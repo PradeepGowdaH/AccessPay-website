@@ -230,7 +230,7 @@ body {
     background-color: rgba(76, 140, 102, 0.75) !important;
     color: #fff;
     border-radius: 30px !important; 
-    font-size: 18px;
+    font-size: 1.5em !important;
     padding: 16px 24px !important; 
     text-transform: uppercase;
     font-weight: bold;
