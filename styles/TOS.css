@@ -57,6 +57,14 @@ body {
   }
 }
 
+@media (max-width: 991px) {
+  .btn-login,
+  .btn-get-started {
+    display: none !important;
+  }
+}
+
+
 footer {
     background-color: rgba(76, 140, 102, 0.75) !important;
     min-height: 200px !important;
@@ -144,6 +152,9 @@ footer {
   border-radius: 20px !important;
   font-size: 16px;
   padding: 8px 12px !important;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-family: 'Fjalla One', sans-serif !important;
 }
 
 .btn-common-styling:hover {
@@ -151,5 +162,39 @@ footer {
 }
 
 .carousel-item .rounded {
-  border-radius: 30px !important;
+  border-radius: 35px !important;
 }
+
+.btn-size-increase {
+  font-size: 1.5em !important; 
+}
+
+
+    .tos,h5{
+      font-family: "Fjalla One", sans-serif;
+      font-weight: 400;
+      font-style: normal;
+    }
+    h1{
+      text-align: center;
+      
+    }
+    .tos-sub{
+      
+      font-weight: 450;
+      text-align: justify;
+      font-family: "Nunito Sans", sans-serif;
+      font-optical-sizing: auto;
+      font-style: normal;
+      font-variation-settings: "wdth" 100, "YTLC" 500;
+    }
+    .a{
+      text-align: center;
+    }
+    .starting{
+      padding-left: 15px;
+    }
+    .tos,.tos-sub{
+      padding-left: 3%;
+      padding-right: 3%;
+    }
