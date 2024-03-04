@@ -1,143 +1,90 @@
 const express = require("express");
 const session = require("express-session");
 const passport = require("passport");
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const mongoose = require("mongoose");
-const flash = require("connect-flash");
+const mongoose = require("mongoose"); // Import mongoose
 require("dotenv").config();
 
-const app = express();
+require("./auth");
 
-// Configure MongoDB
-mongoose.connect("mongodb://0.0.0.0:27017/OAuth", {
-  // No options needed for the MongoDB driver version 4.0.0 and above
-});
+// Define a MongoDB connection URL (replace 'your_database_url' with your actual database URL)
+const mongoDBUrl = process.env.MONGODB_URL;
+mongoose.connect(mongoDBUrl);
+
 const db = mongoose.connection;
+db.on("error", console.error.bind(console, "MongoDB connection error:"));
+db.once("open", () => {
+  console.log("Connected to MongoDB");
+});
 
-// Create a user schema
-const userSchema = new mongoose.Schema({
+// Define a User model for MongoDB
+const User = mongoose.model("User", {
   googleId: String,
-  name: String,
-  email: String,
+  displayName: String,
+  // Add other fields as needed
 });
 
-const User = mongoose.model("User", userSchema);
+function isLoggedIn(req, res, next) {
+  req.user ? next() : res.sendStatus(401);
+}
 
-// Configure Passport
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "http://localhost:3000/auth/google/callback",
-    },
-    async (accessToken, refreshToken, profile, done) => {
-      try {
-        let user = await User.findOne({ googleId: profile.id });
-
-        if (user) {
-          return done(null, user);
-        }
-
-        const newUser = new User({
-          googleId: profile.id,
-          name: profile.displayName,
-          email: profile.emails[0].value,
-        });
-
-        await newUser.save();
-        return done(null, newUser);
-      } catch (err) {
-        console.error(err);
-        return done(err, null);
-      }
-    }
-  )
-);
-
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
-
-passport.deserializeUser((id, done) => {
-  User.findById(id)
-    .then((user) => done(null, user))
-    .catch((err) => done(err, null));
-});
-
-
-// Configure Express
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET, // Use a dynamic session secret
-    resave: true,
-    saveUninitialized: true,
-  })
-);
+const app = express();
+app.use(session({ secret: process.env.SESSION_SECRET }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(flash()); // Initialize flash messages
 
-// Routes
 app.get("/", (req, res) => {
-  res.send("Welcome to OAuth with Google and MongoDB!");
+  res.send('<a href="/auth/google">Authenticate with Google</a>');
 });
 
 app.get(
   "/auth/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
+  passport.authenticate("google", { scope: ["email", "profile"] })
 );
 
 app.get(
-  "/auth/google/callback",
+  "/google/callback",
   passport.authenticate("google", {
-    failureRedirect: "/login",
-    failureFlash: true,
-  }),
-  (req, res) => {
-    // Handle successful authentication here
-    res.redirect("/");
-  }
+    successRedirect: "/protected",
+    failureRedirect: "/auth/failure",
+  })
 );
 
-// Logout route
-app.get("/logout", function (req, res, next) {
-  req.logout(function (err) {
-    if (err) {
-      return next(err); // Pass the error to the next middleware if any error occurs
-    }
-    res.redirect("/"); // Redirect to the home page after logout
-    console.log("Logged out!");
-  });
+app.get("/auth/failure", (req, res) => {
+  res.send("Something went wrong");
 });
 
-// Login route with flash messages
-app.get("/login", (req, res) => {
-  const errorMessage = req.flash("error")[0];
-  res.send(`Login failed. ${errorMessage || ""}`);
+app.get("/protected", isLoggedIn, (req, res) => {
+  res.send(`Hello ${req.user.displayName}`);
+  saveUserToDatabase(req.user); // Save user to MongoDB
 });
 
-// Dashboard route protected by authentication middleware
-const ensureAuthenticated = (req, res, next) => {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.redirect("/login");
-};
-
-app.get("/dashboard", ensureAuthenticated, (req, res) => {
-  res.send("Welcome to your dashboard!");
+app.get("/logout", (req, res) => {
+  req.logout();
+  req.session.destroy();
+  res.send("Goodbye");
 });
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send(`Something broke! ${err.message}`);
-});
+function saveUserToDatabase(user) {
+  // Check if the user already exists in the database
+  User.findOne({ googleId: user.id })
+    .then((existingUser) => {
+      if (!existingUser) {
+        // If the user doesn't exist, save them to the database
+        const newUser = new User({
+          googleId: user.id,
+          displayName: user.displayName,
+          // Add other fields as needed
+        });
 
+        return newUser.save();
+      }
+    })
+    .then(() => {
+      console.log("User saved to MongoDB");
+    })
+    .catch((err) => {
+      console.error("Error saving user to MongoDB:", err);
+    });
+}
 
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+app.listen(5000, () => console.log("listening to port 5000"));
