@@ -40,8 +40,22 @@ body {
 }
 
 .btn-login:hover,
-.btn-get-started:hover {
+.btn-get-started:hover,
+.btn-submit1:hover {
   background-color: rgba(76, 140, 102, 0.9) !important;
+}
+.registrationform > fieldset {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+.registrationForm input[type="text"] {
+  height: 30px;
+  border: 2px solid #181414;
+  border-radius: 4px;
+  padding: 0 10px;
+  font-size: 16px;
+  width: 100%;
 }
 
 /* Remove button styling for mobile view */
@@ -75,7 +89,7 @@ body {
   justify-content: space-between;
   left : 0;
 }
-.btn-login1 {
+.btn-details {
   background-color: rgba(38, 38, 224, 0.89) !important;
   color: #fff;
   border-radius: 13px !important;
@@ -83,8 +97,31 @@ body {
   width: auto;
   margin : 0px;
 }
-.btn-signup {
+.btn-submit1 {
   background-color: rgba(76, 140, 102, 0.75) !important;
+  color: #fff;
+  border-radius: 20px !important;
+  font-size: 16px;
+  padding: 8px 12px !important;
+  max-width: 80px;
+  grid-column: 2;
+  margin-left: 10px;
+  align-self: center;
+  justify-self: center;
+}
+.btn-logout {
+  font-size: 20px; 
+  padding: 20px 30px; 
+  width: fit-content; 
+  align-self: center;
+  background-color:rgba(76, 140, 102, 0.75) !important;
+  color: #fff;
+  border-radius: 20px !important;
+  margin: 0px;
+  align-self: center;
+}
+.btn-changepassword {
+  background-color:rgba(76, 140, 102, 0.75) !important;
   color: #fff;
   border-radius: 13px !important;
   border-bottom-left-radius: 0px;
@@ -93,11 +130,16 @@ body {
 }
 
 .btn-login2:hover,
-.btn-signup:hover {
+.btn-changepassword:hover {
   background-color: rgba(76, 140, 102, 0.9) !important;
 }
-.login-form {
-  align-self: center;
+.form-control registration-form-control address-field{
+column-span: 2;
+}
+
+.registrationForm {
+  align-items: center;
+  text-align: left;
   border: 3px solid rgb(22, 20, 20); 
   border-top: -10px;
   padding: 30px;         
@@ -106,14 +148,21 @@ body {
   width: auto;
   z-index: 1;
   background-color: #fff;
-  margin-top: -50px;
-}
-.g_id_signin{
-  width: 100%; 
-  padding: 5px;
 }
 
 
+@media (min-width: 600px) {
+  .registrationForm {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+}
+.form{
+  margin-top: -10px;
+  align-items: center;
+  text-align: center;
+}
 .flex-grow-1 { 
   display: flex;
   flex-direction: column;
@@ -130,14 +179,7 @@ body {
     font-size: 0.9em;  /* Slightly smaller font */
     margin: auto;
   }
-  .login-form{
-    width: auto;
-    margin-top: -10px;
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
+  
 }
 /* Medium screens */
 @media (min-width:600px) {
@@ -147,28 +189,39 @@ body {
     font-size: 0.9em;  /* Slightly smaller font */
     margin: auto;
   }
-  .login-form{
-    width: 500px;
-    margin-top: -10px;
+}
+@media (max-width: 768px) {
+  .registration-form fieldset {
+    width: auto;
   }
 }
-.or-section {           /* Container for "or" and button */
+.registration-form input,
+.registration-form textarea {
+  height: 30px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  padding: 0 10px;
+  font-size: 16px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+.registrationForm input.address-field,
+.registrationForm textarea.address-field {
+  height: 80px;
+  resize: vertical;
+}
+.registration-form textarea {
+  height: 100px;
+  resize: vertical;
+}
+.form registration-form {
   display: flex;
-  flex-direction: column; /* Stack elements vertically */
-  justify-content: center;
-  align-items: self-start;
-  margin: 10px 0;         /* Space above and below */
+  flex-wrap: wrap;
 }
-
-.login-form input[type="email"], 
-.login-form input[type="password"] {
-    width: 80%;   /* Make input fields take up full available width */
-    padding: 10px; 
-    margin-bottom: 10px; 
-    border-radius: 10px;
-    border: 3px solid rgb(22, 20, 20); 
+.registration-form{
+  width: calc(100%/2 - 20px);
 }
-
 footer {
     background-color: rgba(76, 140, 102, 0.75) !important;
     min-height: 200px !important;
@@ -246,12 +299,14 @@ footer {
   padding: 8px 12px !important;
 }
 
-.btn-signup:hover,
-.btn-get-started1:hover {
+.btn-details:hover,
+.btn-get-started1:hover,
+.btn-submit1:hover,
+.btn-logout:hover {
   background-color: rgba(76, 140, 102, 0.9) !important;
 }
-.btn-login1:hover {
-  background-color: blue !important; 
+.btn-details:hover {
+  background-color: rgb(13, 0, 255) !important; 
 }
 
 .btn-common-styling:hover {
