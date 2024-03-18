@@ -168,30 +168,82 @@ body {
   .btn-size-increase {
     font-size: 1.5em !important; 
   }
-  
-h1{
-    font-family: "Fjalla One", sans-serif;
-    font-weight: 400;
-    font-style: normal;
+  .main{
+    border: none;
+    background-color: #F0F0F0;
+    margin: 3%;
+    padding: 3%;
+    border-radius: 19px;
+  }
+  .success{
+    height: 150px;
+    padding-bottom: 25px;
+   
+    
+    
+  }
+  .top{
+    align-content: center;
     text-align: center;
-    padding-bottom: 15px;
-}  
-.about-us,.sub-section{
-padding-left: 5%;
-padding-right: 5%;
-padding-bottom: 10px;
-text-align: justify;
+    margin: 7%;
+    line-height: 20px;
+    
+  }
+  p{
+
+    font-family: "Nunito Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-variation-settings: "wdth" 100, "YTLC" 500;
 }
-h5{
+h1,h4,.dollar,p{
     font-family: "Fjalla One", sans-serif;
     font-weight: 400;
     font-style: normal;
-    padding-top: 15px;
+}
+.down{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    text-align: center;
+    min-width: fit-content;
+    padding: 1%;
+    vertical-align: text-bottom;
+   
+}
 
+.dollar,.coin{
+  display: inline-block;
+  
 }
-p,ul{
-    font-family: "Nunito Sans", sans-serif;
-      font-optical-sizing: auto;
-      font-style: normal;
-      font-variation-settings: "wdth" 100, "YTLC" 500;
+.coin{
+  width: 20px;
+  vertical-align: top;
+  
 }
+  .dollar{
+    font-size: large;
+    
+  }
+  .back-btn:hover{
+    background-color: rgba(76, 140, 102, 0.75) !important ;
+  }
+  
+  .back-btn{
+    background-color: rgba(76, 140, 102, 0.9) !important;
+    margin: 5%;
+    align-items: center;
+    color: #F0F0F0;
+    border-radius: 20px;
+    height: 40px;
+    border-width: 1px;
+    width: 180px;
+    font-family: "Fjalla One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+
+  }
+  .last{
+    align-items: center;
+    text-align: center;
+  }
+ 
