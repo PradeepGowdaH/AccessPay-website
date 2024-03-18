@@ -2,6 +2,7 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    font-family: 'Fjalla One', sans-serif;
   }
   
   .navbar {
@@ -25,6 +26,7 @@ body {
   
   /* Button styling for desktop view */
   .btn-login,
+  .btn-login2,
   .btn-get-started {
     background-color: rgba(76, 140, 102, 0.75) !important;
     color: #fff;
@@ -64,6 +66,103 @@ body {
     }
   }
   
+  .button-container {
+    align-self: left;
+    justify-content: space-between;
+    left : 0;
+  }
+  .btn-login1 {
+    background-color: rgba(76, 140, 102, 0.75) !important;
+    color: #fff;
+    border-radius: 13px !important;
+    border-bottom-left-radius: 0px;
+    width: auto;
+    margin : 0px;
+  }
+  .btn-signup {
+    background-color:  rgba(38, 38, 224, 0.89) !important;
+    color: #fff;
+    border-radius: 13px !important;
+    border-bottom-left-radius: 0px;
+    width: auto;
+    margin-left: -2.7px;
+  }
+  
+  .btn-login2:hover,
+  .btn-signup:hover {
+    background-color: rgba(76, 140, 102, 0.9) !important;
+  }
+  .login-form {
+    align-self: center;
+    border: 3px solid rgb(22, 20, 20); 
+    border-top: -10px;
+    padding: 30px;         
+    border-radius: 5px; 
+    text-align: center;   
+    width: auto;
+    z-index: 1;
+    background-color: #fff;
+    margin-top: -50px;
+  }
+  .g_id_signin{
+    width: 100%; 
+    padding: 5px;
+  }
+  
+  
+  .flex-grow-1 { 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-bottom: 100px;
+    padding-top: 40px;
+    font-family: 'Fjalla One', sans-serif;
+  }
+  /*small screens*/
+  @media (min-width:200px) {
+    .flex-grow-1 {
+      padding-bottom: 30px; /* Reduce padding */
+      padding-top: 20px;
+      font-size: 0.9em;  /* Slightly smaller font */
+      margin: auto;
+    }
+    .login-form{
+      width: auto;
+      margin-top: -10px;
+    }
+  /* Medium screens */
+  @media (min-width:600px) {
+    .flex-grow-1 {
+      padding-bottom: 30px; /* Reduce padding */
+      padding-top: 20px;
+      font-size: 0.9em;  /* Slightly smaller font */
+      margin: auto;
+    }
+    .login-form{
+      width: 500px;
+      margin-top: -10px;
+    }
+  }
+  .or-section {           /* Container for "or" and button */
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    justify-content: center;
+    align-items: self-start;
+    margin: 15px 0;         /* Space above and below */
+  }
+  
+  .login-form input[type="name"], 
+  .login-form input[type="ph-no"],
+  .login-form input[type="email"],
+  .login-form input[type="pss"],
+  .login-form input[type="conf-pss"]
+   {
+      width: 80%;   /* Make input fields take up full available width */
+      padding: 10px; 
+      margin-bottom: 10px; 
+      border-radius: 10px;
+      border: 3px solid rgb(22, 20, 20); 
+  }
   
   footer {
       background-color: rgba(76, 140, 102, 0.75) !important;
@@ -130,9 +229,10 @@ body {
         position: static; 
         min-height: auto; 
       }
+      
     }
   
-    .btn-login1,
+    .btn-login,
   .btn-get-started1 {
     background-color: rgba(76, 140, 102, 0.75) !important;
     color: #fff;
@@ -142,20 +242,11 @@ body {
   }
   
   .btn-login1:hover,
+  .btn-signup:hover,
   .btn-get-started1:hover {
     background-color: rgba(76, 140, 102, 0.9) !important;
   }
   
-  .btn-common-styling {
-    background-color: rgba(76, 140, 102, 0.75) !important;
-    color: #fff;
-    border-radius: 20px !important;
-    font-size: 16px;
-    padding: 8px 12px !important;
-    text-transform: uppercase;
-    font-weight: bold;
-    font-family: 'Fjalla One', sans-serif !important;
-  }
   
   .btn-common-styling:hover {
     background-color: rgba(76, 140, 102, 0.9) !important;
@@ -168,30 +259,14 @@ body {
   .btn-size-increase {
     font-size: 1.5em !important; 
   }
-  
-h1{
-    font-family: "Fjalla One", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-    text-align: center;
-    padding-bottom: 15px;
-}  
-.about-us,.sub-section{
-padding-left: 5%;
-padding-right: 5%;
-padding-bottom: 10px;
-text-align: justify;
-}
-h5{
-    font-family: "Fjalla One", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-    padding-top: 15px;
-
-}
-p,ul{
-    font-family: "Nunito Sans", sans-serif;
-      font-optical-sizing: auto;
-      font-style: normal;
-      font-variation-settings: "wdth" 100, "YTLC" 500;
-}
+  .otp-btn{
+    background-color: rgba(76, 140, 102, 0.9) !important;
+    color: #fff;
+    border-radius: 20px !important;
+    font-size: 16px;
+    padding: 8px 12px !important;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-family: 'Fjalla One', sans-serif !important;
+    margin: 5%;
+  }
