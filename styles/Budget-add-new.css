@@ -64,6 +64,11 @@ body {
     }
   }
   
+  @media (min-width: 991px) {
+    .mob-only{
+      display: none !important;
+    }
+  }
   
   footer {
       background-color: rgba(76, 140, 102, 0.75) !important;

@@ -70,6 +70,12 @@ body {
   }
 }
 
+@media (min-width: 991px) {
+  .mob-only{
+    display: none !important;
+  }
+}
+
 .button-container {
   align-self: left;
   justify-content: space-between;

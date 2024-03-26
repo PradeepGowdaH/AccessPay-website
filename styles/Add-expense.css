@@ -63,6 +63,11 @@ body {
       display: none !important;
     }
   }
+  @media (min-width: 991px) {
+    .mob-only{
+      display: none !important;
+    }
+  }
   
   
   footer {
