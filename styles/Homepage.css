@@ -57,6 +57,20 @@ body {
   }
 }
 
+@media (max-width: 991px) {
+  .btn-login,
+  .btn-get-started {
+    display: none !important;
+  }
+}
+
+@media (min-width: 991px) {
+  .mob-only{
+    display: none !important;
+  }
+}
+
+
 footer {
     background-color: rgba(76, 140, 102, 0.75) !important;
     min-height: 200px !important;
@@ -144,6 +158,9 @@ footer {
   border-radius: 20px !important;
   font-size: 16px;
   padding: 8px 12px !important;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-family: 'Fjalla One', sans-serif !important;
 }
 
 .btn-common-styling:hover {
@@ -151,5 +168,10 @@ footer {
 }
 
 .carousel-item .rounded {
-  border-radius: 30px !important;
+  border-radius: 35px !important;
 }
+
+.btn-size-increase {
+  font-size: 1.5em !important; 
+}
+
