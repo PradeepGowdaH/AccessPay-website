@@ -195,3 +195,8 @@ p,ul{
       font-style: normal;
       font-variation-settings: "wdth" 100, "YTLC" 500;
 }
+@media (min-width: 991px) {
+  .mob-only{
+    display: none !important;
+  }
+}
