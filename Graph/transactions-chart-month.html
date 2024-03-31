@@ -1,0 +1,49 @@
+
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Transactions for Customer</title>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ </head>
+ <body>
+      <select id="timePeriod">
+          <option value="month">Month</option>
+      </select>
+      <canvas id="transactionsChart" width="400" height="200"></canvas>
+      <script>
+          var ctx = document.getElementById('transactionsChart').getContext('2d');
+          var transactionsChart = new Chart(ctx, {
+             type: 'bar',
+             data: {
+                 labels: ["January","March","February"],
+                 datasets: [{
+                      label: "Transactions",
+                      backgroundColor: ["hsl(0, 70%, 50%)","hsl(120, 70%, 50%)","hsl(240, 70%, 50%)"],
+                      borderColor: ["hsl(0, 70%, 50%)","hsl(120, 70%, 50%)","hsl(240, 70%, 50%)"],
+                      borderWidth: 1,
+                      data: [27100,103000,29000]
+                 }]
+             },
+             options: {
+                 scales: {
+                      x: {
+                          title: {
+                              display: true,
+                              text: 'Months'
+                          }
+                      },
+                      y: {
+                          title: {
+                              display: true,
+                              text: 'Total transaction amount in Rupees'
+                          },
+                          beginAtZero: true
+                      }
+                 }
+             }
+          });
+      </script>
+ </body>
+ </html>
