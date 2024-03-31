@@ -14,11 +14,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
   <link rel="stylesheet" href="./styles/signup-otp.css"/>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <script>
-    import { Input, initMDB } from "mdb-ui-kit";
-    initMDB({ Input });
-  </script>
-  <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </head>
 <body class="d-flex flex-column min-vh-100">
   <header>
@@ -80,22 +75,19 @@
         <DIV class="main">
             <div class="signup">
                 <button class="logout-btn">LOG IN</button>
-                <button class="signup-btn"><u>SIGN-UP</u></button>
+                <a href="signup.html"><button class="signup-btn"><u>SIGN-UP</u></button></a>
 
             </div>
             <div class="sub">
-                <h5>OTP HAS BEEN SENT TO +91 6362623530</h5>
-                <form>
+                <h5>OTP HAS BEEN SENT TO email</h5>
+                <form action="/verify-otp" method="post">
                     <label for="otp" class="otp-label"><b>ENTER THE OTP</b></label><br>
-                  <input type="otp" class="otp" name="otp" required><br>
+                  <input type="text" class="otp" name="otp" required><br>
+                  <button type="submit" class="confirm-btn">VERIFY OTP</button>
                 </form>
-                <button class="confirm-btn">VERIFY OTP</button>
             </div>
         </DIV>
         
-
-
-
     </main>
 
     <footer class="mt-auto">
@@ -158,7 +150,31 @@
         </div>
       </div>
     </footer>
+    <script>
+      document.querySelector('form').addEventListener('submit', function(event) {
+          event.preventDefault(); // Prevent the form from submitting normally
   
+          const formData = new FormData(event.target);
+          fetch('/verify-otp', {
+              method: 'POST',
+              body: formData
+          })
+          .then(response => response.json())
+          .then(data => {
+              if (data.success) {
+                  alert('OTP verified successfully. You can now proceed with registration or login.');
+                  // Redirect to the next step or login page
+                  window.location.href = '/login.html'; // Example redirect
+              } else {
+                  alert('Invalid OTP. Please try again.');
+              }
+          })
+          .catch(error => {
+              console.error('Error:', error);
+              alert('An error occurred. Please try again.');
+          });
+      });
+      </script>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 </body>
