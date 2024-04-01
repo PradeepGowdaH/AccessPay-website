@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8" />
-  <link rel="icon" href="/favicon.ico" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#000000" />
-  <title>Transaction-Analysis</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fjalla+One%3A400"/>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro%3A400%2C700"/>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=DM+Sans%3A700"/>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito+Sans%3A700"/>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat%3A400"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-  <link rel="stylesheet" href="./styles/Transaction-Analysis.css"/>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <script>
+ <meta charset="utf-8" />
+ <link rel="icon" href="/favicon.ico" />
+ <meta name="viewport" content="width=device-width, initial-scale=1" />
+ <meta name="theme-color" content="#000000" />
+ <title>Transaction-Analysis</title>
+ <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fjalla+One%3A400"/>
+ <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro%3A400%2C700"/>
+ <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=DM+Sans%3A700"/>
+ <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito+Sans%3A700"/>
+ <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat%3A400"/>
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+ <link rel="stylesheet" href="./styles/Transaction-Analysis.css"/>
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+ <script>
     import { Input, initMDB } from "mdb-ui-kit";
     initMDB({ Input });
-  </script>
-  <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+ </script>
+ <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </head>
 <body class="d-flex flex-column min-vh-100">
   <header>
@@ -75,43 +75,22 @@
         </div>
     </nav>
 </header>
-    <main  class="flex-grow-1 pt-5">
-    <!--START YOUR CODE FROM HERE!!!!!!!!!!-->
-
+ <main class="flex-grow-1 pt-5">
     <div class="container mt-4">
-        <select id="basisSelect" class="form-select" onchange="updateImage()">
-          <option value="monthly" selected>Monthly Basis</option>
-          <option value="yearly">Yearly Basis</option>
-          <option value="weekly">Weekly Basis</option>
-        </select>
-      
-        <div id="imageContainer" class="mt-4">
-          <img id="monthlyImage" src="./assets/Rectangle69.png" alt="Monthly Image" class="displayed-image">
-          <img id="yearlyImage" src="./assets/Rectangle70.png" alt="Yearly Image" class="displayed-image" style="display: none;">
-          <img id="weeklyImage" src="./assets/Rectangle71.png" alt="Weekly Image" class="displayed-image" style="display: none;">
+      <select id="basisSelect" class="form-select" onchange="updateImage()">
+        <option value="monthly" selected>Monthly Basis</option>
+        <option value="yearly">Yearly Basis</option>
+        <option value="weekly">Weekly Basis</option>
+      </select>
+
+      <div id="imageContainer" class="mt-4">
+        <div id="monthlyImage" class="displayed-image" style="display: none;">
+          <canvas id="transactionsChart" width="600" height="600"></canvas>
         </div>
-      </div>
-      
-      <script>
-        function updateImage() {
-          var basisSelect = document.getElementById('basisSelect');
-          var selectedValue = basisSelect.value;
-      
-          // Hide all images
-          var images = document.querySelectorAll('.displayed-image');
-          images.forEach(function (img) {
-            img.style.display = 'none';
-          });
-      
-          // Show the selected image
-          var selectedImage = document.getElementById(selectedValue + 'Image');
-          selectedImage.style.display = 'block';
-        }
-      </script>
-      
-    
-  
-    </main>
+        <img id="weeklyImage" src="./assets/Rectangle71.png" alt="Weekly Image" class="displayed-image" style="display: none;">
+        </div>
+    </div>
+ </main>
 
     <footer class="mt-auto">
       <div class="container py-4">
@@ -175,5 +154,31 @@
     </footer>
   
 
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ <script src="./Graph/transactions-chart-month.js"></script>
+
+ <script>
+    function updateImage() {
+      var basisSelect = document.getElementById('basisSelect');
+      var selectedValue = basisSelect.value;
+
+      // Hide all images
+      var images = document.querySelectorAll('.displayed-image');
+      images.forEach(function (img) {
+        img.style.display = 'none';
+      });
+
+      // Show the selected image or chart
+      if (selectedValue === 'monthly') {
+        document.getElementById('monthlyImage').style.display = 'block';
+        // Assuming fetchTransactionsForCustomer() is called here to fetch and display the chart
+      } else {
+        var selectedImage = document.getElementById(selectedValue + 'Image');
+        selectedImage.style.display = 'block';
+      }
+    }
+ </script>
+
 </body>
+</html>
