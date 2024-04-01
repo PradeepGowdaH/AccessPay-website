@@ -89,7 +89,8 @@ body {
   width: auto;
   margin : 0px;
 }
-.btn-signup {
+.btn-signup,
+.btn-login3 {
   background-color: rgba(76, 140, 102, 0.75) !important;
   color: #fff;
   border-radius: 13px !important;
@@ -99,7 +100,8 @@ body {
 }
 
 .btn-login2:hover,
-.btn-signup:hover {
+.btn-signup:hover,
+.btn-login3:hover{
   background-color: rgba(76, 140, 102, 0.9) !important;
 }
 .login-form {

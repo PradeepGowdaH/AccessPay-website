@@ -25,8 +25,8 @@ body {
   }
   
   /* Button styling for desktop view */
-  .btn-DASHBOARD,
-  .btn-NAME, 
+  .btn-logout,
+  .btn-username, 
   .btn-reward-buttons{
     background-color: rgba(76, 140, 102, 0.75) !important;
     color: #fff;
@@ -35,16 +35,16 @@ body {
     padding: 8px 12px !important;
   }
   
-  .btn-DASHBOARD:hover,
-  .btn-NAME:hover,
+  .btn-logout:hover,
+  .btn-username:hover,
   .btn-reward-buttons {
     background-color: rgba(76, 140, 102, 0.9) !important;
   }
   
   /* Remove button styling for mobile view */
   @media (max-width: 767px) {
-    .btn-DASHBOARD,
-    .btn-NAME {
+    .btn-logout,
+    .btn-username {
         background: none !important;
         border: none !important;
         color: #000; /* Change the color as needed */
@@ -53,16 +53,16 @@ body {
         display: inline-block !important; /* Ensure the buttons are visible */
     }
   
-    .btn-DASHBOARD:hover,
-    .btn-NAME:hover {
+    .btn-logout:hover,
+    .btn-username:hover {
         background: none !important;
         color: #000; /* Change the color as needed */
     }
   }
   
   @media (max-width: 991px) {
-    .btn-DASHBOARD,
-    .btn-NAME {
+    .btn-logout,
+    .btn-username {
       display: none !important;
     }
   }
@@ -141,8 +141,8 @@ body {
       }
     }
   
-    .btn-DASHBOARD1,
-  .btn-NAME1 {
+    .btn-logout1,
+  .btn-username1 {
     background-color: rgba(76, 140, 102, 0.75) !important;
     color: #fff;
     border-radius: 20px !important;
@@ -150,8 +150,8 @@ body {
     padding: 8px 12px !important;
   }
   
-  .btn-DASHBOARD1:hover,
-  .btn-NAME1:hover {
+  .btn-logout1:hover,
+  .btn-username1:hover {
     background-color: rgba(76, 140, 102, 0.9) !important;
   }
   
@@ -193,12 +193,12 @@ body {
     vertical-align: middle !important;
     margin-left: 4% !important;
     margin-right: 4% !important;
-    border: none !important;
+    border: 0px !important;
     background-color: #F0F0F0 !important;
     border-radius: 20px !important;
     padding: 4% !important;
     margin-bottom: 5% !important;
-    padding-top: 40px !important;
+    margin-top: 5% !important;
     text-align: center !important;
     position:relative !important;
     font-family: 'Fjalla One', sans-serif;
@@ -211,10 +211,9 @@ body {
     box-sizing: border-box;
 }
 .reward-container .bi-currency-dollar{
-  height: auto;
+  height: 30px;
     line-height: 1;
-    margin-top: -20px;
-    box-sizing: border-box;
+  
 }
 .button-text{
 font-size: 28px;
@@ -240,4 +239,7 @@ margin-top: -10px;
 .svg-icon.svg-baseline svg {
   bottom: .125em;
   position: relative;
+}
+.text-start {
+  margin-left: 50px;
 }
