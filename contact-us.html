@@ -21,82 +21,84 @@
   <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </head>
 <body class="d-flex flex-column min-vh-100">
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-light">
-            <div class="container-fluid">
-    
-                <!-- Mobile Toggle Button -->
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-    
-                <!-- Logo -->
-                <a class="navbar-brand" href="./Hompage.html"><img src="./assets/logo.png" alt="Logo" height="45"></a>
-    
-                <!-- Navigation Links (Home, About Us, Features) -->
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link" href="./Hompage.html">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="./About-us.html">About Us</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="featuresDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Features
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="featuresDropdown">
-                                <li><a class="dropdown-item" href="./rewards.html">Rewards</a></li>
-                                <li><a class="dropdown-item" href="./homeloan.html">Loan Tracking</a></li>
-                                <li><a class="dropdown-item" href="./Transaction-Tracking.html">Transaction Tracking</a></li>
-                                <li><a class="dropdown-item" href="./Home-budget.html">Budget Planning</a></li>
-                            </ul>
-                        </li>
-                        
-                        <!-- Login and Get Started Buttons for Mobile View -->
-                        <li class="nav-item mob-only">
-                            <a class="nav-link" href="./login.html">Login</a>
-                        </li>
-                        <li class="nav-item mob-only">
-                            <a class="nav-link" href="./signup.html">Get Started</a>
-                        </li>
-                    </ul>
-                </div>
-    
-                <!-- Login and Get Started Buttons for Desktop View -->
-                <div class="d-none d-lg-flex"><!-- Hide in mobile view -->
-                    <a href="./login.html"><button class="btn btn-primary me-2 btn-login" type="button">Login</button></a>
-                    <a href="./signup.html"><button class="btn btn-primary btn-get-started" type="button">Get Started</button></a>
-                </div>
-                
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+
+            <!-- Mobile Toggle Button -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Logo -->
+            <a class="navbar-brand" href="#"><img src="./assets/logo.png" alt="Logo" height="45"></a>
+
+            <!-- Navigation Links (Home, About Us, Features) -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About Us</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="featuresDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Features
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="featuresDropdown">
+                            <li><a class="dropdown-item" href="#">Rewards</a></li>
+                            <li><a class="dropdown-item" href="#">Loans </a></li>
+                            <li><a class="dropdown-item" href="#">Transaction Tracking</a></li>
+                            <li><a class="dropdown-item" href="#">Budget Planning</a></li>
+                        </ul>
+                    </li>
+                    
+                    <!-- Login and Get Started Buttons for Mobile View -->
+                    <li class="nav-item d-lg-none"><!-- Hide in desktop view -->
+                        <button class="btn btn-primary me-2 btn-login" type="button">Login</button>
+                    </li>
+                    <li class="nav-item d-lg-none"><!-- Hide in desktop view -->
+                        <button class="btn btn-primary btn-get-started" type="button">Get Started</button>
+                    </li>
+                </ul>
             </div>
-        </nav>
-    </header>
+
+            <!-- Login and Get Started Buttons for Desktop View -->
+            <div class="d-none d-lg-flex"><!-- Hide in mobile view -->
+                <button class="btn btn-primary me-2 btn-login" type="button">Login</button>
+                <button class="btn btn-primary btn-get-started" type="button">Get Started</button>
+            </div>
+            
+        </div>
+    </nav>
+</header>
     <main  class="flex-grow-1 pt-5">
     <!--START YOUR CODE FROM HERE!!!!!!!!!!-->
     <div class="container mt-5">
         <div class="row contact-section">
             <div class="col-md-8">
                 <h2 class="mb-4">Get in touch</h2>
-                <form>
+                <form action="https://api.web3forms.com/submit" method="POST">
                     <div class="row mb-3">
+                        <input type="hidden" name="access_key" value="347050ab-e4d2-40c4-ad4e-55d9e58b2f97">
+
                         <div class="col-md-6">
                             <label for="name" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="name" placeholder="Your Name">
+                            <input type="text" name="name" class="form-control" id="name" placeholder="Your Name">
                         </div>
                         <div class="col-md-6">
                             <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" placeholder="Your Email">
+                            <input type="email" name="email" class="form-control" id="email" placeholder="Your Email">
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="subject" class="form-label">Subject</label>
-                        <input type="text" class="form-control" id="subject" placeholder="Subject">
+                        <input type="text" name="subject" class="form-control" id="subject" placeholder="Subject">
                     </div>
                     <div class="mb-3">
                         <label for="message" class="form-label">Message</label>
-                        <textarea class="form-control" id="message" rows="5" placeholder="Your Message"></textarea>
+                        <textarea name="message" class="form-control" id="message" rows="5" placeholder="Your Message"></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
@@ -193,21 +195,21 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="d-flex flex-column">
-                    <a href="./Homepage-logged-in.html">Home</a>
-                    <a href="./About-us.html">About Us</a>
-                    <a href="./NIGGA BALLS">How to Use</a>
-                    <a href="./Transaction-Tracking.html">Transaction Tracker</a>
-                  </div>
+                  <a href="#">Home</a>
+                  <a href="#">About Us</a>
+                  <a href="#">How to Use</a>
+                  <a href="#">Transaction Tracker</a>
                 </div>
-                <div class="col-md-6">
-                  <div class="d-flex flex-column">
-                    <a href="./Home-budget.html">Budget Planning</a>
-                    <a href="./homeloan.html">Quick Loans</a>
-                    <a href="./crypto homepage.html">Crypto Rewards</a>
-                    <a href="./privacy-policy.html">Privacy Policy</a>
-                    <a href="./TOS.html">Terms of Service</a>
-                    <a href="./contact-us.html">Contact Us</a>
-                  </div>
+              </div>
+              <div class="col-md-6">
+                <div class="d-flex flex-column">
+                  <a href="#">Budget Planning</a>
+                  <a href="#">Quick Loans</a>
+                  <a href="#">Crypto Rewards</a>
+                  <a href="#">Privacy Policy</a>
+                  <a href="#">Terms of Service</a>
+                  <a href="#">Contact Us</a>
+                </div>
               </div>
             </div>
           </div>
@@ -245,5 +247,6 @@
   
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    
 </body>
 </html>
