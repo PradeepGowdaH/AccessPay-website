@@ -1,16 +1,27 @@
 async function fetchTransactionsForCustomerMonthly() {
   console.log("Fetching monthly transactions...");
   try {
-    const response = await fetch("/api/transactions");
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    const transactionsData = await response.json();
-    generateChartMonthly(transactionsData);
+     const response = await fetch("/api/transactions");
+     if (!response.ok) {
+       throw new Error("Network response was not ok");
+     }
+     const transactionsData = await response.json();
+     // Aggregate transactions by month
+     const aggregatedData = transactionsData.reduce((acc, transaction) => {
+       const date = new Date(transaction.isoDate);
+       const monthNumber = date.getMonth() + 1; // JavaScript months are 0-indexed
+       if (!acc[monthNumber]) {
+         acc[monthNumber] = { amount: 0 };
+       }
+       acc[monthNumber].amount += transaction.amount;
+       return acc;
+     }, {});
+     generateChartMonthly(Object.values(aggregatedData));
   } catch (error) {
-    console.error("There was a problem with your fetch operation:", error);
+     console.error("There was a problem with your fetch operation:", error);
   }
-}
+ }
+ 
 
 function generateChartMonthly(transactionsData) {
   const ctx = document
