@@ -5,14 +5,14 @@
   <link rel="icon" href="/favicon.ico" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#000000" />
-  <title>Add Expense</title>
+  <title>Rewards History</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fjalla+One%3A400"/>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro%3A400%2C700"/>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=DM+Sans%3A700"/>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito+Sans%3A700"/>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat%3A400"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-  <link rel="stylesheet" href="./styles/Add-expense.css"/>
+  <link rel="stylesheet" href="./styles/Rewards-history.css"/>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <script>
     import { Input, initMDB } from "mdb-ui-kit";
@@ -75,60 +75,33 @@
         </div>
     </nav>
 </header>
-    <main  class="flex-grow-1 pt-5">
-    <!--START YOUR CODE FROM HERE!!!!!!!!!!-->
-    <div class="container">
-        <div class="row">
-          <div class="col-md-6 offset-md-3 expense-box">
-            <form>
-              <h2 class="font-weight-bold" style="font-family: 'DM Sans';">Add Expense</h2>
-              <div class="form-group">
-                <label for="expenseCategory" class="visually-hidden">Select Category</label>
-                <select class="form-select" id="expenseCategory">
-                  <option selected>Categorize expense</option>
-                  <option>Category 1</option>
-                  <option>Category 2</option>
-                  <option>Category 3</option>
-                  <!-- Add more categories as needed -->
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="expenseAmount" class="visually-hidden">Enter Amount</label>
-                <input type="text" class="form-control" placeholder="Enter amount" id="expenseAmount">
-              </div>
-      
-              <div class="form-group">
-                <label for="transactionType" class="visually-hidden">Enter Transaction Type</label>
-                <input type="text" class="form-control" placeholder="Enter transaction type" id="transactionType">
-              </div>
-      
-              <div class="form-group">
-                <label for="transactionTime" class="visually-hidden">Enter Transaction Time</label>
-                <input type="text" class="form-control" placeholder="Enter transaction Date" id="transactionTime">
-              </div>
-
-              <div class="form-group">
-                <label for="transactionTime" class="visually-hidden">Enter Transaction Time</label>
-                <input type="text" class="form-control" placeholder="Enter transaction time" id="transactionTime">
-              </div>
-      
-              <div class="text-center">
-                <a href="./Transactions.html"><button type="submit" class="btn btn-primary">Add Expense</button></a>
-              </div>
-
-              <div class="text-center mt-3">
-                <p class="mb-2" style="font-family: 'DM Sans'; font-size: 1.5rem; font-weight: bold;">OR</p>
-                <button type="button" class="btn btn-export">Import from Spreadsheet</button>
-            </div>
-            </form>
-            <div class="py-3"></div>
+<main class="flex-grow-1 pt-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-10"> 
+        <div class="custom-box">
+          <h2 class="custom-table-header">Rewards History</h2>
+          <div class="table-responsive">
+            <table class="table table-bordered custom-table" id="rewardsHistoryTable">
+              <thead>
+               <tr>
+                  <th class="custom-table-header">Date</th>
+                  <th class="custom-table-header">Time</th>
+                  <th class="custom-table-header">Transaction ID</th>
+                  <th class="custom-table-header">Type</th>
+               </tr>
+              </thead>
+              <tbody style="background-color: #E0E0E0;">
+               <!-- Table rows will be dynamically generated here -->
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
-
-    <div class="py-5"></div> 
-  
-    </main>
+    </div>
+  </div>
+  <div class="py-5"></div>
+</main>
 
     <footer class="mt-auto">
       <div class="container py-4">
@@ -190,7 +163,36 @@
         </div>
       </div>
     </footer>
-  
 
+    <script>
+      // Fetch rewards history from the server
+      async function fetchRewardsHistory() {
+        try {
+          const response = await fetch("/api/rewards-history"); // Assuming this endpoint exists
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          const rewardsHistory = await response.json();
+          displayRewardsHistory(rewardsHistory);
+        } catch (error) {
+          console.error("There was a problem with your fetch operation:", error);
+        }
+      }
+  
+      // Dynamically generate table rows based on the fetched data
+      function displayRewardsHistory(rewardsHistory) {
+        const tableBody = document.getElementById("rewardsHistoryTable").getElementsByTagName('tbody')[0];
+        rewardsHistory.forEach(reward => {
+          const row = tableBody.insertRow();
+          row.insertCell(0).innerHTML = reward.date;
+          row.insertCell(1).innerHTML = reward.time;
+          row.insertCell(2).innerHTML = reward.transaction_id;
+          row.insertCell(3).innerHTML = reward.mode;
+        });
+      }
+  
+      // Call the function to fetch and display the rewards history
+      fetchRewardsHistory();
+   </script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 </body>

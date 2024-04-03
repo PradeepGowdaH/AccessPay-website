@@ -254,13 +254,10 @@ body {
     text-align: center;
     position: relative;
 }
-/*
 #LoanPieChart {
-    max-width: 36%;
-    width: 90%; 
+  float: right;
     margin-bottom: 20px;
 }
-*/
 .loan-details-right .loan-button {
     text-align: center;
 }

@@ -63,6 +63,7 @@ body {
       display: none !important;
     }
   }
+
   @media (min-width: 991px) {
     .mob-only{
       display: none !important;
@@ -151,28 +152,60 @@ body {
     background-color: rgba(76, 140, 102, 0.9) !important;
   }
   
-  .expense-box {
-    border-radius: 30px;
-    background-color: #F0F0F0;
-    padding: 20px;
-    margin: 20px;
-  }  
-
-  form {
-    padding-top: 20px;
-  }
-
-  .form-group {
-    margin-bottom: 20px;
-  }
-
-  .btn-primary, .btn-export {
+  .btn-common-styling {
     background-color: rgba(76, 140, 102, 0.75) !important;
-    color: #fff !important;
+    color: #fff;
     border-radius: 20px !important;
     font-size: 16px;
     padding: 8px 12px !important;
     text-transform: uppercase;
     font-weight: bold;
     font-family: 'Fjalla One', sans-serif !important;
+  }
+  
+  .btn-common-styling:hover {
+    background-color: rgba(76, 140, 102, 0.9) !important;
+  }
+  
+  .carousel-item .rounded {
+    border-radius: 35px !important;
+  }
+  
+  .btn-size-increase {
+    font-size: 1.5em !important; 
+  }
+  
+  .custom-box {
+    background-color: #F0F0F0;
+    border-radius: 30px;
+    padding: 40px;
+    margin: 20px;
+  }
+
+  .custom-table-header {
+    font-family: 'Fjalla One', sans-serif;
+  }
+
+  .custom-table {
+    background-color: #E0E0E0 !important;
+  }
+
+  .custom-table-data {
+    font-family: 'DM Sans', sans-serif;
+  }  
+  .custom-box h2 {
+    margin-bottom: 20px;
+  }
+  
+  .export-button{
+    background-color: rgba(76, 140, 102, 0.75) !important;
+    color: #fff !important;
+    border-radius: 20px !important;
+    font-size: 20px;
+    padding: 8px 12px !important;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-family: 'Fjalla One', sans-serif !important;
+    display: block;
+    margin: 0 auto;
   }
