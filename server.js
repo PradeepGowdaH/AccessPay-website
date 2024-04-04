@@ -118,8 +118,7 @@ app.get("/api/rewards-history", async (req, res) => {
      console.error("Error fetching rewards history for customer:", error);
      res.status(500).send("Error fetching rewards history for customer.");
   }
- });
- 
+ }); 
 
 app.listen(port, () => {
  console.log(`Server running at http://localhost:${port}`);
