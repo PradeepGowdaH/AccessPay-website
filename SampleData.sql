@@ -12,6 +12,7 @@
   "first_name": "Peter",
   "middle_name": "H",
   "last_name": "Joe",
+  "credit_score": 720,
   "bank": [
     {
       "bank_account_number": "111111111111111",
