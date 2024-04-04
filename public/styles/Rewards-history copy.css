@@ -1,0 +1,199 @@
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .navbar {
+    font-family: 'Fjalla One', sans-serif;
+  }
+  
+  .navbar-nav .nav-link {
+    font-size: 18px !important;
+    padding: 10px 15px !important;
+  }
+  
+  .navbar-toggler-icon {
+    font-size: 24px !important;
+  }
+  
+  .navbar-brand,
+  .navbar-nav .nav-link,
+  .navbar-nav .dropdown-item {
+    font-family: 'Fjalla One', sans-serif;
+  }
+  
+  /* Button styling for desktop view */
+  .btn-login,
+  .btn-get-started {
+    background-color: rgba(76, 140, 102, 0.75) !important;
+    color: #fff;
+    border-radius: 20px !important;
+    font-size: 16px;
+    padding: 8px 12px !important;
+  }
+  
+  .btn-login:hover,
+  .btn-get-started:hover {
+    background-color: rgba(76, 140, 102, 0.9) !important;
+  }
+  
+  /* Remove button styling for mobile view */
+  @media (max-width: 767px) {
+    .btn-login,
+    .btn-get-started {
+        background: none !important;
+        border: none !important;
+        color: #000; /* Change the color as needed */
+        font-size: 18px !important;
+        padding: 10px 15px !important;
+        display: inline-block !important; /* Ensure the buttons are visible */
+    }
+  
+    .btn-login:hover,
+    .btn-get-started:hover {
+        background: none !important;
+        color: #000; /* Change the color as needed */
+    }
+  }
+  
+  @media (max-width: 991px) {
+    .btn-login,
+    .btn-get-started {
+      display: none !important;
+    }
+  }
+
+  @media (min-width: 991px) {
+    .mob-only{
+      display: none !important;
+    }
+  }
+  
+  
+  footer {
+      background-color: rgba(76, 140, 102, 0.75) !important;
+      min-height: 200px !important;
+      margin-top: auto;
+    }
+  
+    footer * {
+      font-family: 'Nunito Sans', sans-serif;
+      color: black !important;
+    }
+  
+    footer a {
+      text-decoration: none;
+    }
+    
+    hr {
+      background-color: black;
+      height: 2px;
+      border: none;
+    }
+  
+    .social-icon {
+      margin-right: 10px; 
+    }
+  
+    .newsletter-box {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 100%;
+    }
+  
+    .newsletter-box form {
+      margin-top: 15px; 
+    }
+    
+    .newsletter-box input,
+    .newsletter-box button {
+      border-radius: 20px !important; /* Rounded corners */
+    }
+    
+    .newsletter-box input {
+      padding: 10px; 
+      width: calc(100% - 10px); 
+    }
+    
+    .newsletter-box button {
+      background-color: #263238;
+      color: white !important;
+      padding: 10px 20px; 
+      border: none;
+      cursor: pointer;
+      margin-left: -30px !important;
+    }
+    
+    .newsletter-box button:hover {
+      background-color: #37474f; /
+    }
+  
+    @media (max-width: 767px) {
+      /* Apply these styles only on screens smaller than 768px wide (mobile screens) */
+      footer {
+        position: static; 
+        min-height: auto; 
+      }
+    }
+  
+    .btn-login1,
+  .btn-get-started1 {
+    background-color: rgba(76, 140, 102, 0.75) !important;
+    color: #fff;
+    border-radius: 20px !important;
+    font-size: 16px;
+    padding: 8px 12px !important;
+  }
+  
+  .btn-login1:hover,
+  .btn-get-started1:hover {
+    background-color: rgba(76, 140, 102, 0.9) !important;
+  }
+  
+  .btn-common-styling {
+    background-color: rgba(76, 140, 102, 0.75) !important;
+    color: #fff;
+    border-radius: 20px !important;
+    font-size: 16px;
+    padding: 8px 12px !important;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-family: 'Fjalla One', sans-serif !important;
+  }
+  
+  .btn-common-styling:hover {
+    background-color: rgba(76, 140, 102, 0.9) !important;
+  }
+  
+  .carousel-item .rounded {
+    border-radius: 35px !important;
+  }
+  
+  .btn-size-increase {
+    font-size: 1.5em !important; 
+  }
+  
+  .custom-box {
+    background-color: #F0F0F0;
+    border-radius: 30px;
+    padding: 40px;
+    margin: 20px;
+  }
+
+  .custom-table-header {
+    font-family: 'Fjalla One', sans-serif;
+  }
+
+  .custom-table {
+    background-color: #E0E0E0 !important;
+  }
+
+  .custom-table-data {
+    font-family: 'DM Sans', sans-serif;
+  }  
+  .custom-box h2 {
+    margin-bottom: 20px;
+  }
+  
