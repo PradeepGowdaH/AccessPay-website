@@ -6,13 +6,12 @@
   "googleName": "Peter Joe",
   "email": "Pete.joe@example.com",
   "username": "PeterK",
-  "password": "hashed_password_1",
+  "password": "tits",
   "aadhar_number": "123456789012",
   "pan_number": "ABCDE1234F",
   "first_name": "Peter",
   "middle_name": "H",
   "last_name": "Joe",
-  "credit_score": 720,
   "bank": [
     {
       "bank_account_number": "111111111111111",
@@ -40,7 +39,7 @@
       "loan_amount": 1500000,
       "tenure": 24,
       "months_paid": 12,
-      "months_left":12,
+      "months_left": 12,
       "amount_paid": 0,
       "rate_of_interest": 8.5,
       "loan_payments": [
@@ -119,7 +118,7 @@
       "mode": "sent",
       "category": "Health",
       "amount": 2500,
-      "isoDate": "2024-03-11T17:19:56.659Z"
+      "isoDate": "2024-04-11T17:19:56.659Z"
     },
     {
       "transaction_id": "TXN987654324",
@@ -210,14 +209,14 @@
       "mode": "received",
       "category": "Investment",
       "amount": 15000,
-      "isoDate": "2024-03-15T19:33:05.787Z"
+      "isoDate": "2024-04-15T19:33:05.787Z"
     },
     {
       "transaction_id": "65HFGDFGG987555434GBN",
       "mode": "sent",
       "category": "Shopping",
       "amount": 7000,
-      "isoDate": "2024-03-14T17:04:46.008Z"
+      "isoDate": "2024-04-14T17:04:46.008Z"
     },
     {
       "transaction_id": "65HFGDFGG997675434GBN",
@@ -230,8 +229,8 @@
       "transaction_id": "TXN987654329",
       "mode": "sent",
       "category": "Fitness",
-      "amount": 1000,
-      "isoDate": "2024-01-19T00:14:05.470Z"
+      "amount": 6000,
+      "isoDate": "2024-04-19T00:14:05.470Z"
     },
     {
       "transaction_id": "65HFGDFGG987555434GBO",
@@ -271,13 +270,6 @@
   ],
   "budget": [
     {
-      "month_year": "January, 2024",
-      "Travel": 5000,
-      "Food": 5000,
-      "Rent": 10000,
-      "Bills": 4000
-    },
-    {
       "month_year": "February, 2024",
       "Travel": 5000,
       "Food": 5000,
@@ -286,6 +278,13 @@
     },
     {
       "month_year": "March, 2024",
+      "Travel": 5000,
+      "Food": 5000,
+      "Rent": 10000,
+      "Bills": 4000
+    },
+    {
+      "month_year": "April, 2024",
       "Travel": 5000,
       "Food": 5000,
       "Rent": 10000,
