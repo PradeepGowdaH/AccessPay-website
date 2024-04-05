@@ -97,46 +97,6 @@
                   </thead>
                   <tbody>
                       <!-- Add your transaction data rows here -->
-                      <tr>
-                          <td>2024-03-11</td>
-                          <td>12:30 PM</td>
-                          <td>Spent</td>
-                          <td>Shopping</td>
-                          <td>$50.00</td>
-                      </tr>
-
-                      <tr>
-                        <td>2024-03-11</td>
-                        <td>12:30 PM</td>
-                        <td>Spent</td>
-                        <td>Shopping</td>
-                        <td>$50.00</td>
-                      </tr>
-
-                      <tr>
-                        <td>2024-03-11</td>
-                        <td>12:30 PM</td>
-                        <td>Spent</td>
-                        <td>Shopping</td>
-                        <td>$50.00</td>
-                      </tr>
-
-                      <tr>
-                        <td>2024-03-11</td>
-                        <td>12:30 PM</td>
-                        <td>Spent</td>
-                        <td>Shopping</td>
-                        <td>$50.00</td>
-                      </tr>
-
-                      <tr>
-                        <td>2024-03-11</td>
-                        <td>12:30 PM</td>
-                        <td>Spent</td>
-                        <td>Shopping</td>
-                        <td>$50.00</td>
-                      </tr>
-                      <!-- Add more rows as needed -->
                   </tbody>
               </table>
           </div>
@@ -165,14 +125,12 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="box-image">
-                      <canvas id="budgetChart" width="300" height="300"></canvas>
-                    </div>
-        <select id="monthSelect"></select>
- <script src="/script/budget-chart.js"></script>
+                  <div class="chart-container">
+                    <canvas id="budgetChart" width="300" height="300"></canvas>
                     <div class="budget-button">
                         <a href="./Home-budget.html"><button class="btn more-details-btn mt-3">More Details</button></a>
                     </div>
+                </div>
                 </div>
             </div>
         </div>
@@ -204,7 +162,7 @@
               <div class="loan-details-right">
                   <!-- Placeholder for image -->
     <div class="col-md-6">
-        <canvas id="loanPieChart" width="400" height="400"></canvas>
+        <canvas id="loanPieChart" width="300" height="300"></canvas>
     </div>
                   <!-- Placeholder for button -->
                   <div class="loan-button">
@@ -305,7 +263,36 @@
       </div>
     </footer>
     <script src="./script/loan-pie-chart.js"></script>
-    <script src="./script/budget-chart.js"></script>
+    <script src="./script/budget-alt.js"></script>
+    <script src="./script/budget-items.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', async () => {
+          const response = await fetch('/api/transactions');
+          const transactions = await response.json();
+          const tableBody = document.querySelector('.custom-table tbody'); // Correctly selects the tbody of your table
+      
+          // Limit transactions to the first 5
+          const firstFiveTransactions = transactions.slice(0, 5);
+      
+          firstFiveTransactions.forEach(transaction => {
+              // Correctly access the transaction properties
+              const date = new Date(transaction.isoDate);
+              const formattedDate = date.toLocaleDateString();
+              const formattedTime = date.toLocaleTimeString();
+      
+              const row = document.createElement('tr');
+              row.innerHTML = `
+                  <td class="custom-table-data">${formattedDate}</td>
+                  <td class="custom-table-data">${formattedTime}</td>
+                  <td class="custom-table-data">${transaction.transaction_id}</td>
+                  <td class="custom-table-data">${transaction.category}</td>
+                  <td class="custom-table-data">${transaction.mode === 'received' ? 'IN' : 'OUT'}</td>
+              `;
+              tableBody.appendChild(row);
+          });
+      });
+      </script>
+      
 </body>
