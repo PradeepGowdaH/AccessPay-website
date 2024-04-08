@@ -6,7 +6,7 @@ const port = 3000;
 const mongoURI = "mongodb://0.0.0.0:27017/AccessPay";
 const customerId = "google_id_6";
 
-app.use(express.static("public")); 
+app.use(express.static("public"));
 
 Date.prototype.getWeek = function () {
  var oneJan = new Date(this.getFullYear(), 0, 1);

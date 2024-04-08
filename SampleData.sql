@@ -1,18 +1,14 @@
 {
   "_id": {
-    "$oid": "6603e911b32fd391d41e8315"
+    "$oid": "6613912fb11adac73b469633"
   },
   "googleId": "google_id_6",
   "googleName": "Peter Joe",
   "email": "Pete.joe@example.com",
-  "username": "PeterK",
-  "password": "hashed_password_1",
+  "password": "12345",
   "aadhar_number": "123456789012",
   "pan_number": "ABCDE1234F",
   "first_name": "Peter",
-  "middle_name": "H",
-  "last_name": "Joe",
-  "credit_score": 720,
   "bank": [
     {
       "bank_account_number": "111111111111111",
@@ -39,8 +35,7 @@
       "loan_type": "Home Loan",
       "loan_amount": 1500000,
       "tenure": 24,
-      "months_paid": 12,
-      "months_left":12,
+      "months_paid": 2,
       "amount_paid": 0,
       "rate_of_interest": 8.5,
       "loan_payments": [
@@ -54,7 +49,8 @@
           "amount_paid": 50000,
           "date_of_payment": "28-04-2024"
         }
-      ]
+      ],
+      "months_left": 22
     }
   ],
   "transactions": [
@@ -286,10 +282,14 @@
     },
     {
       "month_year": "March, 2024",
-      "Travel": 5000,
-      "Food": 5000,
-      "Rent": 10000,
-      "Bills": 4000
+      "Travel": 5500,
+      "Food": 7000,
+      "Rent": 8000,
+      "Bills": 4200
     }
-  ]
+  ],
+  "address": "ABC karnataka",
+  "phone_number": "9987665432",
+  "second_name": "Kevin",
+  "credit_score": "720"
 }

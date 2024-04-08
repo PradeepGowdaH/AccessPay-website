@@ -11,8 +11,6 @@ mongoose.connect("mongodb://localhost:27017/AccessPay", {
   serverSelectionTimeoutMS: 10000, // Increase timeout to 5 seconds
   family: 4, // Force IPv4
 });
-
-
 // Define the Customer schema
 const customerSchema = new mongoose.Schema({
   transactions: Array,
