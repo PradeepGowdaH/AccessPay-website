@@ -1,0 +1,255 @@
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .navbar {
+    font-family: 'Fjalla One', sans-serif;
+  }
+  
+  .navbar-nav .nav-link {
+    font-size: 18px !important;
+    padding: 10px 15px !important;
+  }
+  
+  .navbar-toggler-icon {
+    font-size: 24px !important;
+  }
+  
+  .navbar-brand,
+  .navbar-nav .nav-link,
+  .navbar-nav .dropdown-item {
+    font-family: 'Fjalla One', sans-serif;
+  }
+  
+  /* Button styling for desktop view */
+  .btn-login,
+  .btn-get-started {
+    background-color: rgba(76, 140, 102, 0.75) !important;
+    color: #fff;
+    border-radius: 20px !important;
+    font-size: 16px;
+    padding: 8px 12px !important;
+  }
+  
+  .btn-login:hover,
+  .btn-get-started:hover {
+    background-color: rgba(76, 140, 102, 0.9) !important;
+  }
+  
+  /* Remove button styling for mobile view */
+  @media (max-width: 767px) {
+    .btn-login,
+    .btn-get-started {
+        background: none !important;
+        border: none !important;
+        color: #000; /* Change the color as needed */
+        font-size: 18px !important;
+        padding: 10px 15px !important;
+        display: inline-block !important; /* Ensure the buttons are visible */
+    }
+  
+    .btn-login:hover,
+    .btn-get-started:hover {
+        background: none !important;
+        color: #000; /* Change the color as needed */
+    }
+  }
+  
+  @media (max-width: 991px) {
+    .btn-login,
+    .btn-get-started {
+      display: none !important;
+    }
+  }
+
+  @media (min-width: 991px) {
+    .mob-only{
+      display: none !important;
+    }
+  }
+  
+  
+  footer {
+      background-color: rgba(76, 140, 102, 0.75) !important;
+      min-height: 200px !important;
+      margin-top: auto;
+    }
+  
+    footer * {
+      font-family: 'Nunito Sans', sans-serif;
+      color: black !important;
+    }
+  
+    footer a {
+      text-decoration: none;
+    }
+    
+    hr {
+      background-color: black;
+      height: 2px;
+      border: none;
+    }
+  
+    .social-icon {
+      margin-right: 10px; 
+    }
+  
+    .newsletter-box {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 100%;
+    }
+  
+    .newsletter-box form {
+      margin-top: 15px; 
+    }
+    
+    .newsletter-box input,
+    .newsletter-box button {
+      border-radius: 20px !important; /* Rounded corners */
+    }
+    
+    .newsletter-box input {
+      padding: 10px; 
+      width: calc(100% - 10px); 
+    }
+    
+    .newsletter-box button {
+      background-color: #263238;
+      color: white !important;
+      padding: 10px 20px; 
+      border: none;
+      cursor: pointer;
+      margin-left: -30px !important;
+    }
+    
+    .newsletter-box button:hover {
+      background-color: #37474f; /
+    }
+  
+    @media (max-width: 767px) {
+      /* Apply these styles only on screens smaller than 768px wide (mobile screens) */
+      footer {
+        position: static; 
+        min-height: auto; 
+      }
+    }
+  
+    .btn-login1,
+  .btn-get-started1 {
+    background-color: rgba(76, 140, 102, 0.75) !important;
+    color: #fff;
+    border-radius: 20px !important;
+    font-size: 16px;
+    padding: 8px 12px !important;
+  }
+  
+  .btn-login1:hover,
+  .btn-get-started1:hover {
+    background-color: rgba(76, 140, 102, 0.9) !important;
+  }
+  
+  .btn-common-styling {
+    background-color: rgba(76, 140, 102, 0.75) !important;
+    color: #fff;
+    border-radius: 20px !important;
+    font-size: 16px;
+    padding: 8px 12px !important;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-family: 'Fjalla One', sans-serif !important;
+  }
+  
+  .btn-common-styling:hover {
+    background-color: rgba(76, 140, 102, 0.9) !important;
+  }
+  
+  .carousel-item .rounded {
+    border-radius: 35px !important;
+  }
+  
+  .btn-size-increase {
+    font-size: 1.5em !important; 
+  }
+  .main{
+    border: none;
+    background-color: #F0F0F0;
+    margin: 3%;
+    padding: 3%;
+    border-radius: 19px;
+  }
+  .success{
+    height: 150px;
+    padding-bottom: 25px;
+   
+    
+    
+  }
+  .top{
+    align-content: center;
+    text-align: center;
+    margin: 7%;
+    line-height: 20px;
+    
+  }
+  p{
+
+    font-family: "Nunito Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-variation-settings: "wdth" 100, "YTLC" 500;
+}
+h1,h4,.dollar,p{
+    font-family: "Fjalla One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+.down{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    text-align: center;
+    min-width: fit-content;
+    padding: 1%;
+    vertical-align: text-bottom;
+   
+}
+
+.dollar,.coin{
+  display: inline-block;
+  
+}
+.coin{
+  width: 20px;
+  vertical-align: top;
+  
+}
+  .dollar{
+    font-size: large;
+    
+  }
+  .back-btn:hover{
+    background-color: rgba(76, 140, 102, 0.75) !important ;
+  }
+  
+  .back-btn{
+    background-color: rgba(76, 140, 102, 0.9) !important;
+    margin: 5%;
+    align-items: center;
+    color: #F0F0F0;
+    border-radius: 20px;
+    height: 40px;
+    border-width: 1px;
+    width: 180px;
+    font-family: "Fjalla One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+
+  }
+  .last{
+    align-items: center;
+    text-align: center;
+  }
+ 
