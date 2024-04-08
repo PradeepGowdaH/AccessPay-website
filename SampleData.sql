@@ -9,6 +9,10 @@
   "aadhar_number": "123456789012",
   "pan_number": "ABCDE1234F",
   "first_name": "Peter",
+  "second_name": "Kevin",
+  "address": "ABC karnataka",
+  "phone_number": "9987665432",
+  "credit_score": "720",
   "bank": [
     {
       "bank_account_number": "111111111111111",
@@ -287,9 +291,5 @@
       "Rent": 8000,
       "Bills": 4200
     }
-  ],
-  "address": "ABC karnataka",
-  "phone_number": "9987665432",
-  "second_name": "Kevin",
-  "credit_score": "720"
+    ]
 }
