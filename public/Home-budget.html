@@ -85,15 +85,8 @@
               <div class="box-content">
                 <div class="box-text">
                   <h2 class="budget-header">Budget</h2>
-                  <ul>
-                    <li>Category 1: ₹1000</li>
-                    <li>Category 2: ₹1500</li>
-                    <li>Category 3: ₹800</li>
-                    <li>Category 4: ₹800</li>
-                    <li>Category 5: ₹800</li>
-                    <li>Category 6: ₹800</li>
-                    <li>Category 7: ₹800</li>
-                    <li>Category 8: ₹800</li>
+                  <ul class="budget-items">
+                    
                     <!-- Add more categories as needed -->
                   </ul>
                 </div>
@@ -101,30 +94,25 @@
                   <canvas id="budgetChart" width="300" height="300"></canvas>
                 </div>
               </div>
-    <div class="box-image">
-        <canvas id="budgetChart" width="300" height="300"></canvas>
-    </div>
-    <select id="monthSelect"></select>
- <script src="/script/budget-chart.js"></script>
               <div class="text-center"> <!-- Centered container for the slider image -->
-                <img src="./assets/slider.png" class="img-fluid" alt="Slider Image">
+                <canvas id="fullnessBar" width="auto" height="20"></canvas>
               </div>
               <div class="totals-section mt-4">
                 <div class="total-column">
                   <h3 class="total-title">Total Income</h3>
-                  <p class="total-value">₹10,000</p> <!-- Replace with your arbitrary value -->
+                  <p class="total-value" id="totalBudget">₹10,000</p> <!-- Replace with your arbitrary value -->
                 </div>
                 <div class="total-column">
                   <h3 class="total-title">Total Spendings</h3>
-                  <p class="total-value">₹5,000</p> <!-- Replace with your arbitrary value -->
+                  <p class="total-value" id="totalSpendings">₹5,000</p> <!-- Replace with your arbitrary value -->
                 </div>
                 <div class="total-column">
                   <h3 class="total-title">Month</h3>
-                  <p class="total-value">June</p> <!-- Replace with your arbitrary month -->
+                  <p class="total-value" id="currentMonth">June</p> <!-- Replace with your arbitrary month -->
                 </div>
                 <div class="total-column">
                   <h3 class="total-title">Year</h3>
-                  <p class="total-value">2024</p> <!-- Replace with your arbitrary year -->
+                  <p class="total-value" id="currentYear">2024</p> <!-- Replace with your arbitrary year -->
                 </div>
               </div>
               <div class="d-flex justify-content-center mt-4"> <!-- Adjusted container for horizontal centering -->
@@ -200,7 +188,96 @@
         </div>
       </div>
     </footer>
-    <script src="./Graph/budget-chart.js"></script>
+    <script src="./script/budget-alt.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="./script/slider.js"></script>
+    <script src="./script/budgetlist.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script>
+
+
+function updateCurrentMonthAndYear() {
+        const currentDate = new Date();
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const currentMonth = monthNames[currentDate.getMonth()];
+        const currentYear = currentDate.getFullYear();
+
+        // Update the month and year elements
+        document.getElementById("currentMonth").textContent = currentMonth;
+        document.getElementById("currentYear").textContent = currentYear;
+    }
+
+    // Call the function to update the month and year
+    updateCurrentMonthAndYear();
+
+    async function fetchAndDisplayBudget() {
+        try {
+            // Fetch the budget data from your server
+            const response = await fetch("/fetch-budget", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ monthYear: "April, 2024" }) // Adjust the monthYear as needed
+            });
+            const data = await response.json();
+
+            // Calculate the total budget
+            let totalBudget = 0;
+            data.data.forEach(categoryBudget => {
+                totalBudget += categoryBudget;
+            });
+
+            // Update the total budget element
+            document.getElementById("totalBudget").textContent = `₹${totalBudget}`;
+        } catch (error) {
+            console.error("Error fetching budget data:", error);
+        }
+    }
+
+    // Fetch and display the budget
+    fetchAndDisplayBudget();
+
+    async function fetchAndDisplayTotalSpending() {
+        try {
+            // Fetch the transactions data from your server
+            const response = await fetch("/api/transactions", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            const transactions = await response.json();
+
+            // Calculate the total spending for the current month
+            const currentDate = new Date();
+            const currentMonth = currentDate.getMonth();
+            const currentYear = currentDate.getFullYear();
+
+            let totalSpending = 0;
+            transactions.forEach(transaction => {
+                const transactionDate = new Date(transaction.isoDate);
+                if (transactionDate.getMonth() === currentMonth && transactionDate.getFullYear() === currentYear) {
+                    // Assuming 'sent' mode transactions are spendings
+                    if (transaction.mode === "sent") {
+                        totalSpending += transaction.amount;
+                    }
+                }
+            });
+
+            // Update the total spending element
+            document.getElementById("totalSpendings").textContent = `₹${totalSpending}`;
+        } catch (error) {
+            console.error("Error fetching transactions data:", error);
+        }
+    }
+
+    // Fetch and display the total spending
+    fetchAndDisplayTotalSpending();
+
+    
+
+
+    </script>      
 </body>
+</html>

@@ -171,5 +171,9 @@ p {
 
 canvas{
   float: right;
+  width: 100%; /* Make the canvas take the full width of its container */
+  height: auto; /* Maintain aspect ratio */
+  max-width: 600px; /* Set a maximum width */
+  max-height: 400px;
 }
 

@@ -12,7 +12,7 @@
   "second_name": "Kevin",
   "address": "ABC karnataka",
   "phone_number": "9987665432",
-  "credit_score": "720",
+  "credit_score": 720,
   "bank": [
     {
       "bank_account_number": "111111111111111",
