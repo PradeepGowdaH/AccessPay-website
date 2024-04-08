@@ -62,8 +62,10 @@ passport.use(
           aadhar_number: "", // Placeholder for Aadhar Number
           pan_number: "", // Placeholder for PAN Number
           first_name: "", // Placeholder for First Name
-          middle_name: "", // Placeholder for Middle Name
-          last_name: "", // Placeholder for Last Name
+          second_name: "", // Placeholder for Second Name
+          address: "", // Placeholder for Address
+          phone_number: "",
+          credit_score: 0,
           bank: [], // Placeholder for Bank Information
           reward_balance: 0, // Placeholder for Reward Balance
           rewards_history: [], // Placeholder for Rewards History

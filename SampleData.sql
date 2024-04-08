@@ -37,7 +37,7 @@
       "bank_branch": "Delhi-Connaught Place",
       "bank_ifsc": "ICIC0002222",
       "loan_type": "Home Loan",
-      "loan_amount": 1500000,
+      "loan_amount": 900000,
       "tenure": 24,
       "months_paid": 2,
       "amount_paid": 0,
