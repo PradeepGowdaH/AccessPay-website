@@ -40,6 +40,53 @@ app.get("/api/first-name", async (req, res) => {
 });
 
 
+
+//Credit score
+
+
+// Function to calculate and update the user's credit score based on email
+async function getCreditScoreByEmail(email) {
+    const client = new MongoClient(mongoURI);
+
+    try {
+        await client.connect();
+        const database = client.db(); // AccessPay is specified in the URI, so no need to specify it here
+        const customersCollection = database.collection('Customers');
+
+        // Fetch the user document by email
+        const user = await customersCollection.findOne({ email: email });
+        if (!user) {
+            return { success: false, message: 'User not found' };
+        }
+
+        // Calculate the new credit score
+        let newCreditScore = user.credit_score;
+        user.transactions.forEach(transaction => {
+            if (transaction.mode === 'sent') {
+                newCreditScore += 3;
+            }
+        });
+
+        return { success: true, creditScore: newCreditScore };
+    } catch (err) {
+        console.error(err);
+        return { success: false, message: 'An error occurred' };
+    } finally {
+        await client.close();
+    }
+}
+
+// New endpoint to expose the credit score
+app.get('/credit-score', async (req, res) => {
+    const result = await getCreditScoreByEmail(email);
+    if (result.success) {
+        res.json({ creditScore: result.creditScore });
+    } else {
+        res.status(500).json({ error: result.message });
+    }
+});
+
+
 //Chart code
 
 

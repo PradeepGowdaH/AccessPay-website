@@ -3,8 +3,8 @@
     "$oid": "6613912fb11adac73b469633"
   },
   "googleId": "google_id_6",
-  "googleName": "Peter Joe",
-  "email": "Pete.joe@example.com",
+  "googleName": "Peter kevin",
+  "email": "Peter.kevin@example.com",
   "password": "12345",
   "aadhar_number": "123456789012",
   "pan_number": "ABCDE1234F",
@@ -27,7 +27,8 @@
       "transaction_id": "TXN123456789",
       "date": "28-02-2023",
       "time": "10:00",
-      "mode": "received"
+      "mode": "received",
+      "tokens": 20,
     }
   ],
   "loans": [
@@ -37,24 +38,25 @@
       "bank_branch": "Delhi-Connaught Place",
       "bank_ifsc": "ICIC0002222",
       "loan_type": "Home Loan",
-      "loan_amount": 900000,
+      "loan_amount": 1000000,
       "tenure": 24,
       "months_paid": 2,
       "amount_paid": 0,
-      "rate_of_interest": 8.5,
+      "rate_of_interest": 9,
       "loan_payments": [
         {
           "loan_payment_id": "LP123456789",
-          "amount_paid": 50000,
+          "amount_paid": 45684.74,
           "date_of_payment": "28-03-2024"
         },
         {
           "loan_payment_id": "LP234567890",
-          "amount_paid": 50000,
+          "amount_paid": 45684.74,
           "date_of_payment": "28-04-2024"
         }
       ],
-      "months_left": 22
+      "months_left": 22,
+      "emi": 45684.74,
     }
   ],
   "transactions": [
@@ -291,5 +293,5 @@
       "Rent": 8000,
       "Bills": 4200
     }
-    ]
+  ]
 }
