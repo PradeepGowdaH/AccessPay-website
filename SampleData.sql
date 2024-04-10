@@ -1,6 +1,6 @@
 {
   "_id": {
-    "$oid": "6613912fb11adac73b469633"
+    "$oid": "6613912fb11adac73b469733"
   },
   "googleId": "google_id_6",
   "googleName": "Peter kevin",
@@ -27,8 +27,7 @@
       "transaction_id": "TXN123456789",
       "date": "28-02-2023",
       "time": "10:00",
-      "mode": "received",
-      "tokens": 20,
+      "mode": "received"
     }
   ],
   "loans": [
@@ -46,17 +45,17 @@
       "loan_payments": [
         {
           "loan_payment_id": "LP123456789",
-          "amount_paid": 45684.74,
+          "amount_paid": 50000,
           "date_of_payment": "28-03-2024"
         },
         {
           "loan_payment_id": "LP234567890",
-          "amount_paid": 45684.74,
+          "amount_paid": 50000,
           "date_of_payment": "28-04-2024"
         }
       ],
       "months_left": 22,
-      "emi": 45684.74,
+      "emi": "45684.74"
     }
   ],
   "transactions": [

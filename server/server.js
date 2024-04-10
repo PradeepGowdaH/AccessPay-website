@@ -1,6 +1,12 @@
 const express = require("express");
 const MongoClient = require("mongodb").MongoClient;
 const app = express();
+const multer = require("multer");
+const XLSX = require("xlsx");
+const upload = multer({ dest: "uploads/" });
+const fs = require("fs");
+const mongoose = require("mongoose");
+const path = require("path");
 const port = 3000;
 const bcrypt = require("bcrypt");
 
@@ -14,7 +20,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static("public"));
-
 
 //Username
 
@@ -84,6 +89,120 @@ app.get('/credit-score', async (req, res) => {
     } else {
         res.status(500).json({ error: result.message });
     }
+});
+
+
+
+
+// Import transactions
+
+let client;
+MongoClient.connect(mongoURI)
+  .then((connectedClient) => {
+    client = connectedClient;
+    console.log("Connected to MongoDB");
+  })
+  .catch((err) => console.error("Failed to connect to MongoDB", err));
+
+
+async function insertDataToMongoDB(collectionName, data, email) {
+  const collection = client.db("AccessPay").collection(collectionName);
+  try {
+    const result = await collection.findOneAndUpdate(
+      { email: email },
+      { $push: { transactions: { $each: data } } },
+      { upsert: true, returnOriginal: false }
+    );
+    console.log(`Updated document for user ${email}`);
+    return result.value;
+  } catch (e) {
+    console.error(`Error updating MongoDB: ${e.message}`);
+    throw e;
+  }
+}
+
+app.post("/upload", upload.single("file"), async (req, res) => {
+  try {
+    const collectionName = "Customers";
+    const workbook = XLSX.readFile(req.file.path);
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+    const data = XLSX.utils.sheet_to_json(sheet);
+    const updatedDocument = await insertDataToMongoDB(
+      collectionName,
+      data,
+      email
+    );
+    res.send("Data uploaded and added to user document successfully");
+  } catch (e) {
+    console.error(`Error during upload: ${e.message}`);
+    res.status(500).send("Error uploading data");
+  }
+});
+
+
+
+
+// Export Transactions
+
+mongoose.connect(mongoURI, {
+  serverSelectionTimeoutMS: 90000, // Increase timeout to 5 seconds
+  family: 4, // Force IPv4
+});
+
+// Define the Customer schema
+const customerSchema = new mongoose.Schema({
+  transactions: Array,
+  pan_number: String,
+});
+
+// Create the Customer model
+const Customer = mongoose.model("Customer", customerSchema, "Customers");
+
+// Route to fetch transactions for a specific customer and send as Excel
+app.get("/export-transactions", async (req, res) => {
+  try {
+    const panNumber = req.query.panNumber;
+    if (!panNumber) {
+      return res.status(400).send("PAN Number is required");
+    }
+
+    const customer = await Customer.findOne(
+      { pan_number: panNumber },
+      "transactions"
+    );
+    if (!customer) {
+      return res.status(404).send("Customer not found");
+    }
+
+    const transactions = customer.transactions;
+
+    // Create a new workbook and add a worksheet
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(transactions);
+    XLSX.utils.book_append_sheet(wb, ws, "Transactions");
+
+    // Write the workbook to a file
+    const filename = "transactions.xlsx";
+    const filePath = path.join(__dirname, filename);
+    XLSX.writeFile(wb, filePath);
+
+    // Send the file as a download
+    res.download(filePath, (err) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("Error sending file");
+      } else {
+        // Delete the file after sending
+        fs.unlink(filePath, (err) => {
+          if (err) console.error(err);
+        });
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error fetching transactions");
+  }
 });
 
 
@@ -173,15 +292,14 @@ app.get("/api/transactions-weekly", async (req, res) => {
   }
 });
 
+
+// Rewards
+
 app.get("/api/rewards-history", async (req, res) => {
   try {
     const client = await MongoClient.connect(mongoURI);
     const db = client.db();
     const customersCollection = db.collection("Customers");
-
-    // Assuming you have a way to identify the customer, e.g., through a query parameter or a session
-    // For demonstration, let's use a hardcoded email
-    const email = "google_id_6"; // Replace this with the actual customer ID retrieval logic
 
     const customer = await customersCollection.findOne({
       email: email,
@@ -202,6 +320,11 @@ app.get("/api/rewards-history", async (req, res) => {
   }
 });
 
+
+
+
+// Change password
+
 app.post("/changepassword", async (req, res) => {
   try {
     const client = await MongoClient.connect(mongoURI);
@@ -212,7 +335,6 @@ app.post("/changepassword", async (req, res) => {
 
     // Assuming you have a way to identify the customer, e.g., through a session or a token
     // For demonstration, let's use a hardcoded email
-    const email = "google_id_6"; // Replace this with the actual customer ID retrieval logic
 
     const customer = await customersCollection.findOne({
       email: email,

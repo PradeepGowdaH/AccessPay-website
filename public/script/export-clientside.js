@@ -11,5 +11,3 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = `/export-transactions?panNumber=${panNumber}`;
   });
 });
-
-// ABCDY1234F
