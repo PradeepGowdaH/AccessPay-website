@@ -64,8 +64,8 @@ const connectToDatabase = async () => {
 passport.use(
   new GoogleStrategy(
     {
-      clientID: "765699265707-ulhnum9dm1315bfun3g1991k6v8vdgab.apps.googleusercontent.com",
-      clientSecret: "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",
+      clientID: "",
+      clientSecret: "",
       callbackURL: "http://localhost:3000/auth/google/callback",
     },
     async function (accessToken, refreshToken, profile, cb) {
