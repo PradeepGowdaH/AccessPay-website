@@ -21,6 +21,9 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static("public"));
 
+
+
+
 //Username
 
 // Add this route to your Express server
@@ -90,7 +93,6 @@ app.get('/credit-score', async (req, res) => {
         res.status(500).json({ error: result.message });
     }
 });
-
 
 
 
@@ -206,8 +208,10 @@ app.get("/export-transactions", async (req, res) => {
 });
 
 
+
 //Chart code
 
+// Transactions
 
 Date.prototype.getWeek = function () {
   var oneJan = new Date(this.getFullYear(), 0, 1);
@@ -293,13 +297,17 @@ app.get("/api/transactions-weekly", async (req, res) => {
 });
 
 
-// Rewards
+// Rewards history
 
 app.get("/api/rewards-history", async (req, res) => {
   try {
     const client = await MongoClient.connect(mongoURI);
     const db = client.db();
     const customersCollection = db.collection("Customers");
+
+    // Assuming you have a way to identify the customer, e.g., through a query parameter or a session
+    // For demonstration, let's use a hardcoded customerId
+    // Replace this with the actual customer ID retrieval logic
 
     const customer = await customersCollection.findOne({
       email: email,
@@ -321,9 +329,7 @@ app.get("/api/rewards-history", async (req, res) => {
 });
 
 
-
-
-// Change password
+//Change Password
 
 app.post("/changepassword", async (req, res) => {
   try {
@@ -334,7 +340,8 @@ app.post("/changepassword", async (req, res) => {
     const { currentpassword, newpassword, confirmpassword } = req.body;
 
     // Assuming you have a way to identify the customer, e.g., through a session or a token
-    // For demonstration, let's use a hardcoded email
+    // For demonstration, let's use a hardcoded customerId
+    // Replace this with the actual customer ID retrieval logic
 
     const customer = await customersCollection.findOne({
       email: email,
@@ -369,6 +376,9 @@ app.post("/changepassword", async (req, res) => {
     res.status(500).send("Error changing password.");
   }
 });
+
+
+//Budget
 
 app.post("/fetch-budget", async (req, res) => {
   const { monthYear } = req.body;
@@ -469,6 +479,10 @@ app.post("/add-budget-category", async (req, res) => {
     res.status(500).send("Error adding budget category.");
   }
 });
+
+
+
+
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
