@@ -31,16 +31,16 @@
             </button>
 
             <!-- Logo -->
-            <a class="navbar-brand" href="./Hompage.html"><img src="./assets/logo.png" alt="Logo" height="45"></a>
+            <a class="navbar-brand" href="./Homepage-logged-in.html"><img src="./assets/logo.png" alt="Logo" height="45"></a>
 
             <!-- Navigation Links (Home, About Us, Features) -->
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="./Hompage.html">Home</a>
+                        <a class="nav-link" href="./Homepage-logged-in.html">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="./About-us.html">About Us</a>
+                        <a class="nav-link" href="./About-us-logged-in.html">About Us</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="featuresDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -85,24 +85,26 @@
         <div class="row contact-section">
             <div class="col-md-8">
                 <h2 class="mb-4">Get in touch</h2>
-                <form>
+                <form action="https://api.web3forms.com/submit" method="POST">
                     <div class="row mb-3">
+                        <input type="hidden" name="access_key" value="347050ab-e4d2-40c4-ad4e-55d9e58b2f97">
+
                         <div class="col-md-6">
                             <label for="name" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="name" placeholder="Your Name">
+                            <input type="text" name="name" class="form-control" id="name" placeholder="Your Name">
                         </div>
                         <div class="col-md-6">
                             <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" placeholder="Your Email">
+                            <input type="email" name="email" class="form-control" id="email" placeholder="Your Email">
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="subject" class="form-label">Subject</label>
-                        <input type="text" class="form-control" id="subject" placeholder="Subject">
+                        <input type="text" name="subject" class="form-control" id="subject" placeholder="Subject">
                     </div>
                     <div class="mb-3">
                         <label for="message" class="form-label">Message</label>
-                        <textarea class="form-control" id="message" rows="5" placeholder="Your Message"></textarea>
+                        <textarea name="message" class="form-control" id="message" rows="5" placeholder="Your Message"></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
@@ -112,9 +114,7 @@
                 <h2 class="mb-4">Want to reach us directly?</h2>
                 <p>Contact us using the following emails:</p>
                 <ul>
-                    <li>info@example.com</li>
-                    <li>support@example.com</li>
-                    <li>sales@example.com</li>
+                    <li>accesspay2024@gmail.com</li>
                 </ul>
             </div>
         </div>
@@ -199,19 +199,19 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="d-flex flex-column">
-                  <a href="#">Home</a>
-                  <a href="#">About Us</a>
-                  <a href="#">How to Use</a>
-                  <a href="#">Transaction Tracker</a>
+                  <a href="./Homepage-logged-in.html">Home</a>
+                  <a href="./About-us-logged-in.html">About Us</a>
+                  <a href="./HowToUse.html">How to Use</a>
+                  <a href="./Transactions.html">Transaction Tracker</a>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="d-flex flex-column">
                   <a href="#">Budget Planning</a>
-                  <a href="#">Quick Loans</a>
-                  <a href="#">Crypto Rewards</a>
-                  <a href="#">Privacy Policy</a>
-                  <a href="#">Terms of Service</a>
+                  <a href="./homeloan.html">Quick Loans</a>
+                  <a href="./crypto homepage.html">Crypto Rewards</a>
+                  <a href="./privacy-policy-logged-in.html">Privacy Policy</a>
+                  <a href="./TOS-logged-in.html">Terms of Service</a>
                   <a href="#">Contact Us</a>
                 </div>
               </div>

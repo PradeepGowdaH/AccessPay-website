@@ -7,12 +7,14 @@ const upload = multer({ dest: "uploads/" });
 const fs = require("fs");
 const mongoose = require("mongoose");
 const path = require("path");
-const port = 3000;
+const session = require("express-session");
+const passport = require("passport");
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const bcrypt = require("bcrypt");
+const port = 3000;
 
 const mongoURI = "mongodb://0.0.0.0:27017/AccessPay";
-const email = "Peter.kevin@example.com";
-
+let email = null;
 // Middleware to parse JSON bodies
 app.use(express.json());
 
@@ -22,6 +24,130 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 
+// OAuth Log-in & Sign-up
+
+app.use(
+  session({
+    secret: "cats", // Make sure SESSION_SECRET is defined in your .env file
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
+// Initialize Passport and restore authentication state, if any, from the session.
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Global variable to store the user's email
+
+// Connect to MongoDB
+app.use(
+  session({
+    secret: "cats", // Make sure SESSION_SECRET is defined in your .env file
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
+// Initialize Passport and restore authentication state, if any, from the session.
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Connect to MongoDB
+const connectToDatabase = async () => {
+  const client = new MongoClient("mongodb://127.0.0.1:27017/AccessPay");
+  await client.connect();
+  return client.db("AccessPay");
+};
+
+// Configure Passport to use Google OAuth strategy
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: "765699265707-ulhnum9dm1315bfun3g1991k6v8vdgab.apps.googleusercontent.com",
+      clientSecret: "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",
+      callbackURL: "http://localhost:3000/auth/google/callback",
+    },
+    async function (accessToken, refreshToken, profile, cb) {
+      const db = await connectToDatabase();
+      const usersCollection = db.collection("Customers");
+
+      const existingUser = await usersCollection.findOne({
+        googleId: profile.id,
+      });
+      if (existingUser) {
+        email = existingUser.email; // Set the global variable
+        console.log(`User email: ${email}`); // Log the user's email
+        return cb(null, existingUser);
+      } else {
+        // Split the displayName into first_name and second_name
+        const nameParts = profile.displayName.split(" ");
+        const first_name = nameParts[0];
+        const second_name =
+          nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
+
+        const newUser = {
+          googleId: profile.id,
+          googleName: profile.displayName,
+          email: profile.emails[0].value,
+          password: "",
+          aadhar_number: "", // Placeholder for Aadhar Number
+          pan_number: "", // Placeholder for PAN Number
+          first_name: first_name, // Assign the first part of the name
+          second_name: second_name, // Assign the rest of the name
+          address: "", // Placeholder for Address
+          phone_number: "",
+          credit_score: 0,
+          bank: [], // Placeholder for Bank Information
+          reward_balance: 0, // Placeholder for Reward Balance
+          rewards_history: [], // Placeholder for Rewards History
+          loans: [], // Placeholder for Loans
+          transactions: [], // Placeholder for Transactions
+          budget: [], // Placeholder for Budget
+        };
+        await usersCollection.insertOne(newUser);
+        email = newUser.email; // Set the global variable
+        console.log(`User email: ${email}`); // Log the user's email
+        return cb(null, newUser);
+      }
+    }
+  )
+);
+
+// Configure Passport to serialize and deserialize user instances to and from the session
+passport.serializeUser(function (user, done) {
+  done(null, user.googleId);
+});
+
+passport.deserializeUser(async function (googleId, done) {
+  const db = await connectToDatabase();
+  const usersCollection = db.collection("Customers");
+  const user = await usersCollection.findOne({ googleId: googleId });
+  done(null, user);
+});
+
+// Define routes
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "public", "login.html"));
+});
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "public", "signup.html"));
+});
+
+app.get(
+  "/auth/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+app.get(
+  "/auth/google/callback",
+  passport.authenticate("google", { failureRedirect: "/login" }),
+  function (req, res) {
+    // Successful authentication, redirect to Homepage-logged-in.html.
+    res.redirect("/Homepage-logged-in.html");
+  }
+);
 
 
 //Username
