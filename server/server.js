@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const MongoClient = require("mongodb").MongoClient;
 const app = express();
@@ -23,27 +24,11 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static("public"));
 
-
 // OAuth Log-in & Sign-up
 
 app.use(
   session({
-    secret: "cats", // Make sure SESSION_SECRET is defined in your .env file
-    resave: false,
-    saveUninitialized: false,
-  })
-);
-
-// Initialize Passport and restore authentication state, if any, from the session.
-app.use(passport.initialize());
-app.use(passport.session());
-
-// Global variable to store the user's email
-
-// Connect to MongoDB
-app.use(
-  session({
-    secret: "cats", // Make sure SESSION_SECRET is defined in your .env file
+    secret: process.env.SESSION_SECRET, // Make sure SESSION_SECRET is defined in your .env file
     resave: false,
     saveUninitialized: false,
   })
@@ -64,8 +49,8 @@ const connectToDatabase = async () => {
 passport.use(
   new GoogleStrategy(
     {
-      clientID: "",
-      clientSecret: "",
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: "http://localhost:3000/auth/google/callback",
     },
     async function (accessToken, refreshToken, profile, cb) {
@@ -149,12 +134,11 @@ app.get(
   }
 );
 
-
 //Username
 
 // Add this route to your Express server
 app.get("/api/first-name", async (req, res) => {
- try {
+  try {
     const client = await MongoClient.connect(mongoURI);
     const db = client.db();
     const customersCollection = db.collection("Customers");
@@ -167,60 +151,55 @@ app.get("/api/first-name", async (req, res) => {
     }
     res.json({ firstName: customer.first_name });
     client.close();
- } catch (error) {
+  } catch (error) {
     console.error("Error fetching first name:", error);
     res.status(500).send("Error fetching first name.");
- }
+  }
 });
-
-
 
 //Credit score
 
-
 // Function to calculate and update the user's credit score based on email
 async function getCreditScoreByEmail(email) {
-    const client = new MongoClient(mongoURI);
+  const client = new MongoClient(mongoURI);
 
-    try {
-        await client.connect();
-        const database = client.db(); // AccessPay is specified in the URI, so no need to specify it here
-        const customersCollection = database.collection('Customers');
+  try {
+    await client.connect();
+    const database = client.db(); // AccessPay is specified in the URI, so no need to specify it here
+    const customersCollection = database.collection("Customers");
 
-        // Fetch the user document by email
-        const user = await customersCollection.findOne({ email: email });
-        if (!user) {
-            return { success: false, message: 'User not found' };
-        }
-
-        // Calculate the new credit score
-        let newCreditScore = user.credit_score;
-        user.transactions.forEach(transaction => {
-            if (transaction.mode === 'sent') {
-                newCreditScore += 3;
-            }
-        });
-
-        return { success: true, creditScore: newCreditScore };
-    } catch (err) {
-        console.error(err);
-        return { success: false, message: 'An error occurred' };
-    } finally {
-        await client.close();
+    // Fetch the user document by email
+    const user = await customersCollection.findOne({ email: email });
+    if (!user) {
+      return { success: false, message: "User not found" };
     }
+
+    // Calculate the new credit score
+    let newCreditScore = user.credit_score;
+    user.transactions.forEach((transaction) => {
+      if (transaction.mode === "sent") {
+        newCreditScore += 3;
+      }
+    });
+
+    return { success: true, creditScore: newCreditScore };
+  } catch (err) {
+    console.error(err);
+    return { success: false, message: "An error occurred" };
+  } finally {
+    await client.close();
+  }
 }
 
 // New endpoint to expose the credit score
-app.get('/credit-score', async (req, res) => {
-    const result = await getCreditScoreByEmail(email);
-    if (result.success) {
-        res.json({ creditScore: result.creditScore });
-    } else {
-        res.status(500).json({ error: result.message });
-    }
+app.get("/credit-score", async (req, res) => {
+  const result = await getCreditScoreByEmail(email);
+  if (result.success) {
+    res.json({ creditScore: result.creditScore });
+  } else {
+    res.status(500).json({ error: result.message });
+  }
 });
-
-
 
 // Import transactions
 
@@ -231,7 +210,6 @@ MongoClient.connect(mongoURI)
     console.log("Connected to MongoDB");
   })
   .catch((err) => console.error("Failed to connect to MongoDB", err));
-
 
 async function insertDataToMongoDB(collectionName, data, email) {
   const collection = client.db("AccessPay").collection(collectionName);
@@ -267,9 +245,6 @@ app.post("/upload", upload.single("file"), async (req, res) => {
     res.status(500).send("Error uploading data");
   }
 });
-
-
-
 
 // Export Transactions
 
@@ -332,8 +307,6 @@ app.get("/export-transactions", async (req, res) => {
     res.status(500).send("Error fetching transactions");
   }
 });
-
-
 
 //Chart code
 
@@ -422,7 +395,6 @@ app.get("/api/transactions-weekly", async (req, res) => {
   }
 });
 
-
 // Rewards history
 
 app.get("/api/rewards-history", async (req, res) => {
@@ -453,7 +425,6 @@ app.get("/api/rewards-history", async (req, res) => {
     res.status(500).send("Error fetching rewards history for customer.");
   }
 });
-
 
 //Change Password
 
@@ -502,7 +473,6 @@ app.post("/changepassword", async (req, res) => {
     res.status(500).send("Error changing password.");
   }
 });
-
 
 //Budget
 
@@ -605,10 +575,6 @@ app.post("/add-budget-category", async (req, res) => {
     res.status(500).send("Error adding budget category.");
   }
 });
-
-
-
-
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
