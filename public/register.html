@@ -56,39 +56,38 @@
                     
                     <!-- Login and Get Started Buttons for Mobile View -->
                     <li class="nav-item mob-only">
-                        <a class="nav-link" href="./login.html">Login</a>
+                        <a class="nav-link username-display" href="./Dashboard.html">Profile</a>
+                        <script src="./script/username.js"></script>
                     </li>
                     <li class="nav-item mob-only">
-                        <a class="nav-link" href="./signup.html">Get Started</a>
+                        <a class="nav-link" href="./logout.html">log out</a>
                     </li>
                 </ul>
             </div>
 
             <!-- Login and Get Started Buttons for Desktop View -->
-            <div class="d-none d-lg-flex"><!-- Hide in mobile view -->
-                <a href="./login.html"><button class="btn btn-primary me-2 btn-login" type="button">Login</button></a>
-                <a href="./signup.html"><button class="btn btn-primary btn-get-started" type="button">Get Started</button></a>
-            </div>
-            
+<div class="d-none d-lg-flex"><!-- Hide in mobile view -->
+    <a href="./Dashboard.html"><button class="btn btn-primary me-2 btn-login username-display" type="button">Username <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-person" viewBox="0 0 16 16">
+        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM1 15s1-4 7-4 7 4 7 4H1z"/>
+      </svg></button></a>
+    <a href="./logout.html"><button class="btn btn-primary btn-get-started" type="button">Log out</button></a>
+</div>
+
+<!-- Include the JavaScript file that contains the client.js functionality -->
+<script src="./script/username.js"></script>
+
         </div>
     </nav>
 </header>
     <main  class="flex-grow-1 pt-5">
       <div class="button-container">
-        <a href="./register.html"><button class="btn btn-primary btn-details" type="button"><u>DETAILS</u></Details></button></a>
-        <a href="./change-password.html"><button class="btn btn-primary btn-changepassword" type="button">CHANGE PASSWORD</button></a>
+        <button class="btn btn-primary btn-details" type="button"><u>DETAILS</u></Details></button>
+        <button class="btn btn-primary btn-changepassword" type="button">CHANGE PASSWORD</button>
       </div>
      <div class="form">
         <form class="registrationForm">
         
-              <fieldset>
-                <label for="FIRST_NAME">First Name</label>
-                <input type="text" id="FIRST_NAME" name="FIRST_NAME" required>
-              </fieldset>
-              <fieldset>
-                <label for="LAST_NAME">Last Name</label>
-                <input type="text" id="LAST_NAME" name="LAST_NAME" required>
-              </fieldset>
+
               <fieldset>
                 <label for="BANK_ACCOUNT_NUMBER">Bank Account Number</label>
                 <input type="text" id="BANK_ACCOUNT_NUMBER" name="BANK_ACCOUNT_NUMBER" required>
@@ -106,16 +105,8 @@
                 <input type="text" id="AADHAR_CARD_NUMBER" name="AADHAR_CARD_NUMBER" required>
               </fieldset>
               <fieldset>
-                <label for="PHONE_NUMBER">Phone Number</label>
-                <input type="text" id="PHONE_NUMBER" name="PHONE_NUMBER" required>
-              </fieldset>
-              <fieldset>
                 <label for="ADDRESS">Address</label>
                 <input type="text" class="form-control registration-form-control address-field"  name="address">
-              </fieldset>
-              <fieldset>
-                <label for="EMAIL">Email</label>
-                <input type="text" id="email" name="EMAIL" required>
               </fieldset>
                 <fieldset>
                 <label for="BANK_BRANCH">Bank Branch</label>
@@ -129,7 +120,7 @@
                 <label for="PAN_CARD_NUMBER">PAN Card Number</label>
                 <input type="text" id="PAN_CARD_NUMBER" name="PAN_CARD_NUMBER" required>
             </fieldset><br>
-            <a href="./Dashboard.html"><button type="submit" class="btn-submit1">Submit</button></a>
+            <button type="submit" class="btn-submit1">Submit</button>
           </span>
         </form><br>
         <button class="btn btn-primary me-2 btn-logout" type="button">Logout</button>
@@ -196,7 +187,31 @@
         </div>
       </div>
     </footer>
-  
+      <script>
+    document.getElementById('register-form').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const data = Object.fromEntries(formData.entries());
 
+    try {
+        const response = await fetch('/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+        const result = await response.json();
+        alert(result.message);
+        if (result.message === 'register done successfully') {
+            // Redirect to the login page upon successful registration
+            window.location.href = './login.html';
+        }
+    } catch (error) {
+        console.error('Error registering user:', error);
+        alert('Failed to register user.');
+    }
+});
+  </script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 </body>
