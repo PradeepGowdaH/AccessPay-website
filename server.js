@@ -264,6 +264,67 @@ app.post('/add-budget-category', async (req, res) => {
      res.status(500).send("Error adding budget category.");
   }
  });
+
+
+ app.get("/api/balance", async (req, res) => {
+  try {
+     const client = await MongoClient.connect(mongoURI);
+     const db = client.db();
+     const customersCollection = db.collection("Customers");
+ 
+     const customer = await customersCollection.findOne({
+       googleId: customerId,
+     });
+     if (!customer) {
+       return res.status(404).send("Customer not found.");
+     }
+ 
+     // Assuming the balance is stored in a field named 'reward_balance'
+     const balance = customer.reward_balance;
+ 
+     res.json({ balance });
+     client.close();
+  } catch (error) {
+     console.error("Error fetching balance for customer:", error);
+     res.status(500).send("Error fetching balance for customer.");
+  }
+ });
+
+
+//Add expense
+ 
+ const { v4: uuidv4 } = require('uuid'); // For generating unique transaction IDs
+
+ app.post('/api/add-transaction', async (req, res) => {
+  try {
+     const client = await MongoClient.connect(mongoURI);
+     const db = client.db();
+     const customersCollection = db.collection("Customers");
+ 
+     const transactionData = req.body;
+     transactionData.transaction_id = uuidv4(); // Generate a unique transaction ID
+ 
+     // Assuming you have a way to identify the customer, e.g., through a query parameter or a session
+     // For demonstration, let's use a hardcoded customerId
+     const customerId = "google_id_6"; // Replace this with the actual customer ID retrieval logic
+ 
+     // Find the customer and update the transactions array
+     const result = await customersCollection.updateOne(
+       { googleId: customerId },
+       { $push: { transactions: transactionData } }
+     );
+ 
+     if (result.modifiedCount === 0) {
+       return res.status(404).send("Customer not found or transaction not added.");
+     }
+ 
+     res.json({ message: 'Transaction added successfully', transactionData });
+     client.close();
+  } catch (error) {
+     console.error("Error adding transaction:", error);
+     res.status(500).send("Error adding transaction.");
+  }
+ });
  
  
  

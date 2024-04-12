@@ -151,6 +151,22 @@
         </div>
       </div>
     </footer>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+       // Fetch the balance from the server
+       fetch('/api/balance')
+          .then(response => response.json())
+          .then(data => {
+            // Update the balance in the HTML
+            const balanceElement = document.querySelector('.Balance');
+            balanceElement.textContent = `Balance: ${data.balance.toFixed(3)}`;
+          })
+          .catch(error => console.error('Error fetching balance:', error));
+      });
+      </script>
+      
+     
   
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>

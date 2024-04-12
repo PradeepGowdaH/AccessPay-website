@@ -81,7 +81,7 @@
         <div class="row">
           <div class="col-md-6 offset-md-3 expense-box">
             <form>
-              <h2 class="font-weight-bold" style="font-family: 'DM Sans';">Add Expense</h2>
+              <h2 class="font-weight-bold" style="font-family: 'DM Sans';">Add Transaction</h2>
               <div class="form-group">
                 <label for="expenseCategory" class="visually-hidden">Select Category</label>
                 <select class="form-select" id="expenseCategory">
@@ -99,18 +99,24 @@
       
               <div class="form-group">
                 <label for="transactionType" class="visually-hidden">Enter Transaction Type</label>
-                <input type="text" class="form-control" placeholder="Enter transaction type" id="transactionType">
-              </div>
+                <select class="form-control" id="transactionType">
+                    <option value="">Select transaction type</option>
+                    <option value="spent">Spent</option>
+                    <option value="received">Received</option>
+                </select>
+            </div>
+            
       
-              <div class="form-group">
-                <label for="transactionTime" class="visually-hidden">Enter Transaction Time</label>
-                <input type="text" class="form-control" placeholder="Enter transaction Date" id="transactionTime">
-              </div>
-
-              <div class="form-group">
-                <label for="transactionTime" class="visually-hidden">Enter Transaction Time</label>
-                <input type="text" class="form-control" placeholder="Enter transaction time" id="transactionTime">
-              </div>
+            <div class="form-group">
+              <label for="transactionDate" class="visually-hidden">Enter Transaction Date</label>
+              <input type="date" class="form-control" id="transactionDate" placeholder="Enter transaction Date">
+             </div>
+             
+             <div class="form-group">
+              <label for="transactionTime" class="visually-hidden">Enter Transaction Time</label>
+              <input type="time" class="form-control" id="transactionTime" placeholder="Enter transaction time">
+             </div>
+             
       
               <div class="text-center">
                 <a href="./Transactions.html"><button type="submit" class="btn btn-primary">Add Expense</button></a>
@@ -192,7 +198,7 @@
         </div>
       </div>
     </footer>
-  
 
+    <script src="./script/Add-Transcations.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 </body>
