@@ -86,7 +86,7 @@
           <input type="email" id="email" name="email" required><br>
           <label for="password"><b>PASSWORD</b></label><br>
           <input type="password" id="password" name="password" required><br>
-          <button type ="submit" class="btn btn-primary me-2 btn-login3" type="button">LOGIN</button>
+          <a href="./login otp.html"><button class="btn btn-primary me-2 btn-login" type="button">LOGIN</button></a>
           <br>
           <span class="or-text"><b>OR</b></span>
           <button id="google-signin-btn" class="google-btn">
@@ -165,31 +165,7 @@ document.getElementById('google-signin-btn').addEventListener('click', function(
         </div>
       </div>
     </footer>
-      <script>
-    document.getElementById('login-form').addEventListener('submit', async function(event) {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    const data = Object.fromEntries(formData.entries());
+  
 
-    try {
-        const response = await fetch('/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        });
-        const result = await response.json();
-        alert(result.message);
-        if (result.message === 'Login successful') {
-            // Redirect to a success page or dashboard
-            window.location.href = './Homepage.html';
-        }
-    } catch (error) {
-        console.error('Error logging in:', error);
-        alert('Failed to log in.');
-    }
-});
-  </script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 </body>

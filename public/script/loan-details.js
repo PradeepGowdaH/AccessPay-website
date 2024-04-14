@@ -7,13 +7,13 @@ function calculateLoan(loanType, creditScore, tenure) {
 
   // Determine the interest rate based on the loan type
   switch (loanType) {
-    case "House":
+    case "Home Loan":
       interestRate = 9;
       break;
-    case "Personal":
+    case "Car Loan":
       interestRate = 12;
       break;
-    case "Vehicle":
+    case "Personal Loan":
       interestRate = 10.5;
       break;
     default:

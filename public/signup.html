@@ -73,7 +73,7 @@
         <button class="btn btn-primary btn-login1" type="button">LOG IN</button>
         <button class="btn btn-primary btn-signup" type="button"><u>SIGN-UP</u></button>
       </div>
-      <form id="signup-form" action="/signup" method="post" class="login-form">
+      <form action="/signup" method="post" class="login-form">
         <label for="Name"><b>NAME</b></label><br>
         <input type="text" id="Name" name="Name" required><br>
         <label for="ph-no"><b>PHONE NUMBER</b></label><br>
@@ -84,7 +84,7 @@
         <input type="password" id="pss" name="pss" required><br>
         <label for="conf-pss"><b>CONFIRM PASSWORD</b></label><br>
         <input type="password" id="conf-pss" name="conf-pss" required><br>
-        <button type ="submit" id="submitBtn" class="otp-btn">SEND OTP</button>
+        <button type ="submit" class="otp-btn">SEND OTP</button>
         <br>
         <span class="or-text"><b>OR</b></span>
         <button id="google-signin-btn" class="google-btn">
@@ -160,40 +160,30 @@ document.getElementById('google-signin-btn').addEventListener('click', function(
           </div>
         </div>
       </div>
-    </footer>
-    <script>document.getElementById('signup-form').addEventListener('submit', async function(event) {
-      event.preventDefault();
-      const username = document.getElementById('Name').value;
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('pss').value;
-      const confirmPassword = document.getElementById('conf-pss').value;
-      const phone_number = document.getElementById('ph-no').value;
-
-      if (password !== confirmPassword) {
-          alert('Passwords do not match.');
-          return;
-      }
+    </footer><script>
+      document.querySelector('form').addEventListener('submit', function(event) {
+          event.preventDefault(); // Prevent the form from submitting normally
   
-      const response = await fetch('/signup', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ username, email, password, phone_number }),
+          const formData = new FormData(event.target);
+          fetch('/signup', {
+              method: 'POST',
+              body: formData
+          })
+          .then(response => response.json())
+          .then(data => {
+              if (data.success) {
+                  alert('OTP sent successfully. Please check your email.');
+                  window.location.href = '/signup-otp.html'; // Redirect to OTP verification page
+              } else {
+                  alert('Error sending OTP. Please try again.');
+              }
+          })
+          .catch(error => {
+              console.error('Error:', error);
+              alert('An error occurred. Please try again.');
+          });
       });
-  
-      const data = await response.json();
-      if (data.message === 'OTP sent') {
-          alert('OTP has been sent to your email.');
-          // Redirect to OTP page
-          window.location.href = './verify-otp';
-      } else {
-          alert('user already existing please login');
-          window.location.href = './login';
-      }
-  });</script>
+      </script>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    
 </body>
-</html>
