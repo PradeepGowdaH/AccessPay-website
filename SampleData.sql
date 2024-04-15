@@ -5,7 +5,7 @@
   "googleId": "google_id_6",
   "googleName": "Peter kevin",
   "email": "Peter.kevin@example.com",
-  "password": "12345",
+  "password": "67890",
   "aadhar_number": "123456789012",
   "pan_number": "ABCDE1234F",
   "first_name": "Peter",
@@ -268,6 +268,36 @@
       "category": "Insurance",
       "amount": 2500,
       "isoDate": "2024-01-17T17:57:28.765Z"
+    },
+    {
+      "category": "Category 1",
+      "amount": 10000,
+      "mode": "spent",
+      "isoDate": "2024-04-11T15:55:00.000Z",
+      "transaction_id": "3954a5c0-fdde-4b4e-886c-e0614c9de5ad"
+    },
+    {
+      "category": "Entertainment",
+      "amount": 10000,
+      "mode": "received",
+      "isoDate": "2024-04-11T17:02:00.000Z",
+      "transaction_id": "51bbc28d-479f-4fe3-827e-b63dd63c274a"
+    },
+    {
+      "transaction_id": "65HFGDFGG987555434GBG",
+      "date": 44979,
+      "time": 0.78125,
+      "mode": "received",
+      "category": "Travelling",
+      "amount": 1000
+    },
+    {
+      "transaction_id": "65HFGDFGG997675434GBG",
+      "date": 45005,
+      "time": 0.2708333333333333,
+      "mode": "sent",
+      "category": "Movie",
+      "amount": 1900
     }
   ],
   "budget": [

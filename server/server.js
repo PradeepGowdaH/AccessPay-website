@@ -63,7 +63,7 @@ passport.use(
       const usersCollection = db.collection("Customers");
 
       const existingUser = await usersCollection.findOne({
-        googleId: profile.id,
+        email: profile.emails[0].value,
       });
       if (existingUser) {
         email = existingUser.email; // Set the global variable
@@ -106,13 +106,13 @@ passport.use(
 
 // Configure Passport to serialize and deserialize user instances to and from the session
 passport.serializeUser(function (user, done) {
-  done(null, user.googleId);
+  done(null, user.email);
 });
 
-passport.deserializeUser(async function (googleId, done) {
+passport.deserializeUser(async function (email, done) {
   const db = await connectToDatabase();
   const usersCollection = db.collection("Customers");
-  const user = await usersCollection.findOne({ googleId: googleId });
+  const user = await usersCollection.findOne({ email: email });
   done(null, user);
 });
 
@@ -881,6 +881,32 @@ app.get("/signup", (req, res) => {
 app.get("/verify-otp", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "public", "signup-otp.html"));
 });
+
+
+
+
+// Crypto Rewards
+
+
+app.get("/api/reward-balance", async (req, res) => {
+  try {    
+  await client.connect();
+  const database = client.db(); // AccessPay is specified in the URI, so no need to specify it here
+  const customersCollection = database.collection("Customers");
+
+  // Fetch the user document by email
+  const user = await customersCollection.findOne({ email: email });
+  if (!user) {
+    return { success: false, message: "User not found" };
+  }
+    // Return the reward_balance
+    res.json({ reward_balance: user.reward_balance });
+  } catch (error) {
+    console.error("Error fetching reward balance:", error);
+    res.status(500).send("Error fetching reward balance.");
+  }
+});
+
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

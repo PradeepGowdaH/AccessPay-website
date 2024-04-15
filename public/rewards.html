@@ -84,7 +84,7 @@
             <h1>Crypto Rewards</h1>
             <div class="top">
                 <img src="./assets/success.png" class="success">
-                <p>coins have been redeemed Successfully!
+                <p>Coins have been redeemed Successfully!
                 It will reflect on your account in few hours.</P></div>
             <h4>Reward details:</h4>
             <div class="down">
@@ -93,33 +93,13 @@
               <P class="dollar">4500.00</P></div>
             
             <div class="middle"><P>Coins redeemed</P><img src="assets/coin.png.jpg" class="coin"> <P class="dollar">500.00</P></div>
-            <div class="rigth"><P>Coins left</P> <img src="assets/coin.png.jpg" class="coin"> <P class="dollar">4000.00</P></div></div>
+            <div class="rigth"><P>Coins left</P> <img src="assets/coin.png.jpg" class="coin"> <P class="dollar">00.00</P></div></div>
             
             <div class="last">
               <a href="./crypto homepage.html"><button class="back-btn">BACK TO HOME</button></a>
             </div>
             
         </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     </main>
 
     <footer class="mt-auto">
@@ -135,7 +115,7 @@
                 <div class="d-flex flex-column">
                   <a href="./Homepage-logged-in.html">Home</a>
                   <a href="./About-us-logged-in.html">About Us</a>
-                  <a href="2024">How to Use</a>
+                  <a href="./">How to Use</a>
                   <a href="./Transaction-Tracking.html">Transaction Tracker</a>
                 </div>
               </div>
@@ -169,7 +149,7 @@
         <div class="row">
           <!-- Copyright -->
           <div class="col-lg-6">
-            <p>&copy; Accesspay 2024</p>
+            <p>&copy; Accesspay 2023</p>
           </div>
           <!-- Social Icons -->
           <div class="col-lg-6 text-end">
@@ -182,7 +162,29 @@
         </div>
       </div>
     </footer>
-  
+    <script>
+      // Function to fetch and update the reward balance
+      async function updateRewardBalance() {
+         try {
+           // Replace '/api/reward-balance' with the actual endpoint if different
+           const response = await fetch('/api/reward-balance');
+           if (!response.ok) {
+             throw new Error('Network response was not ok');
+           }
+           const data = await response.json();
+           // Assuming the reward balance is in the 'reward_balance' field of the response
+           const rewardBalance = data.reward_balance;
+           // Update the HTML content
+           document.querySelector('.dollar').textContent = `${rewardBalance}.00`;
+         } catch (error) {
+           console.error('There was a problem with the fetch operation:', error);
+         }
+      }
+     
+      // Call the function when the page loads
+      window.addEventListener('DOMContentLoaded', updateRewardBalance);
+     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 </body>
+</html>
