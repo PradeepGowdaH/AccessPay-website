@@ -576,11 +576,69 @@ app.post("/add-budget-category", async (req, res) => {
   }
 });
 
-app.post("/calculate-loan", async (req, res) => {
-  const { loanType, creditScore, tenure } = req.body;
-  const result = calculateLoan(loanType, creditScore, tenure);
-  res.json(result);
- });
+app.get("/api/loan-details", async (req, res) => {
+  try {
+      const client = await MongoClient.connect(mongoURI);
+      const db = client.db();
+      const customersCollection = db.collection("Customers");
+
+      const customer = await customersCollection.findOne({
+          email: email,
+      });
+      if (!customer) {
+          return res.status(404).send("Customer not found.");
+      }
+
+      // Assuming the loan details are stored in a field named 'loans'
+      const loanDetails = customer.loans[0]; // Assuming you want to display the first loan
+
+      // Construct the loan object to send to the client
+      const loanObject = {
+          loan_amount: loanDetails.loan_amount,
+          emi: parseFloat(loanDetails.emi),
+          tenure: loanDetails.tenure,
+          months_paid: loanDetails.months_paid,
+          rate_of_interest: loanDetails.rate_of_interest,
+          loan_payments: loanDetails.loan_payments,
+      };
+
+      res.json(loanObject);
+      client.close();
+  } catch (error) {
+      console.error("Error fetching loan details for customer:", error);
+      res.status(500).send("Error fetching loan details for customer.");
+  }
+});
+
+
+app.get("/loan-data", async (req, res) => {
+  try {
+    const client = await MongoClient.connect(mongoURI);
+    const db = client.db("AccessPay");
+    const collection = db.collection("Customers");
+
+    const customer = await collection.findOne({ email: email });
+    if (!customer) {
+      return res.status(404).send("Customer not found.");
+    }
+
+    const hasLoan = customer.loans && customer.loans.some(loan => loan.loan_id !== "");
+
+    res.json({ hasLoan });
+  } catch (error) {
+    console.error("Error fetching loan data:", error);
+    res.status(500).send("Error fetching loan data.");
+  } finally {
+    // Close the MongoDB connection
+    if (client) {
+      client.close();
+    }
+  }
+});
+
+
+
+
  
 
 app.listen(port, () => {
