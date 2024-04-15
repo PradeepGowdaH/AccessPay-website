@@ -133,6 +133,8 @@
                                 </select>
                             </div>
                         </div>
+                        <button type="submit" class="btn btn-primary submit-btn">Generate EMI</button>
+                        <div class="py-4"></div>
     
                         <!-- Additional columns -->
                         <div class="row mt-3">
@@ -142,7 +144,7 @@
                             </div>
                             <div class="col-md-3">
                                 <strong>EMI</strong>
-                                <p id="emi"></p>
+                                <p id="emi">₹s</p>
                             </div>
                             <div class="col-md-3">
                                 <strong>Duration</strong>
@@ -232,31 +234,5 @@
   
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="./script/loan-details.js"></script>
-    <script>
-      // Assuming you have the data in session storage or query parameters
-const loanData = JSON.parse(sessionStorage.getItem('loanData'));
-document.getElementById("emi").textContent = `₹${loanData.emi.toFixed(2)}`;
-document.getElementById("loanAmount").textContent = `₹${loanData.maxLoanAmount / 100000}`;
-document.getElementById("tenure").textContent = `${loanData.tenure} months`;
-document.getElementById("interestRate").textContent = `${loanData.interestRate}%`;
-
-document.getElementById("applyLoanBtn").addEventListener("click", async () => {
- const loanData = JSON.parse(sessionStorage.getItem('loanData'));
- const response = await fetch("/apply-loan", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(loanData),
- });
- if (response.ok) {
-    alert("Loan applied successfully!");
- } else {
-    alert("Failed to apply for the loan.");
- }
-});
-
-    </script>
 </body>
 </html>
