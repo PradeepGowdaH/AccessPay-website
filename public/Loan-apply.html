@@ -119,7 +119,7 @@
                         <div class="row mt-3">
                             <div class="col-md-12">
                                 <span class="interest-text">Interest based on credit score :  </span>
-                                <span class="interest-percentage">5%</span> <!-- Arbitrary percentage value -->
+                                <span class="interest-percentage" id="interestRate"></span> <!-- Arbitrary percentage value -->
                             </div>
                         </div>
     
@@ -133,24 +133,26 @@
                                 </select>
                             </div>
                         </div>
+                        <button type="submit" class="btn btn-primary submit-btn">Generate EMI</button>
+                        <div class="py-4"></div>
     
                         <!-- Additional columns -->
                         <div class="row mt-3">
                             <div class="col-md-3">
                                 <strong>Amount Granted</strong>
-                                <p>₹1,00,000</p>
+                                <p id="loanAmount">₹</p>
                             </div>
                             <div class="col-md-3">
                                 <strong>EMI</strong>
-                                <p>₹5,000</p>
+                                <p id="emi">₹s</p>
                             </div>
                             <div class="col-md-3">
                                 <strong>Duration</strong>
-                                <p>36 months</p>
+                                <p id="tenure">36 months</p>
                             </div>
                             <div class="col-md-3">
                                 <strong>Rate of Interest</strong>
-                                <p>5%</p>
+                                <p id="interestRate">5%</p>
                             </div>
                         </div>
     

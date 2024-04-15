@@ -79,12 +79,10 @@
 
             </div>
             <div class="sub">
-               
+                <h5>OTP HAS BEEN SENT TO email</h5>
                 <form action="/verify-otp" method="post">
-                  <h5>OTP has been sent to your email</h5>
                     <label for="otp" class="otp-label"><b>ENTER THE OTP</b></label><br>
-                  <input type="text" class="otp" id="otp" name="otp" required><br>
-                  <p id="timer"></p>
+                  <input type="text" class="otp" name="otp" required><br>
                   <button type="submit" class="confirm-btn">VERIFY OTP</button>
                 </form>
             </div>
@@ -153,63 +151,29 @@
       </div>
     </footer>
     <script>
-      document.getElementById('otp-form').addEventListener('submit', async function(event) {
+      document.querySelector('form').addEventListener('submit', function(event) {
           event.preventDefault(); // Prevent the form from submitting normally
-      
-          const otp = document.getElementById('otp').value;
-      
-          // Disable the submit button to prevent multiple submissions
-          document.querySelector('.confirm-btn').disabled = true;
-      
-          try {
-              const response = await fetch('/verify-otp', {
-                  method: 'POST',
-                  headers: {
-                      'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({ otp }),
-              });
-      
-              if (!response.ok) {
-                  throw new Error('Network response was not ok');
-              }
-      
-              const data = await response.json();
-      
-              if (data.message === 'User registered successfully') {
-                  // Redirect to the register page upon successful OTP verification
-                  window.location.href = './register';
+  
+          const formData = new FormData(event.target);
+          fetch('/verify-otp', {
+              method: 'POST',
+              body: formData
+          })
+          .then(response => response.json())
+          .then(data => {
+              if (data.success) {
+                  alert('OTP verified successfully. You can now proceed with registration or login.');
+                  // Redirect to the next step or login page
+                  window.location.href = '/login.html'; // Example redirect
               } else {
                   alert('Invalid OTP. Please try again.');
-                  // Re-enable the submit button
-                  document.querySelector('.confirm-btn').disabled = false;
               }
-          } catch (error) {
-              console.error('There was a problem with the fetch operation:', error);
-              alert('An error occurred while verifying the OTP. Please try again.');
-              // Re-enable the submit button
-              document.querySelector('.confirm-btn').disabled = false;
-          }
+          })
+          .catch(error => {
+              console.error('Error:', error);
+              alert('An error occurred. Please try again.');
+          });
       });
-      </script>
-    <script>
-      let countdown = 300;
-      const timer = document.getElementById('timer');
-      
-      function startTimer() {
-          const intervalId = setInterval(() => {
-              countdown--;
-              timer.textContent = countdown + ' seconds remaining';
-              if (countdown <= 0) {
-                  clearInterval(intervalId);
-                  alert('OTP session expired.');
-                  // Redirect to signup page or show an error message
-                  window.location.href = './signup.html';
-              }
-          }, 1000);
-      }
-      
-      startTimer();
       </script>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>

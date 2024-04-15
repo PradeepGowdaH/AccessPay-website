@@ -106,7 +106,7 @@
           </div>
   
           <div class="balance-section">
-              <p>Available Balance: $1234.56</p>
+              <p></p>
               <a href="./Transaction-Tracking.html"><button class="btn view-more-btn">View more</button></a>
           </div>
       </div>
@@ -290,9 +290,9 @@
               row.innerHTML = `
                   <td class="custom-table-data">${formattedDate}</td>
                   <td class="custom-table-data">${formattedTime}</td>
-                  <td class="custom-table-data">${transaction.transaction_id}</td>
-                  <td class="custom-table-data">${transaction.category}</td>
                   <td class="custom-table-data">${transaction.mode === 'received' ? 'IN' : 'OUT'}</td>
+                  <td class="custom-table-data">${transaction.category}</td>
+                  <td class="custom-table-data">${transaction.amount}</td>
               `;
               tableBody.appendChild(row);
           });
