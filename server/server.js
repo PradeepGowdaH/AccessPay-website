@@ -925,8 +925,7 @@ app.get("/api/reward-balance", async (req, res) => {
     res.status(500).send("Error fetching reward balance.");
   }
 });
-const cors = require("cors");
-app.use(cors());
+
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
