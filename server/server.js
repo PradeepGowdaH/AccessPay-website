@@ -313,7 +313,7 @@ app.get("/export-transactions", async (req, res) => {
   }
 });
 
-//Chart code
+//Chart code // Nishanth
 
 // Transactions
 
@@ -651,6 +651,120 @@ app.post("/api/add-transaction", async (req, res) => {
   }
 });
 
+app.get("/api/loan-details", async (req, res) => {
+  try {
+    const client = await MongoClient.connect(mongoURI);
+    const db = client.db();
+    const customersCollection = db.collection("Customers");
+
+    const customer = await customersCollection.findOne({
+      email: email,
+    });
+    if (!customer) {
+      return res.status(404).send("Customer not found.");
+    }
+
+    // Check if the customer has any loans
+    if (customer.loans.length > 0) {
+      // Assuming you want to display the first loan
+      const loanDetails = customer.loans[0];
+      const loanObject = {
+        loan_id: loanDetails.loan_id, // Ensure this is not empty if the loan exists
+        loan_amount: loanDetails.loan_amount,
+        emi: parseFloat(loanDetails.emi),
+        tenure: loanDetails.tenure,
+        months_paid: loanDetails.months_paid,
+        rate_of_interest: loanDetails.rate_of_interest,
+        loan_payments: loanDetails.loan_payments,
+      };
+      res.json(loanObject);
+    } else {
+      // If no loans, return an object with an empty loan_id
+      res.json({ loan_id: "" });
+    }
+    client.close();
+  } catch (error) {
+    console.error("Error fetching loan details for customer:", error);
+    res.status(500).send("Error fetching loan details for customer.");
+  }
+});
+
+// Add this route to your server.js file
+app.post("/apply-loan", async (req, res) => {
+  const { loan_type, loan_amount, tenure, emi, rate_of_interest } = req.body;
+
+  try {
+    const client = await MongoClient.connect(mongoURI);
+    const db = client.db();
+    const customersCollection = db.collection("Customers");
+
+    // Assuming the first loan in the array is the one to be updated
+    const customer = await customersCollection.findOne({ email: email });
+    if (!customer) {
+      return res.status(404).send("Customer not found.");
+    }
+
+    // Update the first loan in the array
+    const loanIndex = 0; // Assuming you want to update the first loan
+    if (customer.loans[loanIndex]) {
+      customer.loans[loanIndex].loan_type = loan_type;
+      customer.loans[loanIndex].loan_amount = loan_amount;
+      customer.loans[loanIndex].tenure = parseInt(tenure);
+      customer.loans[loanIndex].months_left = parseInt(tenure);
+      customer.loans[loanIndex].emi = emi;
+      customer.loans[loanIndex].rate_of_interest = parseFloat(rate_of_interest);
+
+      // Update the customer document in the database
+      await customersCollection.updateOne(
+        { email: email },
+        { $set: { loans: customer.loans } }
+      );
+      res.status(200).send("Loan application successful.");
+    } else {
+      res.status(400).send("No loan found to update.");
+    }
+  } catch (error) {
+    console.error("Error applying for loan:", error);
+    res.status(500).send("Error applying for loan.");
+  }
+});
+
+app.post("/update-loan-details", async (req, res) => {
+  const { loan_id, loan_amount, tenure, emi, rate_of_interest } = req.body;
+
+  try {
+    const client = await MongoClient.connect(mongoURI);
+    const db = client.db();
+    const customersCollection = db.collection("Customers");
+
+    const customer = await customersCollection.findOne({ email: email });
+    if (!customer) {
+      return res.status(404).send("Customer not found.");
+    }
+
+    const loanIndex = customer.loans.findIndex(
+      (loan) => loan.loan_id === loan_id
+    );
+    if (loanIndex !== -1) {
+      customer.loans[loanIndex].loan_amount = loan_amount;
+      customer.loans[loanIndex].tenure = tenure;
+      customer.loans[loanIndex].emi = emi;
+      customer.loans[loanIndex].rate_of_interest = rate_of_interest;
+
+      await customersCollection.updateOne(
+        { email: email },
+        { $set: { loans: customer.loans } }
+      );
+      res.status(200).send("Loan details updated successfully.");
+    } else {
+      res.status(404).send("Loan not found.");
+    }
+  } catch (error) {
+    console.error("Error updating loan details:", error);
+    res.status(500).send("Error updating loan details.");
+  }
+});
+
 // Pavan's Login, Signup and register
 
 app.use(cors());
@@ -865,7 +979,7 @@ app.post("/register", async (req, res) => {
 app.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
-    email=email;
+    email = email;
     // Connect to the database
     const client = await MongoClient.connect(mongoURI);
     const db = client.db();
@@ -908,7 +1022,7 @@ app.get("/verify-otp", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "public", "signup-otp.html"));
 });
 
-// Crypto Rewards
+// Crypto Rewards // Eshwar
 
 app.get("/api/reward-balance", async (req, res) => {
   try {
@@ -928,113 +1042,6 @@ app.get("/api/reward-balance", async (req, res) => {
     res.status(500).send("Error fetching reward balance.");
   }
 });
-
-
-app.get("/api/loan-details", async (req, res) => {
-  try {
-       const client = await MongoClient.connect(mongoURI);
-       const db = client.db();
-       const customersCollection = db.collection("Customers");
- 
-       const customer = await customersCollection.findOne({
-           email: email,
-       });
-       if (!customer) {
-           return res.status(404).send("Customer not found.");
-       }
- 
-       // Check if the customer has any loans
-       if (customer.loans.length > 0) {
-           // Assuming you want to display the first loan
-           const loanDetails = customer.loans[0];
-           const loanObject = {
-               loan_id: loanDetails.loan_id, // Ensure this is not empty if the loan exists
-               loan_amount: loanDetails.loan_amount,
-               emi: parseFloat(loanDetails.emi),
-               tenure: loanDetails.tenure,
-               months_paid: loanDetails.months_paid,
-               rate_of_interest: loanDetails.rate_of_interest,
-               loan_payments: loanDetails.loan_payments,
-           };
-           res.json(loanObject);
-       } else {
-           // If no loans, return an object with an empty loan_id
-           res.json({ loan_id: "" });
-       }
-       client.close();
-  } catch (error) {
-       console.error("Error fetching loan details for customer:", error);
-       res.status(500).send("Error fetching loan details for customer.");
-  }
- });
-
- // Add this route to your server.js file
-app.post('/apply-loan', async (req, res) => {
-  const { loan_type, loan_amount, tenure, emi, rate_of_interest } = req.body;
- 
-  try {
-     const client = await MongoClient.connect(mongoURI);
-     const db = client.db();
-     const customersCollection = db.collection("Customers");
- 
-     // Assuming the first loan in the array is the one to be updated
-     const customer = await customersCollection.findOne({ email: email });
-     if (!customer) {
-       return res.status(404).send("Customer not found.");
-     }
- 
-     // Update the first loan in the array
-     const loanIndex = 0; // Assuming you want to update the first loan
-     if (customer.loans[loanIndex]) {
-       customer.loans[loanIndex].loan_type = loan_type;
-       customer.loans[loanIndex].loan_amount = loan_amount;
-       customer.loans[loanIndex].tenure = parseInt(tenure);
-       customer.loans[loanIndex].months_left = parseInt(tenure);
-       customer.loans[loanIndex].emi = emi;
-       customer.loans[loanIndex].rate_of_interest = parseFloat(rate_of_interest);
- 
-       // Update the customer document in the database
-       await customersCollection.updateOne({ email: email }, { $set: { loans: customer.loans } });
-       res.status(200).send('Loan application successful.');
-     } else {
-       res.status(400).send('No loan found to update.');
-     }
-  } catch (error) {
-     console.error("Error applying for loan:", error);
-     res.status(500).send("Error applying for loan.");
-  }
- });
-
- app.post('/update-loan-details', async (req, res) => {
-  const { loan_id, loan_amount, tenure, emi, rate_of_interest } = req.body;
- 
-  try {
-     const client = await MongoClient.connect(mongoURI);
-     const db = client.db();
-     const customersCollection = db.collection("Customers");
- 
-     const customer = await customersCollection.findOne({ email: email });
-     if (!customer) {
-       return res.status(404).send("Customer not found.");
-     }
- 
-     const loanIndex = customer.loans.findIndex(loan => loan.loan_id === loan_id);
-     if (loanIndex !== -1) {
-       customer.loans[loanIndex].loan_amount = loan_amount;
-       customer.loans[loanIndex].tenure = tenure;
-       customer.loans[loanIndex].emi = emi;
-       customer.loans[loanIndex].rate_of_interest = rate_of_interest;
- 
-       await customersCollection.updateOne({ email: email }, { $set: { loans: customer.loans } });
-       res.status(200).send('Loan details updated successfully.');
-     } else {
-       res.status(404).send('Loan not found.');
-     }
-  } catch (error) {
-     console.error("Error updating loan details:", error);
-     res.status(500).send("Error updating loan details.");
-  }
- });
  
 
 app.listen(port, () => {
