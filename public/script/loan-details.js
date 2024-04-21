@@ -1,3 +1,36 @@
+// updateLoanDetails.js
+
+// Function to update loan details on the page
+async function updateLoanDetails() {
+  try {
+     const response = await fetch('/api/loan-details');
+     if (!response.ok) {
+       throw new Error('Network response was not ok');
+     }
+     const loanDetails = await response.json();
+ 
+     // Update the loan amount
+     document.getElementById('loan_amount').textContent = ` ${loanDetails.loan_amount.toLocaleString('en-IN')}.00`;
+ 
+     // Update the EMI
+     document.getElementById('emi').textContent = ` ${loanDetails.emi.toLocaleString('en-IN')}.00`;
+ 
+     // Update the tenure
+     document.getElementById('tenure').textContent = `${loanDetails.tenure} MONTHS`;
+ 
+     // Update the rate of interest
+     document.getElementById('rate_of_interest').textContent = `${loanDetails.rate_of_interest}%`;
+  } catch (error) {
+     console.error('There was a problem with the fetch operation:', error);
+  }
+ }
+ 
+ // Call the function to update loan details when the page loads
+ document.addEventListener('DOMContentLoaded', updateLoanDetails);
+ 
+
+
+/*
 function calculateLoan(loanType, creditScore, tenure) {
   let eligibility = false;
   let maxLoanAmount = 0;
@@ -6,7 +39,7 @@ function calculateLoan(loanType, creditScore, tenure) {
   let message = "";
 
   // Determine the interest rate based on the loan type
-  switch (loanType) {
+  switch (loanCategory) {
     case "Home Loan":
       interestRate = 9;
       break;
@@ -23,15 +56,12 @@ function calculateLoan(loanType, creditScore, tenure) {
   // Determine eligibility and max loan amount based on credit score
   if (creditScore < 500) {
     message = "You are not eligible due to an insufficient credit score.";
-  } else if (creditScore >= 500 && creditScore < 700) {
+  } else if (creditScore >= 500 && creditScore < 700 && loan_amount < 500000) {
+    eligibility = true; 
+  } else if (creditScore >= 700 && creditScore < 850 && loan_amount < 1000000) {
     eligibility = true;
-    maxLoanAmount = 500000; // 5L
-  } else if (creditScore >= 700 && creditScore < 850) {
+  } else if (creditScore >= 850 && loan_amount < 1500000) {
     eligibility = true;
-    maxLoanAmount = 1000000; // 10L
-  } else if (creditScore >= 850) {
-    eligibility = true;
-    maxLoanAmount = 1500000; // 15L
   }
 
   // Calculate EMI if eligible
@@ -70,3 +100,5 @@ if (result.eligibility) {
 } else {
   console.log(result.message);
 }
+
+*/

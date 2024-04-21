@@ -112,14 +112,14 @@
                             </div>
                             <div class="col-md-12 col-lg-6 mt-3 mt-lg-0">
                                 <label class="form-label" for="loanAmount">Enter the required amount</label>
-                                <input type="text" class="form-control" id="loanAmount" name="loanAmount" placeholder="Amount">
+                                <input type="text" class="form-control" id="loan_amount" name="loan_amount" placeholder="Amount">
                             </div>
                         </div>
     
                         <div class="row mt-3">
                             <div class="col-md-12">
                                 <span class="interest-text">Interest based on credit score :  </span>
-                                <span class="interest-percentage" id="interestRate"></span> <!-- Arbitrary percentage value -->
+                                <span class="interest-percentage" id="interestRate"></span> <p id="interestRate"></p>
                             </div>
                         </div>
     
@@ -133,10 +133,11 @@
                                 </select>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary submit-btn">Generate EMI</button>
+                        <button type="submit" class="btn btn-primary submit-btn" id="generate_loan">Generate EMI</button>
                         <div class="py-4"></div>
     
-                        <!-- Additional columns -->
+                        <!-- Loan details -->
+                        <div class="loan-details d-none">
                         <div class="row mt-3">
                             <div class="col-md-3">
                                 <strong>Amount Granted</strong>
@@ -152,15 +153,16 @@
                             </div>
                             <div class="col-md-3">
                                 <strong>Rate of Interest</strong>
-                                <p id="interestRate">5%</p>
+                                <p id="interest_Rate"></p>
                             </div>
                         </div>
     
                         <div class="row mt-3">
                             <div class="col-md-12 text-center">
-                                <a href="./loan-grant.html"><button type="submit" class="btn btn-primary submit-btn">Apply Loan</button></a>
+                                <button type="submit" class="btn btn-primary submit-btn" id="Apply_loan">Apply Loan</button>
                             </div>
                         </div>
+                      </div>
                     </form>
                 </div>
             </div>
@@ -234,5 +236,42 @@
   
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function(event) {
+    // Get the dropdown element
+    var loanCategoryDropdown = document.getElementById('loanCategory');
+
+    // Add event listener for the 'change' event
+    loanCategoryDropdown.addEventListener('change', function() {
+        // Get the selected loan category
+        var loanCategory = this.value;
+
+        // Initialize the interest rate variable
+        var interestRate;
+
+        // Determine the interest rate based on the loan category
+        switch (loanCategory) {
+            case "Home Loan":
+                interestRate = 9;
+                break;
+            case "Car Loan":
+                interestRate = 12;
+                break;
+            case "Personal Loan":
+                interestRate = 10.5;
+                break;
+            default:
+                console.error("Invalid loan type.");
+                return;
+        }
+
+        // Update the interest rate display
+        document.getElementById('interestRate').textContent = interestRate + '%';
+        document.getElementById('interest_Rate').textContent = interestRate + '%';
+    });
+});
+
+    </script>
+    <script src="./script/loan-generate.js"></script>
 </body>
 </html>
