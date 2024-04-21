@@ -72,22 +72,20 @@
 
 
 
-        <DIV class="main">
+        <div class="main">
             <div class="signup">
                 <button class="logout-btn">LOG IN</button>
                 <a href="signup.html"><button class="signup-btn"><u>SIGN-UP</u></button></a>
-
             </div>
             <div class="sub">
                 <h5>OTP HAS BEEN SENT TO email</h5>
-                <form action="/verify-otp" method="post">
+                <form id="otp-form" action="/verify-otp" method="post">
                     <label for="otp" class="otp-label"><b>ENTER THE OTP</b></label><br>
-                  <input type="text" class="otp" name="otp" required><br>
-                  <button type="submit" class="confirm-btn">VERIFY OTP</button>
+                    <input type="text" id="otp-input" class="otp" name="otp" required><br>
+                    <button type="submit" class="confirm-btn">VERIFY OTP</button>
                 </form>
             </div>
-        </DIV>
-        
+        </div>
     </main>
 
     <footer class="mt-auto">
@@ -151,30 +149,35 @@
       </div>
     </footer>
     <script>
-      document.querySelector('form').addEventListener('submit', function(event) {
-          event.preventDefault(); // Prevent the form from submitting normally
-  
-          const formData = new FormData(event.target);
-          fetch('/verify-otp', {
-              method: 'POST',
-              body: formData
-          })
-          .then(response => response.json())
-          .then(data => {
-              if (data.success) {
-                  alert('OTP verified successfully. You can now proceed with registration or login.');
-                  // Redirect to the next step or login page
-                  window.location.href = '/login.html'; // Example redirect
-              } else {
-                  alert('Invalid OTP. Please try again.');
-              }
-          })
-          .catch(error => {
-              console.error('Error:', error);
-              alert('An error occurred. Please try again.');
-          });
-      });
+      document.getElementById('otp-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const otp = document.getElementById('otp-input').value;
+
+            // Send the OTP to the server for verification
+            console.log("OTP from form:", otp); // Debugging line
+
+            const response = await fetch('/verify-otp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ otp }),
+            });
+            console.log("OTP from form:", otp); // Debugging line
+
+
+
+            const data = await response.json();
+            if (data.message === 'User registered successfully') {
+                alert('OTP is valid. Redirecting to dashboard.');
+                // Redirect to dashboard or any other page
+                window.location.href = './register';
+            } else {
+                alert('Invalid OTP. Please try again.');
+            }
+        });
       </script>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 </body>
+</html>

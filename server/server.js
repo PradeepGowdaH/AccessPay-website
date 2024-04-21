@@ -19,8 +19,8 @@ const bodyParser = require("body-parser");
 const port = 3000;
 
 const mongoURI = "mongodb://0.0.0.0:27017/AccessPay";
-// let email = null;
-let email = "Peter.kevin@example.com";
+let email = null;
+// let email = "Peter.kevin@example.com";
 // Middleware to parse JSON bodies
 app.use(express.json());
 
@@ -662,7 +662,7 @@ app.use(
     secret: "your-secret-key", // Replace with your own secret key
     resave: false,
     saveUninitialized: true,
-    cookie: { maxAge: 3000000 }, // 5 minutes
+    cookie: { maxAge: 3000000 }, // 50 minutes
   })
 );
 
@@ -697,7 +697,8 @@ async function storeUser(Customers) {
 
 app.post("/signup", async (req, res) => {
   try {
-    const { username, email, password, phone_number } = req.body;
+    let { username, email, password, phone_number } = req.body; //4 array
+    console.log(email);
     const nameParts = username.split(" ");
     const first_name = nameParts[0];
     const second_name = nameParts.slice(1).join(" ");
@@ -781,6 +782,7 @@ app.post("/verify-otp", async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
 app.post("/register", async (req, res) => {
   try {
     const {
@@ -863,6 +865,7 @@ app.post("/register", async (req, res) => {
 app.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
+    email=email;
     // Connect to the database
     const client = await MongoClient.connect(mongoURI);
     const db = client.db();

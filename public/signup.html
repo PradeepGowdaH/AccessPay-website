@@ -182,46 +182,37 @@ document.getElementById('google-signin-btn').addEventListener('click', function(
         passwordError.style.display = 'block';
     }
 });
-     document.querySelector('form').addEventListener('submit', function(event) {
-          event.preventDefault(); 
+     document.getElementById('signup-form').addEventListener('submit', async function(event) {
+      event.preventDefault();
+      const username = document.getElementById('Name').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('pss').value;
+      const confirmPassword = document.getElementById('conf-pss').value;
+      const phone_number = document.getElementById('ph-no').value;
+
+      if (password !== confirmPassword) {
+          alert('Passwords do not match.');
+          return;
+      }
   
-      // Serialize form data into a JSON object
-      const formData = {
-          Name: document.getElementById('Name').value,
-          'ph-no': document.getElementById('ph-no').value,
-          email: document.getElementById('email').value,
-          pss: document.getElementById('pss').value,
-          'conf-pss': document.getElementById('conf-pss').value
-      };
-  
-      // Send the data to the server
-      fetch('/signup', {
+      const response = await fetch('/signup', {
           method: 'POST',
           headers: {
-              'Content-Type': 'application/json' // Set the content type header
+              'Content-Type': 'application/json',
           },
-          body: JSON.stringify(formData) // Convert JSON object to string
-      })
-      .then(response => {
-          if (!response.ok) {
-              throw new Error('Network response was not ok');
-          }
-      })
-      .then(data => {
-        console.log('Data received:', data);
-          if (data.success) {
-              alert('OTP sent successfully. Please check your email.');
-              window.location.href = '/signup-otp.html'; // Redirect to OTP verification page
-          } else {
-              alert('Error sending OTP. Please try again.');
-          }
-      })
-      .catch(error => {
-              console.error('Error:', error);
-              alert('An error occurred. Please try again.');
-              console.log(error);
-          });
-  });
+          body: JSON.stringify({ username, email, password, phone_number }),
+      });
+  
+      const data = await response.json();
+      if (data.message === 'OTP sent') {
+          alert('OTP has been sent to your email.');
+          // Redirect to OTP page
+          window.location.href = './verify-otp';
+      } else {
+          alert('user already existing please login');
+          window.location.href = './login';
+      }
+  });
 </script>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>

@@ -80,13 +80,13 @@
           <a href="./login.html"><button class="btn btn-primary btn-login1" type="button">LOG IN</button></a>
         <a  href="./signup.html"><button class="btn btn-primary btn-signup" type="button"><u>SIGN-UP</u></button></a>
         </div>
-        <form action="/login" method="post" class="login-form">
+        <form action="/login" method="post" class="login-form" id="loginForm">
           <label for="email"><b>E-MAIL</b></label>
           <br>
           <input type="email" id="email" name="email" required><br>
           <label for="password"><b>PASSWORD</b></label><br>
           <input type="password" id="password" name="password" required><br>
-          <a href="./login otp.html"><button class="btn btn-primary me-2 btn-login" type="button">LOGIN</button></a>
+          <button type ="submit" class="btn btn-primary me-2 btn-login3" type="button">LOGIN</button>
           <br>
           <span class="or-text"><b>OR</b></span>
           <button id="google-signin-btn" class="google-btn">
@@ -166,6 +166,51 @@ document.getElementById('google-signin-btn').addEventListener('click', function(
       </div>
     </footer>
   
-
+  <script>
+document.getElementById('loginForm').addEventListener('submit', async function(event) {
+          event.preventDefault(); // Prevent the form from submitting normally
+      
+          // Collect form data into variables
+          const email = document.getElementById('email').value;
+          const password = document.getElementById('password').value;
+      
+          // Create an object to hold the form data
+          const formData = {
+              email,
+              password
+          };
+      
+          // Send the data to the server
+          try {
+              const response = await fetch('/login', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify(formData),
+              });
+      
+              if (!response.ok) {
+                  throw new Error('Network response was not ok');
+              }
+      
+              const responseData = await response.json();
+              console.log(responseData);
+      
+              // Check if the login was successful
+              if (responseData.message === 'Login successful') {
+                  // Redirect the user to the desired page after a successful login
+                  window.location.href = './Homepage-logged-in.html'; // Adjust the URL as needed
+              } else {
+                  // Handle unsuccessful login (e.g., show an error message)
+                  alert('Login failed. Please check your email and password.');
+              }
+          } catch (error) {
+              console.error('Error:', error);
+              // Handle error (e.g., show an error message)
+              alert('An error occurred during login. Please try again.');
+          }
+      });
+  </script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 </body>

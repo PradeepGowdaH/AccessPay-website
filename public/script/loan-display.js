@@ -44,5 +44,4 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error("Error fetching loan data:", error);
       });
   });
-
   */

@@ -157,12 +157,7 @@ body {
     margin: 15px 0;         /* Space above and below */
   }
   
-  .login-form input[type="name"], 
-  .login-form input[type="ph-no"],
-  .login-form input[type="email"],
-  .login-form input[type="pss"],
-  .login-form input[type="conf-pss"]
-   {
+  .login-form input {
       width: 80%;   /* Make input fields take up full available width */
       padding: 10px; 
       margin-bottom: 10px; 
