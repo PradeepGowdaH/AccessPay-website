@@ -1,6 +1,6 @@
 {
   "_id": {
-    "$oid": "6613912fb11adac73b469733"
+    "$oid": "66291cb8b3f4090bf4addd9a"
   },
   "googleId": "google_id_6",
   "googleName": "Peter kevin",
@@ -12,7 +12,7 @@
   "second_name": "Kevin",
   "address": "ABC karnataka",
   "phone_number": "9987665432",
-  "credit_score": 720,
+  "credit_score": 500,
   "bank": [
     {
       "bank_account_number": "111111111111111",
@@ -21,7 +21,8 @@
       "bank_ifsc": "HDFC0001111"
     }
   ],
-  "reward_balance": 500,
+  "reward_balance": 10,
+  "initial_balance": 10,
   "rewards_history": [
     {
       "transaction_id": "TXN123456789",
@@ -42,6 +43,8 @@
       "months_paid": 2,
       "amount_paid": 0,
       "rate_of_interest": 9,
+      "months_left": 22,
+      "emi": 45684.74,
       "loan_payments": [
         {
           "loan_payment_id": "LP123456789",
@@ -53,9 +56,7 @@
           "amount_paid": 50000,
           "date_of_payment": "28-04-2024"
         }
-      ],
-      "months_left": 22,
-      "emi": 45684.74,
+      ]
     }
   ],
   "transactions": [

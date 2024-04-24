@@ -1153,7 +1153,7 @@ app.post("/api/create-rewards-history-entry", async (req, res) => {
             transaction_id: transactionId,
             date: formattedDate,
             time: formattedTime,
-            mode: "spent",
+            mode: "Spent",
           },
         },
       }
