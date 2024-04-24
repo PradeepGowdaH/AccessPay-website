@@ -56,20 +56,25 @@
                     
                     <!-- Login and Get Started Buttons for Mobile View -->
                     <li class="nav-item mob-only">
-                        <a class="nav-link" href="./login.html">Login</a>
+                        <a class="nav-link username-display" href="./Dashboard.html">Username</a>
+                        <script src="./script/username.js"></script>
                     </li>
                     <li class="nav-item mob-only">
-                        <a class="nav-link" href="./signup.html">Get Started</a>
+                        <a class="nav-link" href="./logout.html">log out</a>
                     </li>
                 </ul>
             </div>
 
             <!-- Login and Get Started Buttons for Desktop View -->
-            <div class="d-none d-lg-flex"><!-- Hide in mobile view -->
-                <a href="./login.html"><button class="btn btn-primary me-2 btn-login" type="button">Login</button></a>
-                <a href="./signup.html"><button class="btn btn-primary btn-get-started" type="button">Get Started</button></a>
-            </div>
-            
+<div class="d-none d-lg-flex"><!-- Hide in mobile view -->
+    <a href="./Dashboard.html"><button class="btn btn-primary me-2 btn-login username-display" type="button">Username <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-person" viewBox="0 0 16 16">
+        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM1 15s1-4 7-4 7 4 7 4H1z"/>
+      </svg></button></a>
+    <a href="./logout.html"><button class="btn btn-primary btn-get-started" type="button">Log out</button></a>
+</div>
+
+<!-- Include the JavaScript file that contains the client.js functionality -->
+<script src="./script/username.js"></script>
         </div>
     </nav>
 </header>
@@ -79,16 +84,7 @@
         <a href="./change-password.html"><button class="btn btn-primary btn-changepassword" type="button">CHANGE PASSWORD</button></a>
       </div>
      <div class="form">
-        <form class="registrationForm">
-        
-              <fieldset>
-                <label for="FIRST_NAME">First Name</label>
-                <input type="text" id="FIRST_NAME" name="FIRST_NAME" required>
-              </fieldset>
-              <fieldset>
-                <label for="LAST_NAME">Last Name</label>
-                <input type="text" id="LAST_NAME" name="LAST_NAME" required>
-              </fieldset>
+        <form id="registrationForm" class="registrationForm" action="/register" method="post">
               <fieldset>
                 <label for="BANK_ACCOUNT_NUMBER">Bank Account Number</label>
                 <input type="text" id="BANK_ACCOUNT_NUMBER" name="BANK_ACCOUNT_NUMBER" required>
@@ -96,7 +92,9 @@
               <fieldset>
                 <label for="CONFIRM_BANK_ACCOUNT_NUMBER">Confirm Bank Account Number</label>
                 <input type="text" id="CONFIRM_BANK_ACCOUNT_NUMBER" name="CONFIRM_BANK_ACCOUNT_NUMBER" required>
+                <span id="bankAccountError" style="color: red; display: none;">Bank account numbers do not match.</span>
               </fieldset>
+              
               <fieldset>
                 <label for="BANK_NAME">Bank Name</label>
                 <input type="text" id="BANK_NAME" name="BANK_NAME" required>
@@ -105,18 +103,12 @@
                 <label for="AADHAR_CARD_NUMBER">Aadhar Card Number</label>
                 <input type="text" id="AADHAR_CARD_NUMBER" name="AADHAR_CARD_NUMBER" required>
               </fieldset>
-              <fieldset>
-                <label for="PHONE_NUMBER">Phone Number</label>
-                <input type="text" id="PHONE_NUMBER" name="PHONE_NUMBER" required>
-              </fieldset>
+              
               <fieldset>
                 <label for="ADDRESS">Address</label>
-                <input type="text" class="form-control registration-form-control address-field"  name="address">
+                <input type="text" class="form-control registration-form-control address-field"  name="ADDRESS">
               </fieldset>
-              <fieldset>
-                <label for="EMAIL">Email</label>
-                <input type="text" id="email" name="EMAIL" required>
-              </fieldset>
+              
                 <fieldset>
                 <label for="BANK_BRANCH">Bank Branch</label>
                 <input type="text" id="BANK_BRANCH" name="BANK_BRANCH" required>
@@ -129,7 +121,7 @@
                 <label for="PAN_CARD_NUMBER">PAN Card Number</label>
                 <input type="text" id="PAN_CARD_NUMBER" name="PAN_CARD_NUMBER" required>
             </fieldset><br>
-            <a href="./Dashboard.html"><button type="submit" class="btn-submit1">Submit</button></a>
+            <button type="submit" class="btn-submit1">Submit</button></a>
           </span>
         </form><br>
         <button class="btn btn-primary me-2 btn-logout" type="button">Logout</button>
@@ -196,7 +188,67 @@
         </div>
       </div>
     </footer>
-  
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+    const registrationForm = document.getElementById('registrationForm');
+    const bankAccountNumber = document.getElementById('BANK_ACCOUNT_NUMBER');
+    const confirmBankAccountNumber = document.getElementById('CONFIRM_BANK_ACCOUNT_NUMBER');
+    const bankAccountError = document.getElementById('bankAccountError');
 
+    function checkBankAccountNumbers() {
+        if (bankAccountNumber.value !== confirmBankAccountNumber.value) {
+            // If they don't match, show the error message
+            bankAccountError.style.display = 'block';
+        } else {
+            // If they match, hide the error message
+            bankAccountError.style.display = 'none';
+        }
+    }
+
+    // Attach the keyup event listener to both input fields
+    bankAccountNumber.addEventListener('keyup', checkBankAccountNumbers);
+    confirmBankAccountNumber.addEventListener('keyup', checkBankAccountNumbers);
+});
+
+      document.getElementById('registerForm').addEventListener('submit', async function(event) {
+ event.preventDefault();
+
+ const BANK_ACCOUNT_NUMBER = document.getElementById('BANK_ACCOUNT_NUMBER').value;
+ const CONFIRM_BANK_ACCOUNT_NUMBER = document.getElementById('CONFIRM_BANK_ACCOUNT_NUMBER').value;
+ const BANK_NAME = document.getElementById('BANK_NAME').value;
+ const AADHAR_CARD_NUMBER = document.getElementById('AADHAR_CARD_NUMBER').value;
+ const ADDRESS = document.getElementById('ADDRESS').value;
+ const BANK_BRANCH = document.getElementById('BANK_BRANCH').value;
+ const IFSC_CODE = document.getElementById('IFSC_CODE').value;
+ const PAN_CARD_NUMBER = document.getElementById('PAN_CARD_NUMBER').value;
+
+
+
+ const response = await fetch('/register', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      BANK_ACCOUNT_NUMBER,
+      CONFIRM_BANK_ACCOUNT_NUMBER,
+      BANK_NAME,
+      AADHAR_CARD_NUMBER,
+      ADDRESS,
+      BANK_BRANCH,
+      IFSC_CODE,
+      PAN_CARD_NUMBER,
+    }),
+ });
+
+ const data = await response.json();
+ if (data.message === "register done successfully") {
+    alert('Registration is successful, please log in');
+    window.location.href = './login';
+ } else {
+    alert('Registration failed. Please try again.');
+ }
+});
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 </body>

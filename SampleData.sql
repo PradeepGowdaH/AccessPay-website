@@ -55,7 +55,7 @@
         }
       ],
       "months_left": 22,
-      "emi": "45684.74"
+      "emi": 45684.74,
     }
   ],
   "transactions": [

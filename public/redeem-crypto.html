@@ -80,15 +80,12 @@
     </nav>
 </header>
     <main  class="flex-grow-1 pt-5">
-
-
-
       <div class="main">
         <h1>Redeem Crypto Rewards</h1>
         <p class="Balance">Balance:4500</p>
-        <a href="./rewards.html"><button class="btn-confirm">REDEEM</button></a>
+        <a href="javascript:void(0);" onclick="redeemRewards()"><button class="btn-confirm">REDEEM</button></a>
       </div>
-</main>
+    </main>
 
     <footer class="mt-auto">
       <div class="container py-4">
@@ -151,16 +148,58 @@
       </div>
     </footer>
 
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-       fetch('/api/reward-balance')
-          .then(response => response.json())
-          .then(data => {
-            // Update the balance displayed on the page
-            document.querySelector('.Balance').textContent = `Balance: ${data.reward_balance}`;
-          })
-          .catch(error => console.error('Error fetching reward balance:', error));
-      });
+<script>
+ document.addEventListener('DOMContentLoaded', function() {
+    fetch('/api/reward-balance')
+      .then(response => response.json())
+      .then(data => {
+        // Update the balance displayed on the page
+        document.querySelector('.Balance').textContent = `Balance: ${data.reward_balance}`;
+      })
+      .catch(error => console.error('Error fetching reward balance:', error));
+ });
+
+ function redeemRewards() {
+    // Function to update reward_balance to zero in the database
+    function updateRewardBalance() {
+      fetch('/api/update-reward-balance', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ newRewardBalance: 0 }),
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        // Navigate to the next rewards webpage
+        window.location.href = './rewards.html';
+      })
+      .catch(error => console.error('Error updating reward balance:', error));
+    }
+
+    // Function to create a new rewards history entry
+    function createRewardsHistoryEntry() {
+      fetch('/api/create-rewards-history-entry', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        // Call the function to update the reward balance
+        updateRewardBalance();
+      })
+      .catch(error => console.error('Error creating rewards history entry:', error));
+    }
+
+    // Call the function to create a new rewards history entry
+    createRewardsHistoryEntry();
+ }
 </script>
       
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>

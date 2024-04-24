@@ -69,9 +69,6 @@
     </nav>
 </header>
     <main  class="flex-grow-1 pt-5">
-
-
-
         <div class="main">
             <div class="signup">
                 <button class="logout-btn">LOG IN</button>
@@ -164,9 +161,6 @@
                 body: JSON.stringify({ otp }),
             });
             console.log("OTP from form:", otp); // Debugging line
-
-
-
             const data = await response.json();
             if (data.message === 'User registered successfully') {
                 alert('OTP is valid. Redirecting to dashboard.');
@@ -177,7 +171,6 @@
             }
         });
       </script>
-
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 </body>
 </html>

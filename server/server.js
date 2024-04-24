@@ -16,6 +16,7 @@ const { v4: uuidv4 } = require("uuid"); // For generating unique transaction IDs
 const nodemailer = require("nodemailer");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const crypto = require("crypto");
 const port = 3000;
 
 const mongoURI = "mongodb://0.0.0.0:27017/AccessPay";
@@ -87,9 +88,10 @@ passport.use(
           second_name: second_name, // Assign the rest of the name
           address: "", // Placeholder for Address
           phone_number: "",
-          credit_score: 0,
+          credit_score: 500,
           bank: [], // Placeholder for Bank Information
-          reward_balance: 0, // Placeholder for Reward Balance
+          reward_balance: 500,
+          initial_balance: 500, // Placeholder for Reward Balance
           rewards_history: [], // Placeholder for Rewards History
           loans: [], // Placeholder for Loans
           transactions: [], // Placeholder for Transactions
@@ -103,6 +105,7 @@ passport.use(
     }
   )
 );
+
 
 // Configure Passport to serialize and deserialize user instances to and from the session
 passport.serializeUser(function (user, done) {
@@ -138,29 +141,6 @@ app.get(
     res.redirect("/Homepage-logged-in.html");
   }
 );
-
-//Username
-
-// Add this route to your Express server
-app.get("/api/first-name", async (req, res) => {
-  try {
-    const client = await MongoClient.connect(mongoURI);
-    const db = client.db();
-    const customersCollection = db.collection("Customers");
-
-    const customer = await customersCollection.findOne({
-      email: email,
-    });
-    if (!customer) {
-      return res.status(404).send("Customer not found.");
-    }
-    res.json({ firstName: customer.first_name });
-    client.close();
-  } catch (error) {
-    console.error("Error fetching first name:", error);
-    res.status(500).send("Error fetching first name.");
-  }
-});
 
 //Credit score
 
@@ -313,6 +293,296 @@ app.get("/export-transactions", async (req, res) => {
   }
 });
 
+
+//Username
+
+// Add this route to your Express server
+app.get("/api/first-name", async (req, res) => {
+  try {
+    const client = await MongoClient.connect(mongoURI);
+    const db = client.db();
+    const customersCollection = db.collection("Customers");
+
+    const customer = await customersCollection.findOne({
+      email: email,
+    });
+    if (!customer) {
+      return res.status(404).send("Customer not found.");
+    }
+    res.json({ firstName: customer.first_name });
+    client.close();
+  } catch (error) {
+    console.error("Error fetching first name:", error);
+    res.status(500).send("Error fetching first name.");
+  }
+});
+
+
+
+// Pavan's Login, Signup and register
+
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET, // Replace with your own secret key
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 3000000 }, // 50 minutes
+  })
+);
+
+function generateOTP() {
+  return Math.floor(100000 + Math.random() * 900000);
+}
+
+async function sendOTP(email, otp) {
+  let transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "accesspay2024@gmail.com",
+      pass: "wgak pjic bevd sjwm",
+    },
+  });
+
+  let mailOptions = {
+    from: "accesspay2024@gmail.com",
+    to: email,
+    subject: "Your OTP",
+    text: `Your OTP is ${otp}`,
+  };
+
+  await transporter.sendMail(mailOptions);
+}
+
+async function storeUser(Customers) {
+  const CustomerCollection = db.collection("Customers");
+  const result = await CustomerCollection.insertOne(Customers);
+  console.log(`User stored with the following id: ${result.insertedId}`);
+}
+
+app.post("/signup", async (req, res) => {
+  try {
+    let { username, email: userEmail, password, phone_number } = req.body; // Renamed local email to userEmail
+    console.log(userEmail);
+    const nameParts = username.split(" ");
+    const first_name = nameParts[0];
+    const second_name = nameParts.slice(1).join(" ");
+    console.log(first_name);
+    const client = await MongoClient.connect(mongoURI);
+    const db = client.db();
+    const customersCollection = db.collection("Customers");
+
+    const existingUser = await customersCollection.findOne({
+      email: userEmail,
+    });
+    if (existingUser) {
+      return res.status(400).json({
+        message: "A user with this email already exists. Please log in.",
+      });
+    }
+
+    // If no user with the same email exists, proceed with OTP generation and sending
+    const otp = generateOTP();
+    await sendOTP(userEmail, otp);
+    req.session.otp = otp;
+    req.session.email = userEmail; // Use the local userEmail variable
+    const userData = {
+      googleId: "",
+      googleName: "",
+      email: userEmail, // Use the local userEmail variable
+      password: password,
+      first_name: first_name,
+      second_name: second_name,
+      // Set default or placeholder values for additional fields
+      aadhar_number: "",
+      pan_number: "",
+      address: "",
+      phone_number: phone_number,
+      credit_score: 500,
+      bank: [],
+      reward_balance: 500,
+      initial_balance: 500,
+      rewards_history: [],
+      loans: [],
+      transactions: [],
+      budget: [],
+    };
+    req.session.user = userData;
+    // Store user data in session
+    res.json({ message: "OTP sent", otp });
+    console.log(otp);
+  } catch (error) {
+    console.error("Error in /signup route:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+app.post("/verify-otp", async (req, res) => {
+  try {
+    // Extract OTP from req.body
+    const { otp } = req.body;
+    console.log(req.session.otp);
+    console.log(otp);
+    // Check if the OTP matches the one stored in the session
+    if (req.session.otp == otp) {
+      // OTP is correct, proceed with storing the user data in MongoDB
+      const userData = req.session.user;
+      // Assuming you have a function to hash the password before storing it
+
+      // Connect to the database
+      const client = await MongoClient.connect(mongoURI);
+      const db = client.db();
+      const customersCollection = db.collection("Customers");
+
+      // Insert the user data into the database
+      const result = await customersCollection.insertOne(userData);
+      console.log(`User stored with the following id: ${result.insertedId}`);
+
+      // Clear the OTP and user data from the session
+      req.session.otp = null;
+
+      res.status(200).json({ message: "User registered successfully" });
+    } else {
+      // OTP is incorrect
+      res.status(400).json({ message: "Incorrect OTP" });
+    }
+  } catch (error) {
+    console.error("Error in /verify-otp route:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+// Register
+
+app.post("/register", async (req, res) => {
+  try {
+    const {
+      BANK_ACCOUNT_NUMBER,
+      CONFIRM_BANK_ACCOUNT_NUMBER,
+      BANK_NAME,
+      AADHAR_CARD_NUMBER,
+      PHONE_NUMBER,
+      ADDRESS,
+      BANK_BRANCH,
+      IFSC_CODE,
+      PAN_CARD_NUMBER,
+      LOAN_TYPE,
+      LOAN_AMOUNT,
+      LOAN_DURATION,
+    } = req.body;
+
+    // Determine the email to use for updating user details
+    let emailToUse = email; // Start with the global email variable
+    if (!emailToUse) {
+      // If the global email variable is null, use the email from the session
+      emailToUse = req.session.email;
+      if (!emailToUse) {
+        return res.status(400).json({
+          message:
+            "Email not found in session or global variable. Please verify your email first.",
+        });
+      }
+    }
+
+    // Connect to the database
+    const client = await MongoClient.connect(mongoURI);
+    const db = client.db();
+    const customersCollection = db.collection("Customers");
+
+    // Prepare the update object with all fields from the form
+    const update = {
+      $set: {
+        aadhar_number: AADHAR_CARD_NUMBER,
+        phone_number: PHONE_NUMBER,
+        address: ADDRESS,
+        pan_number: PAN_CARD_NUMBER,
+        email: emailToUse, // Use the determined email
+        bank: [
+          {
+            bank_account_number: BANK_ACCOUNT_NUMBER,
+            confirmBankAccountNumber: CONFIRM_BANK_ACCOUNT_NUMBER,
+            bank_name: BANK_NAME,
+            bank_branch: BANK_BRANCH,
+            bank_ifsc: IFSC_CODE,
+          },
+        ],
+        loans: [
+          {
+            loan_type: LOAN_TYPE,
+            loan_amount: LOAN_AMOUNT,
+            loan_duration: LOAN_DURATION,
+          },
+        ],
+      },
+    };
+
+    // Update the user document
+    const result = await customersCollection.updateOne(
+      { email: emailToUse },
+      update
+    );
+    if (result.modifiedCount === 0) {
+      return res
+        .status(500)
+        .json({ message: "Failed to update user information" });
+    }
+
+    res.json({ message: "register done successfully" });
+  } catch (error) {
+    console.error("Error in /register route:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+app.post("/login", async (req, res) => {
+  try {
+    const { email: userEmail, password } = req.body; // Renamed local email to userEmail
+    // Connect to the database
+    const client = await MongoClient.connect(mongoURI);
+    const db = client.db();
+    const customersCollection = db.collection("Customers");
+    const user = await customersCollection.findOne({ email: userEmail });
+
+    if (!user) {
+      return res.status(400).json({ message: "Invalid email or password" });
+    }
+
+    if (password != user.password) {
+      return res.status(400).json({ message: "Invalid email or password" });
+    }
+
+    // Successful login, return user's email and a success message
+    email = userEmail; // Set the global email variable
+    res.json({ message: "Login successful", email: user.email });
+  } catch (error) {
+    console.error("Error in /login route:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+// Serve the login page
+app.get("/login", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "public", "login.html"));
+});
+
+// Serve the register page
+app.get("/register", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "public", "register.html"));
+});
+
+// Serve the signup page
+app.get("/signup", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "public", "signup.html"));
+});
+
+// Serve the OTP verification page
+app.get("/verify-otp", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "public", "signup-otp.html"));
+});
+
 //Chart code // Nishanth
 
 // Transactions
@@ -409,7 +679,7 @@ app.get("/api/rewards-history", async (req, res) => {
     const customersCollection = db.collection("Customers");
 
     // Assuming you have a way to identify the customer, e.g., through a query parameter or a session
-    // For demonstration, let's use a hardcoded customerId
+    // For demonstration, let's use a hardcoded email
     // Replace this with the actual customer ID retrieval logic
 
     const customer = await customersCollection.findOne({
@@ -442,7 +712,7 @@ app.post("/changepassword", async (req, res) => {
     const { currentpassword, newpassword, confirmpassword } = req.body;
 
     // Assuming you have a way to identify the customer, e.g., through a session or a token
-    // For demonstration, let's use a hardcoded customerId
+    // For demonstration, let's use a hardcoded email
     // Replace this with the actual customer ID retrieval logic
 
     const customer = await customersCollection.findOne({
@@ -629,7 +899,7 @@ app.post("/api/add-transaction", async (req, res) => {
     transactionData.transaction_id = uuidv4(); // Generate a unique transaction ID
 
     // Assuming you have a way to identify the customer, e.g., through a query parameter or a session
-    // For demonstration, let's use a hardcoded customerId
+    // For demonstration, let's use a hardcoded email
 
     // Find the customer and update the transactions array
     const result = await customersCollection.updateOne(
@@ -765,284 +1035,138 @@ app.post("/update-loan-details", async (req, res) => {
   }
 });
 
-// Pavan's Login, Signup and register
-
-app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-app.use(
-  session({
-    secret: "your-secret-key", // Replace with your own secret key
-    resave: false,
-    saveUninitialized: true,
-    cookie: { maxAge: 3000000 }, // 50 minutes
-  })
-);
-
-function generateOTP() {
-  return Math.floor(100000 + Math.random() * 900000);
-}
-
-async function sendOTP(email, otp) {
-  let transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: "accesspay2024@gmail.com",
-      pass: "wgak pjic bevd sjwm",
-    },
-  });
-
-  let mailOptions = {
-    from: "accesspay2024@gmail.com",
-    to: email,
-    subject: "Your OTP",
-    text: `Your OTP is ${otp}`,
-  };
-
-  await transporter.sendMail(mailOptions);
-}
-
-async function storeUser(Customers) {
-  const CustomerCollection = db.collection("Customers");
-  const result = await CustomerCollection.insertOne(Customers);
-  console.log(`User stored with the following id: ${result.insertedId}`);
-}
-
-app.post("/signup", async (req, res) => {
-  try {
-    let { username, email, password, phone_number } = req.body; //4 array
-    console.log(email);
-    const nameParts = username.split(" ");
-    const first_name = nameParts[0];
-    const second_name = nameParts.slice(1).join(" ");
-    const client = await MongoClient.connect(mongoURI);
-    const db = client.db();
-    const customersCollection = db.collection("Customers");
-
-    const existingUser = await customersCollection.findOne({ email: email });
-    if (existingUser) {
-      return res.status(400).json({
-        message: "A user with this email already exists. Please log in.",
-      });
-    }
-
-    // If no user with the same email exists, proceed with OTP generation and sending
-    const otp = generateOTP();
-    await sendOTP(email, otp);
-    req.session.otp = otp;
-    req.session.email = email;
-    const userData = {
-      googleId: "",
-      googleName: "",
-      email: email,
-      password: password,
-      first_name: first_name,
-      second_name: second_name,
-      // Set default or placeholder values for additional fields
-      aadhar_number: "",
-      pan_number: "",
-      address: "",
-      phone_number: phone_number,
-      credit_score: 500,
-      bank: [],
-      reward_balance: 0,
-      rewards_history: [],
-      loans: [],
-      transactions: [],
-      budget: [],
-    };
-    req.session.user = userData;
-    // Store user data in session
-    res.json({ message: "OTP sent", otp });
-    console.log(otp);
-  } catch (error) {
-    console.error("Error in /signup route:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-});
-
-app.post("/verify-otp", async (req, res) => {
-  try {
-    // Extract OTP from req.body
-    const { otp } = req.body;
-    console.log(req.session.otp);
-    console.log(otp);
-    // Check if the OTP matches the one stored in the session
-    if (req.session.otp == otp) {
-      // OTP is correct, proceed with storing the user data in MongoDB
-      const userData = req.session.user;
-      // Assuming you have a function to hash the password before storing it
-
-      // Connect to the database
-      const client = await MongoClient.connect(mongoURI);
-      const db = client.db();
-      const customersCollection = db.collection("Customers");
-
-      // Insert the user data into the database
-      const result = await customersCollection.insertOne(userData);
-      console.log(`User stored with the following id: ${result.insertedId}`);
-
-      // Clear the OTP and user data from the session
-      req.session.otp = null;
-
-      res.status(200).json({ message: "User registered successfully" });
-    } else {
-      // OTP is incorrect
-      res.status(400).json({ message: "Incorrect OTP" });
-    }
-  } catch (error) {
-    console.error("Error in /verify-otp route:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-});
-
-app.post("/register", async (req, res) => {
-  try {
-    const {
-      FIRST_NAME,
-      LAST_NAME,
-      BANK_ACCOUNT_NUMBER,
-      CONFIRM_BANK_ACCOUNT_NUMBER,
-      BANK_NAME,
-      AADHAR_CARD_NUMBER,
-      PHONE_NUMBER,
-      ADDRESS,
-      BANK_BRANCH,
-      IFSC_CODE,
-      PAN_CARD_NUMBER,
-      LOAN_TYPE,
-      LOAN_AMOUNT,
-      LOAN_DURATION,
-    } = req.body;
-
-    // Retrieve the email from the session
-    const email = req.session.email;
-    if (!email) {
-      return res.status(400).json({
-        message: "Email not found in session. Please verify your email first.",
-      });
-    }
-
-    // Connect to the database
-    const client = await MongoClient.connect(mongoURI);
-    const db = client.db();
-    const customersCollection = db.collection("Customers");
-
-    // Prepare the update object with all fields from the form
-    const update = {
-      $set: {
-        first_name: FIRST_NAME,
-        second_name: LAST_NAME,
-        bank_account_number: BANK_ACCOUNT_NUMBER,
-        confirmBankAccountNumber: CONFIRM_BANK_ACCOUNT_NUMBER,
-        aadhar_number: AADHAR_CARD_NUMBER,
-        phone_number: PHONE_NUMBER,
-        address: ADDRESS,
-        email: email, // Use the email from the session
-        bank: [
-          {
-            bank_name: BANK_NAME,
-            bank_branch: BANK_BRANCH,
-            bank_ifsc: IFSC_CODE,
-            pan_number: PAN_CARD_NUMBER,
-          },
-        ],
-        loans: [
-          {
-            loan_type: LOAN_TYPE,
-            loan_amount: LOAN_AMOUNT,
-            loan_duration: LOAN_DURATION,
-          },
-        ],
-      },
-    };
-
-    // Update the user document
-    const result = await customersCollection.updateOne(
-      { email: email },
-      update
-    );
-    if (result.modifiedCount === 0) {
-      return res
-        .status(500)
-        .json({ message: "Failed to update user information" });
-    }
-
-    res.json({ message: "register done successfully" });
-  } catch (error) {
-    console.error("Error in /register route:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-});
-
-app.post("/login", async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    email = email;
-    // Connect to the database
-    const client = await MongoClient.connect(mongoURI);
-    const db = client.db();
-    const customersCollection = db.collection("Customers");
-    const user = await customersCollection.findOne({ email: email });
-
-    if (!user) {
-      return res.status(400).json({ message: "Invalid email or password" });
-    }
-
-    if (password != user.password) {
-      return res.status(400).json({ message: "Invalid email or password" });
-    }
-
-    // Successful login, return user's email and a success message
-    res.json({ message: "Login successful", email: user.email });
-  } catch (error) {
-    console.error("Error in /login route:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-});
-
-// Serve the login page
-app.get("/login", (req, res) => {
-  res.sendFile(path.join(__dirname, "..", "public", "login.html"));
-});
-
-// Serve the register page
-app.get("/register", (req, res) => {
-  res.sendFile(path.join(__dirname, "..", "public", "register.html"));
-});
-
-// Serve the signup page
-app.get("/signup", (req, res) => {
-  res.sendFile(path.join(__dirname, "..", "public", "signup.html"));
-});
-
-// Serve the OTP verification page
-app.get("/verify-otp", (req, res) => {
-  res.sendFile(path.join(__dirname, "..", "public", "signup-otp.html"));
-});
-
 // Crypto Rewards // Eshwar
 
 app.get("/api/reward-balance", async (req, res) => {
   try {
-    await client.connect();
-    const database = client.db(); // AccessPay is specified in the URI, so no need to specify it here
-    const customersCollection = database.collection("Customers");
+    const client = await MongoClient.connect(mongoURI);
+    const db = client.db();
+    const customersCollection = db.collection("Customers");
 
-    // Fetch the user document by email
-    const user = await customersCollection.findOne({ email: email });
-    if (!user) {
-      return { success: false, message: "User not found" };
+    const customer = await customersCollection.findOne({
+      email: email,
+    });
+
+    if (!customer) {
+      return res.status(404).send("Customer not found.");
     }
-    // Return the reward_balance
-    res.json({ reward_balance: user.reward_balance });
+
+    res.json({
+      reward_balance: customer.reward_balance,
+      initial_balance: customer.initial_balance,
+    });
+    client.close();
   } catch (error) {
-    console.error("Error fetching reward balance:", error);
-    res.status(500).send("Error fetching reward balance.");
+    console.error("Error fetching reward balance for customer:", error);
+    res.status(500).send("Error fetching reward balance for customer.");
   }
 });
- 
+
+//code to update both r_b and i_b
+// Function to update reward balance and initial balance
+async function updateRewardAndInitialBalance(newRewardBalance) {
+  try {
+    const client = await MongoClient.connect(mongoURI);
+    const db = client.db();
+    const customersCollection = db.collection("Customers");
+
+    // Assuming you have a way to identify the customer, e.g., through a query parameter or a session
+    // For demonstration, let's use a hardcoded email
+    // const email = "google_id_6"; // Replace this with the actual customer ID retrieval logic
+
+    // Check if the new reward balance is not zero
+    if (newRewardBalance !== 0) {
+      // Update both reward_balance and initial_balance fields
+      await customersCollection.updateOne(
+        { email: email },
+        {
+          $set: {
+            reward_balance: newRewardBalance,
+            initial_balance: newRewardBalance, // Update initial_balance with the new reward balance
+          },
+        }
+      );
+    } else {
+      // If the new reward balance is zero, only update reward_balance
+      await customersCollection.updateOne(
+        { email: email },
+        { $set: { reward_balance: newRewardBalance } }
+      );
+    }
+
+    console.log("Reward and initial balance updated successfully.");
+    client.close();
+  } catch (error) {
+    console.error("Error updating reward and initial balance:", error);
+  }
+}
+
+// Example usage of the function
+// Call this function whenever you update the reward balance in your application
+// updateRewardAndInitialBalance(150); // Example call with a new reward balance of 150
+
+app.post("/api/update-reward-balance", async (req, res) => {
+  try {
+    const client = await MongoClient.connect(mongoURI);
+    const db = client.db();
+    const customersCollection = db.collection("Customers");
+
+    // Assuming you have a way to identify the customer, e.g., through a session or a token
+    // For demonstration, let's use a hardcoded email
+    // const email = "google_id_6"; // Replace this with the actual customer ID retrieval logic
+
+    await customersCollection.updateOne(
+      { email: email },
+      { $set: { reward_balance: 0 } }
+    );
+
+    res.sendStatus(200); // Send a 200 OK response
+    client.close();
+  } catch (error) {
+    console.error("Error updating reward balance:", error);
+    res.status(500).send("Error updating reward balance.");
+  }
+});
+
+//generating history
+
+app.post("/api/create-rewards-history-entry", async (req, res) => {
+  try {
+    const client = await MongoClient.connect(mongoURI);
+    const db = client.db();
+    const customersCollection = db.collection("Customers");
+
+    // Generate a random transaction ID
+    const transactionId = crypto.randomBytes(16).toString("hex");
+
+    // Get the current date and time
+    const date = new Date();
+    const formattedDate = date.toISOString().split("T")[0];
+    const formattedTime = date.toISOString().split("T")[1].split(".")[0];
+
+    // Update the rewards_history array in the database
+    await customersCollection.updateOne(
+      { email: email },
+      {
+        $push: {
+          rewards_history: {
+            transaction_id: transactionId,
+            date: formattedDate,
+            time: formattedTime,
+            mode: "spent",
+          },
+        },
+      }
+    );
+
+    res.sendStatus(200); // Send a 200 OK response
+    client.close();
+  } catch (error) {
+    console.error("Error creating rewards history entry:", error);
+    res.status(500).send("Error creating rewards history entry.");
+  }
+});
+
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

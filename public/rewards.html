@@ -88,11 +88,16 @@
                 It will reflect on your account in few hours.</P></div>
             <h4>Reward details:</h4>
             <div class="down">
-                <div class="left"><P>Initial balance</P>
+              <div class="left">
+                <p>Initial balance</p>
                 <img src="./assets/coin.png.jpg" class="coin">
-              <P class="dollar">4500.00</P></div>
-            
-            <div class="middle"><P>Coins redeemed</P><img src="assets/coin.png.jpg" class="coin"> <P class="dollar">500.00</P></div>
+                <p class="initial-balance">4500.00</p>
+               </div>
+               <div class="middle">
+                <p>Coins redeemed</p>
+                <img src="assets/coin.png.jpg" class="coin">
+                <p class="coins-redeemed">500.00</p>
+               </div>               
             <div class="rigth"><P>Coins left</P> <img src="assets/coin.png.jpg" class="coin"> <P class="dollar">00.00</P></div></div>
             
             <div class="last">
@@ -163,26 +168,23 @@
       </div>
     </footer>
     <script>
-      // Function to fetch and update the reward balance
-      async function updateRewardBalance() {
+      // Function to fetch and update the balance
+      async function updateBalances() {
          try {
-           // Replace '/api/reward-balance' with the actual endpoint if different
            const response = await fetch('/api/reward-balance');
            if (!response.ok) {
              throw new Error('Network response was not ok');
            }
            const data = await response.json();
-           // Assuming the reward balance is in the 'reward_balance' field of the response
-           const rewardBalance = data.reward_balance;
-           // Update the HTML content
-           document.querySelector('.dollar').textContent = `${rewardBalance}.00`;
+           document.querySelector('.initial-balance').textContent = data.initial_balance;
+           document.querySelector('.coins-redeemed').textContent = data.initial_balance;
          } catch (error) {
            console.error('There was a problem with the fetch operation:', error);
          }
       }
      
-      // Call the function when the page loads
-      window.addEventListener('DOMContentLoaded', updateRewardBalance);
+      // Call the function to update the balances when the page loads
+      window.onload = updateBalances;
      </script>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
