@@ -113,7 +113,7 @@
         </div>
         <div class="row mt-3">
             <div class="col-md-3">
-                <h4 class="amt">AMOUNT TO BE PAID: $20,000</h4>
+                <h4 class="amt">AMOUNT TO BE PAID:</h4><p id="emi2"></p>
             </div>
             <div class="col-md-3">
                 <a href="./loan-repayment.html"><button class="btn btn-custom">PAY AMOUNT</button></a>
@@ -194,6 +194,38 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="./script/loan-display.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          const payButton = document.querySelector('.btn-custom');
+          payButton.addEventListener('click', function(event) {
+              event.preventDefault(); // Prevent the default form submission
+              const loanId = 'LN123456789'; // Assuming this is the loan ID you want to update
+              fetch('/pay-loan', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                      loan_id: loanId,
+                  }),
+              })
+              .then(response => response.json())
+              .then(data => {
+                  if (data.success) {
+                      window.location.href = './loan-repayment.html'; // Redirect to loan-repayment.html
+                  } else {
+                      alert('Error paying loan.');
+                  }
+              })
+              .catch((error) => {
+                  console.error('Error:', error);
+                  alert('Error paying loan.');
+              });
+          });
+      });
+      </script>
+      
+    
      
      
 </body>

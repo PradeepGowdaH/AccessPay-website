@@ -921,6 +921,8 @@ app.post("/api/add-transaction", async (req, res) => {
   }
 });
 
+//LOAN SECTION
+
 app.get("/api/loan-details", async (req, res) => {
   try {
     const client = await MongoClient.connect(mongoURI);
@@ -1034,6 +1036,89 @@ app.post("/update-loan-details", async (req, res) => {
     res.status(500).send("Error updating loan details.");
   }
 });
+
+
+app.post('/pay-loan', async (req, res) => {
+  const { loan_id } = req.body;
+  const currentDate = new Date().toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+  }).replace(/\//g, '/'); // Format date as dd/mm/yyyy
+
+  try {
+      const client = await MongoClient.connect(mongoURI);
+      const db = client.db();
+      const customersCollection = db.collection("Customers");
+
+      const customer = await customersCollection.findOne({ email: email });
+      if (!customer) {
+          return res.status(404).send("Customer not found.");
+      }
+
+      const loanIndex = customer.loans.findIndex(loan => loan.loan_id === loan_id);
+      if (loanIndex !== -1) {
+          customer.loans[loanIndex].months_paid += 1;
+          customer.loans[loanIndex].months_left -= 1;
+          const newPayment = {
+              loan_payment_id: uuidv4(),
+              amount_paid: parseFloat(customer.loans[loanIndex].emi),
+              date_of_payment: currentDate,
+          };
+          customer.loans[loanIndex].loan_payments.push(newPayment);
+
+          await customersCollection.updateOne({ email: email }, { $set: { loans: customer.loans } });
+          res.status(200).json({ success: true });
+      } else {
+          res.status(404).send('Loan not found.');
+      }
+  } catch (error) {
+      console.error("Error paying loan:", error);
+      res.status(500).send("Error paying loan.");
+  }
+});
+
+app.get("/api/loan-details-and-calculate", async (req, res) => {
+  try {
+     const client = await MongoClient.connect(mongoURI);
+     const db = client.db();
+     const customersCollection = db.collection("Customers");
+ 
+     const customer = await customersCollection.findOne({
+       email: email,
+     });
+     if (!customer) {
+       return res.status(404).send("Customer not found.");
+     }
+ 
+     // Check if the customer has any loans
+     if (customer.loans.length > 0) {
+       // Assuming you want to display the first loan
+       const loanDetails = customer.loans[0];
+       const loanObject = {
+         loan_amount: loanDetails.loan_amount,
+         emi: parseFloat(loanDetails.emi),
+         months_paid: loanDetails.months_paid,
+         months_left: loanDetails.months_left,
+         toBePaid: (loanDetails.months_left * parseFloat(loanDetails.emi)).toFixed(2),
+       };
+       res.json(loanObject);
+     } else {
+       // If no loans, return an object with empty values
+       res.json({
+         loan_amount: "",
+         emi: "",
+         months_paid: "",
+         months_left: "",
+         toBePaid: "",
+       });
+     }
+     client.close();
+  } catch (error) {
+     console.error("Error fetching loan details for customer:", error);
+     res.status(500).send("Error fetching loan details for customer.");
+  }
+ });
 
 // Crypto Rewards // Eshwar
 
