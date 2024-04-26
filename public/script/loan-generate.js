@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
          // Display loan details
          loanDetailsSection.classList.remove('d-none');
          amountGrantedElement.textContent = `₹${loanAmount.toFixed(2)}`;
-         emiElement.textContent = `₹${emi.toFixed(2)}`;
+         emiElement.textContent = `${emi.toFixed(2)}`;
          tenureElement.textContent = `${tenure} months`;
        } else {
          alert("You are not eligible for this loan.");
@@ -73,7 +73,6 @@ async function applyLoan() {
     const tenure = document.getElementById('loanTenure').value.split(' ')[0]; // Extract the number from "24 months"
     const emi = document.getElementById('emi').textContent; // Assuming this is updated correctly
     const interestRate = document.getElementById('interestRate').textContent; // Assuming this is updated correctly
-   
     // Send the loan details to the server
     const response = await fetch('/apply-loan', {
        method: 'POST',

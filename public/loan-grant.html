@@ -96,11 +96,11 @@
             <div class="down">
                 <div class="left"><P>AMOUNT GRANTED</P>
                 
-              <P class="dollar" id="loan_amount">&#x20B9 </P></div>
+              <P class="dollar" id="loan_amount">₹ </P></div>
             
-            <div class="middle-1"><p>EMIs </p> <p class="dollar" id="emi"> </p></div>
-            <div class="middle-2"><p>DURATION</p> <p class="dollar" id="tenure"> MONTHS</P></div>
-            <div class="rigth"><p>RATE OF INTREST</p>  <p class="dollar" id="rate_of_interest"></p></div></div>
+            <div class="middle-1"><p>EMIs </p> <p class="dollar" id="emi">₹ </p></div>
+            <div class="middle-2"><p>DURATION</p> <p class="dollar" id="tenure">24 MONTHS</P></div>
+            <div class="rigth"><p>RATE OF INTREST</p>  <p class="dollar" id="rate_of_interest"> %</p></div></div>
             
             <div class="last">
               <a href="./homeloan.html"><button class="back-btn">BACK TO HOME</button></a>
@@ -172,6 +172,37 @@
   
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="./script/loan-details.js"></script>
+    <script>
+// updateLoanDetails.js
+
+// Function to update loan details on the page
+async function updateLoanDetails() {
+ try {
+    const response = await fetch('/api/loan-details');
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const loanDetails = await response.json();
+
+    // Update the loan amount
+    document.getElementById('loan_amount').textContent = `₹ ${loanDetails.loan_amount.toLocaleString('en-IN')}.00`;
+
+    // Update the EMI
+    document.getElementById('emi').textContent = `₹ ${loanDetails.emi.toLocaleString('en-IN')}`;
+
+    // Update the tenure
+    document.getElementById('tenure').textContent = `${loanDetails.tenure} MONTHS`;
+
+    // Update the rate of interest
+    document.getElementById('rate_of_interest').textContent = `${loanDetails.rate_of_interest}%`;
+ } catch (error) {
+    console.error('There was a problem with the fetch operation:', error);
+ }
+}
+
+// Call the function to update loan details when the page loads
+document.addEventListener('DOMContentLoaded', updateLoanDetails);
+
+    </script>
 
 </body>

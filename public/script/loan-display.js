@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", function() {
           document.getElementById("months_paid").textContent = `${data.months_paid} Months`;
           document.getElementById("rate_of_interest").textContent = `${data.rate_of_interest}%`;
           document.getElementById("date_of_payment").textContent = data.loan_payments[data.loan_payments.length - 1].date_of_payment;
+          document.getElementById("emi2").textContent = `₹ ${data.emi.toFixed(2)}`;
 
           // Calculate and display the next payment date
           const lastPaymentDateStr = data.loan_payments[data.loan_payments.length - 1].date_of_payment;

@@ -92,31 +92,17 @@
             <div class="down">
                 <div class="left"><P>AMOUNT GRANTED</P>
                 
-              <P class="dollar">&#x20B9 4,00,000.00</P></div>
+              <P class="dollar" id="loan_amount">&#x20B9 4,00,000.00</P></div>
             
-            <div class="middle-1"><P>EMIs PAID</P> <P class="dollar">28</P></div>
-            <div class="middle-2"><P>EMIs LEFT</P> <P class="dollar">20</P></div>
-            <div class="rigth"><P>AMOUNT LEFT TO BE PAID</P>  <P class="dollar">&#x20B9 2,00,000.00</P></div></div>
+            <div class="middle-1"><P>EMIs PAID</P> <P class="dollar" id="months_paid">28</P></div>
+            <div class="middle-2"><P>EMIs LEFT</P> <P class="dollar" id="months_left">20</P></div>
+            <div class="rigth"><P>AMOUNT LEFT TO BE PAID</P>  <P class="dollar" id="ToBePaid">&#x20B9 2,00,000.00</P></div></div>
             
             <div class="last">
               <a href="./homeloan.html"><button class="back-btn">BACK TO HOME</button></a>
             </div>
             
         </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     </main>
 
     <footer class="mt-auto">
@@ -182,4 +168,20 @@
   
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', async () => {
+         try {
+           const response = await fetch('/api/loan-details-and-calculate');
+           const loanDetails = await response.json();
+     
+           document.getElementById('loan_amount').textContent = `₹ ${loanDetails.loan_amount.toLocaleString('en-IN')}.00`;
+           document.getElementById('months_paid').textContent = loanDetails.months_paid;
+           document.getElementById('months_left').textContent = loanDetails.months_left;
+           document.getElementById('ToBePaid').textContent = `₹ ${loanDetails.toBePaid.toLocaleString('en-IN')}`;
+         } catch (error) {
+           console.error('Error fetching loan details:', error);
+         }
+      });
+     </script>
+     
 </body>
