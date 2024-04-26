@@ -92,6 +92,7 @@
                   <th class="custom-table-header">Date</th>
                   <th class="custom-table-header">Time</th>
                   <th class="custom-table-header">Transaction ID</th>
+                  <th class="custom-table-header">Coins</th>
                   <th class="custom-table-header">Type</th>
                </tr>
               </thead>
@@ -191,7 +192,8 @@
           row.insertCell(0).innerHTML = reward.date;
           row.insertCell(1).innerHTML = reward.time;
           row.insertCell(2).innerHTML = reward.transaction_id;
-          row.insertCell(3).innerHTML = reward.mode;
+          row.insertCell(3).innerHTML = reward.coins;
+          row.insertCell(4).innerHTML = reward.mode;
         });
       }
   

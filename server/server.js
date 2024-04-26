@@ -88,6 +88,7 @@ passport.use(
           second_name: second_name, // Assign the rest of the name
           address: "", // Placeholder for Address
           phone_number: "",
+          wallet_address: "",
           credit_score: 500,
           bank: [], // Placeholder for Bank Information
           reward_balance: 500,
@@ -105,7 +106,6 @@ passport.use(
     }
   )
 );
-
 
 // Configure Passport to serialize and deserialize user instances to and from the session
 passport.serializeUser(function (user, done) {
@@ -293,7 +293,6 @@ app.get("/export-transactions", async (req, res) => {
   }
 });
 
-
 //Username
 
 // Add this route to your Express server
@@ -316,7 +315,6 @@ app.get("/api/first-name", async (req, res) => {
     res.status(500).send("Error fetching first name.");
   }
 });
-
 
 
 // Pavan's Login, Signup and register
@@ -399,6 +397,7 @@ app.post("/signup", async (req, res) => {
       // Set default or placeholder values for additional fields
       aadhar_number: "",
       pan_number: "",
+      wallet_address: "",
       address: "",
       phone_number: phone_number,
       credit_score: 500,
@@ -464,7 +463,7 @@ app.post("/register", async (req, res) => {
       CONFIRM_BANK_ACCOUNT_NUMBER,
       BANK_NAME,
       AADHAR_CARD_NUMBER,
-      PHONE_NUMBER,
+      WALLET_ADDRESS,
       ADDRESS,
       BANK_BRANCH,
       IFSC_CODE,
@@ -496,10 +495,10 @@ app.post("/register", async (req, res) => {
     const update = {
       $set: {
         aadhar_number: AADHAR_CARD_NUMBER,
-        phone_number: PHONE_NUMBER,
         address: ADDRESS,
         pan_number: PAN_CARD_NUMBER,
-        email: emailToUse, // Use the determined email
+        email: emailToUse,
+        wallet_address: WALLET_ADDRESS, // Use the determined email
         bank: [
           {
             bank_account_number: BANK_ACCOUNT_NUMBER,
@@ -1093,7 +1092,6 @@ async function updateRewardAndInitialBalance(newRewardBalance) {
         { $set: { reward_balance: newRewardBalance } }
       );
     }
-
     console.log("Reward and initial balance updated successfully.");
     client.close();
   } catch (error) {
@@ -1136,13 +1134,22 @@ app.post("/api/create-rewards-history-entry", async (req, res) => {
     const db = client.db();
     const customersCollection = db.collection("Customers");
 
+    // Fetch the user's document to get the initial_balance
+    const user = await customersCollection.findOne({ email: email });
+    if (!user) {
+      return res.status(404).send("User not found.");
+    }
+
     // Generate a random transaction ID
     const transactionId = crypto.randomBytes(16).toString("hex");
 
     // Get the current date and time
     const date = new Date();
-    const formattedDate = date.toISOString().split("T")[0];
-    const formattedTime = date.toISOString().split("T")[1].split(".")[0];
+    const istOffset = 5.5; // IST offset in hours
+    const istDate = new Date(date.getTime() + istOffset * 60 * 60 * 1000);
+    const formattedDate = istDate.toISOString().split("T")[0];
+    const formattedTime = istDate.toISOString().split("T")[1].split(".")[0];
+    const balance = user.initial_balance; // Use the fetched initial_balance
 
     // Update the rewards_history array in the database
     await customersCollection.updateOne(
@@ -1153,6 +1160,7 @@ app.post("/api/create-rewards-history-entry", async (req, res) => {
             transaction_id: transactionId,
             date: formattedDate,
             time: formattedTime,
+            coins: balance,
             mode: "Spent",
           },
         },
