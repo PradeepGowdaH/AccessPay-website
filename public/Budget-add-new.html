@@ -98,18 +98,6 @@
                   <canvas id="budgetChart" width="300" height="300"></canvas>
                 </div>
               </div>
-              <form class="text-center mt-4" action="#" method="post" id="budgetForm">
-                <div class="form-group d-inline-block mx-2">
-                  <label for="categoryName" class="font-weight-bold" style="font-family: 'DM Sans', sans-serif;">Enter name of category</label>
-                  <input type="text" class="form-control rounded-pill border-dark" id="categoryName" style="border-width: 2px;">
-                </div>
-                <div class="form-group d-inline-block mx-2">
-                  <label for="categoryAmount" class="font-weight-bold" style="font-family: 'DM Sans', sans-serif;">Enter amount</label>
-                  <input type="text" class="form-control rounded-pill border-dark" id="categoryAmount" style="border-width: 2px;">
-                </div>
-                <br> <!-- Add a line break to ensure the button is on the line below -->
-                <a href="Home-budget.html"><button type="submit" class="btn btn-custom mt-3">Add</button></a>
-              </form>
               <div class="text-center mt-4">
                 <canvas id="fullnessBar" width="auto" height="20"></canvas>
               </div>
@@ -131,6 +119,27 @@
                   <p class="total-value" id="currentYear">2024</p>
                 </div>
               </div>
+              
+            </div>
+            <div class="custom-box2 d-none">
+              <div class="py-3"></div> 
+              <h1>You have not set budget for this month</h1>
+              <div class="py-3"></div> 
+            </div>
+            <div class="form-section">
+              <form class="text-center mt-4" action="#" method="post" id="budgetForm">
+                <div class="form-group d-inline-block mx-2">
+                  <label for="categoryName" class="font-weight-bold" style="font-family: 'DM Sans', sans-serif;">Enter name of category</label>
+                  <input type="text" class="form-control rounded-pill border-dark" id="categoryName" style="border-width: 2px;">
+                </div>
+                <div class="form-group d-inline-block mx-2">
+                  <label for="categoryAmount" class="font-weight-bold" style="font-family: 'DM Sans', sans-serif;">Enter amount</label>
+                  <input type="text" class="form-control rounded-pill border-dark" id="categoryAmount" style="border-width: 2px;">
+                </div>
+                <br> <!-- Add a line break to ensure the button is on the line below -->
+                <a href="Home-budget.html"><button type="submit" class="btn btn-custom mt-3">Add</button></a>
+              </form>
+              <div class="py-2"></div> 
               <div class="d-flex justify-content-center mt-4">
                 <a href="Budget-added.html"><button class="btn btn-custom">View past months</button></a>
               </div>
@@ -395,5 +404,41 @@ function updateCurrentMonthAndYear() {
 
     // Fetch and display the total spending
     fetchAndDisplayTotalSpending();
-    </script>  
+    </script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+ const budgetForm = document.getElementById('budgetForm');
+ budgetForm.addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    const categoryName = document.getElementById('categoryName').value;
+    const categoryAmount = document.getElementById('categoryAmount').value;
+
+    // Send the data to the server
+    fetch('/add-budget-category', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ categoryName, categoryAmount }),
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.message === "Budget category added successfully.") {
+        alert("Budget category added successfully.");
+        // Refresh the page to reflect the changes
+        location.reload();
+      } else {
+        alert("Error adding budget category.");
+      }
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      alert("Error adding budget category.");
+    });
+ });
+});
+
+      </script>
+      
 </body>

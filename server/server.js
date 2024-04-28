@@ -861,10 +861,9 @@ app.post("/fetch-budget", async (req, res) => {
 
   const budget = customer.budget.find((b) => b.month_year === monthYear);
   if (!budget) {
-    return res
-      .status(404)
-      .send("Budget not found for the specified month and year.");
-  }
+    // Return a JSON response with a message indicating no budget found
+    return res.status(404).json({ message: "Budget not found for the specified month and year." });
+ }
 
   const labels = Object.keys(budget).filter((key) => key !== "month_year");
   const data = Object.values(budget).slice(1);
@@ -891,46 +890,50 @@ app.get("/fetch-months", async (req, res) => {
 
 app.post("/add-budget-category", async (req, res) => {
   const { categoryName, categoryAmount } = req.body;
+  // Format the current month and year to match the expected format in the database
   const currentMonthYear = new Date().toLocaleString("default", {
-    month: "long",
-    year: "numeric",
-  });
-
+     month: "long",
+     year: "numeric",
+  }).replace(/ /g, ', '); // Replace spaces with ', ' to match the expected format
+ 
   try {
-    const client = await MongoClient.connect(mongoURI);
-    const db = client.db();
-    const customersCollection = db.collection("Customers");
-
-    const customer = await customersCollection.findOne({
-      email: email,
-    });
-    if (!customer) {
-      return res.status(404).send("Customer not found.");
-    }
-
-    const budgetEntry = customer.budget.find(
-      (b) => b.month_year === currentMonthYear
-    );
-    if (!budgetEntry) {
-      return res.status(404).send("Budget not found for the current month.");
-    }
-
-    // Update the budget entry with the new category
-    budgetEntry[categoryName] = parseInt(categoryAmount, 10);
-
-    await customersCollection.updateOne(
-      { email: email },
-      { $set: { budget: customer.budget } }
-    );
-
-    res.json({ message: "Budget category added successfully." });
-    client.close();
+     const client = await MongoClient.connect(mongoURI);
+     const db = client.db();
+     const customersCollection = db.collection("Customers");
+ 
+     const customer = await customersCollection.findOne({
+       email: email,
+     });
+     if (!customer) {
+       return res.status(404).send("Customer not found.");
+     }
+ 
+     // Find the budget entry for the current month and year, case-insensitive
+     let budgetEntry = customer.budget.find(
+       (b) => b.month_year.toLowerCase() === currentMonthYear.toLowerCase()
+     );
+ 
+     if (!budgetEntry) {
+       // If there's no budget entry for the current month, create a new one
+       budgetEntry = { month_year: currentMonthYear };
+       customer.budget.push(budgetEntry);
+     }
+ 
+     // Update the budget entry with the new category
+     budgetEntry[categoryName] = parseInt(categoryAmount, 10);
+ 
+     await customersCollection.updateOne(
+       { email: email },
+       { $set: { budget: customer.budget } }
+     );
+ 
+     res.json({ message: "Budget category added successfully." });
+     client.close();
   } catch (error) {
-    console.error("Error adding budget category:", error);
-    res.status(500).send("Error adding budget category.");
+     console.error("Error adding budget category:", error);
+     res.status(500).send("Error adding budget category.");
   }
-});
-
+ });
 // Loan
 
 app.get("/loan-data", async (req, res) => {

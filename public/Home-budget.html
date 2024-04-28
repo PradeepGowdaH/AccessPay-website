@@ -107,24 +107,37 @@
               <div class="totals-section mt-4">
                 <div class="total-column">
                   <h3 class="total-title">Total Income</h3>
-                  <p class="total-value" id="totalBudget">₹10,000</p> <!-- Replace with your arbitrary value -->
+                  <p class="total-value" id="totalBudget"></p> 
                 </div>
                 <div class="total-column">
                   <h3 class="total-title">Total Spendings</h3>
-                  <p class="total-value" id="totalSpendings">₹5,000</p> <!-- Replace with your arbitrary value -->
+                  <p class="total-value" id="totalSpendings"></p>
                 </div>
                 <div class="total-column">
                   <h3 class="total-title">Month</h3>
-                  <p class="total-value" id="currentMonth">June</p> <!-- Replace with your arbitrary month -->
+                  <p class="total-value" id="currentMonth"></p> 
                 </div>
                 <div class="total-column">
                   <h3 class="total-title">Year</h3>
-                  <p class="total-value" id="currentYear">2024</p> <!-- Replace with your arbitrary year -->
+                  <p class="total-value" id="currentYear">2024</p> 
                 </div>
               </div>
               <div class="d-flex justify-content-center mt-4"> <!-- Adjusted container for horizontal centering -->
                 <a href="./Budget-added.html"><button class="btn btn-custom">View past months</button></a>
               </div>
+            </div>
+            <div class="custom-box2 d-none">
+              <div class="py-3"></div> 
+              <h1>You have not set budget for this month</h1>
+              <div class="py-3"></div> 
+              <div class="d-flex justify-content-center mt-4"> <!-- Adjusted container for horizontal centering -->
+                <a href="./Budget-add-new.html"><button class="btn btn-custom">Add Budget</button></a>
+              </div>
+              <h1>OR</h1>
+              <div class="d-flex justify-content-center mt-4"> <!-- Adjusted container for horizontal centering -->
+                <a href="./Budget-added.html"><button class="btn btn-custom">View past months</button></a>
+              </div>
+              <div class="py-3"></div> 
             </div>
           </div>
         </div>
@@ -217,6 +230,8 @@ function updateCurrentMonthAndYear() {
     // Call the function to update the month and year
     updateCurrentMonthAndYear();
 
+    
+
     async function fetchAndDisplayBudget() {
         try {
             // Fetch the budget data from your server
@@ -244,6 +259,8 @@ function updateCurrentMonthAndYear() {
 
     // Fetch and display the budget
     fetchAndDisplayBudget();
+
+    
 
     async function fetchAndDisplayTotalSpending() {
         try {
