@@ -201,16 +201,23 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
               if (responseData.message === 'Login successful') {
                   // Redirect the user to the desired page after a successful login
                   window.location.href = './Homepage-logged-in.html'; // Adjust the URL as needed
-              } else {
+              }
+              else if (responseData.message === 'Admin login') {
+                  // Redirect the user to the desired page after a successful login
+                  window.location.href = './Redeem-history-admin.html'; // Adjust the URL as needed
+              }
+              else {
                   // Handle unsuccessful login (e.g., show an error message)
                   alert('Login failed. Please check your email and password.');
               }
           } catch (error) {
-              console.error('Error:', error);
-              // Handle error (e.g., show an error message)
-              alert('An error occurred during login. Please try again.');
-          }
-      });
+    console.error('Error:', error);
+    // Log the error object for more details
+    console.error('Error details:', error);
+    alert('An error occurred during login. Please try again.');
+}
+});
   </script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 </body>
+</html>

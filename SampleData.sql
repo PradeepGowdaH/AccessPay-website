@@ -325,3 +325,24 @@
     }
   ]
 }
+
+//
+{
+  "_id": {
+    "$oid": "77291cb8b3f4090bf4addd9a"
+  },
+  "googleId": "google_id_6",
+  "googleName": "Admin",
+  "email": "accesspay2024@gmail.com",
+  "password": "admin",
+  "redeem_history": [
+      {
+	"wallet_address" : "ggsfef3452462425",
+	"transaction_id" : "83403843hgjn303",
+	"email" : "email",
+	"date" : "formattedDate",
+  "time": "formattedTime",
+	"coins" : 500
+	}
+    ]
+  }

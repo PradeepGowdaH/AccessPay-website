@@ -34,13 +34,44 @@ body {
     font-size: 16px;
     padding: 8px 12px !important;
   }
-  
+  #walletaddress {
+    margin-right: -100%;
+}
   .btn-logout:hover,
   .btn-username:hover,
   .btn-reward-buttons {
     background-color: rgba(76, 140, 102, 0.9) !important;
   }
-  
+ /* Adjustments for the form container */
+.d-none.d-lg-flex {
+  display: flex;
+  justify-content: center; /* Center the form horizontally */
+  align-items: center; /* Center the form vertically */
+  flex-wrap: wrap; /* Allow the form to wrap if necessary */
+}
+
+/* Adjustments for the form and input */
+#walletaddress {
+  width: 50%; /* Adjust the width as needed */
+  margin: 0 auto; /* Center the form */
+}
+
+.input-group {
+  display: flex;
+  justify-content: center; /* Center the input within the group */
+  width: 100%; /* Ensure the input group takes the full width of the form */
+
+}
+
+.input-group input {
+  width: 80%; /* Adjust the width of the input field */
+  margin: 0 auto; /* Center the input field within the input group */
+}
+input {
+  border: 2px solid #000; /* Set the border color and width */
+  border-radius: 20px; /* Set the border radius */
+}
+
   /* Remove button styling for mobile view */
   @media (max-width: 767px) {
     .btn-logout,

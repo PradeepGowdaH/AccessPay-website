@@ -67,19 +67,27 @@
 
             <!-- Login and Get Started Buttons for Desktop View -->
 <div class="d-none d-lg-flex"><!-- Hide in mobile view -->
-    <a href="./Dashboard.html"><button class="btn btn-primary me-2 btn-login username-display" type="button">Username <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-person" viewBox="0 0 16 16">
+    <a href="./Dashboard.html"><button class="btn btn-primary me-2 btn-logout username-display" type="button">Username <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-person" viewBox="0 0 16 16">
         <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM1 15s1-4 7-4 7 4 7 4H1z"/>
       </svg></button></a>
-    <a href="./logout.html"><button class="btn btn-primary btn-get-started" type="button">Log out</button></a>
+    <a href="./logout.html"><button class="btn btn-primary btn-logout" type="button">Log out</button></a>
 </div>
-
 <!-- Include the JavaScript file that contains the client.js functionality -->
 <script src="./script/username.js"></script>
 
         </div>
     </nav>
+    <form id="walletaddress" action="/wallet" method="post">
+      <div class="input-group">
+          <input type="text" class="form-control" placeholder="Crypto Address" aria-label="Crypto Address" name="cryptoAddress">
+          <div class="input-group-append">
+              <button class="btn btn-primary btn-reward-button" type="submit">Submit</button>
+          </div>
+      </div>
+    </form>
 </header>
-    <main  class="flex-grow-1 pt-5">
+
+  <main  class="flex-grow-1 pt-5">
       <div class="reward-container">
         <div class="crypto-rewards col-sm-6 col-md-6 col-lg-12">
           <h2 class="text-start" font-family = "Sans" >Crypto Rewards</h2>
@@ -163,6 +171,35 @@
         </div>
       </div>
     </footer>
+    <script>
+      document.getElementById('walletaddress').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const cryptoAddress = formData.get('cryptoAddress');
+
+    try {
+        const response = await fetch('/wallet', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ cryptoAddress }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        if (data.success) {
+          alert('Crypto wallet address updated successfully');
+        } else {
+            alert('Failed to update crypto address. Please try again.');
+        }
+    } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+    }
+});
+</script>
     <script>
       // Function to fetch and display the reward balance
       async function fetchAndDisplayRewardBalance() {

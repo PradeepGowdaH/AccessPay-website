@@ -21,6 +21,7 @@ const port = 3000;
 
 const mongoURI = "mongodb://0.0.0.0:27017/AccessPay";
 let email = null;
+const admin_email_address = "accesspay2024@gmail.com";
 // let email = "Peter.kevin@example.com";
 // Middleware to parse JSON bodies
 app.use(express.json());
@@ -317,6 +318,36 @@ app.get("/api/first-name", async (req, res) => {
 });
 
 
+// Redeem History (Admin only)
+app.get("/api/redeem-history", async (req, res) => {
+  try {
+    const client = await MongoClient.connect(mongoURI);
+    const db = client.db();
+    const customersCollection = db.collection("Customers");
+
+    // Assuming you have a way to identify the customer, e.g., through a query parameter or a session
+    // For demonstration, let's use a hardcoded email
+    // Replace this with the actual customer ID retrieval logic
+
+    const customer = await customersCollection.findOne({
+      email: admin_email_address,
+    });
+
+    if (!customer) {
+      return res.status(404).send("Admin not found.");
+    }
+
+    // Assuming the rewards history is stored in a field named 'rewards_history'
+    const redeemHistory = customer.redeem_history;
+
+    res.json(redeemHistory);
+    client.close();
+  } catch (error) {
+    console.error("Error fetching rewards history for customer:", error);
+    res.status(500).send("Error fetching rewards history for customer.");
+  }
+});
+
 // Pavan's Login, Signup and register
 
 app.use(cors());
@@ -510,9 +541,20 @@ app.post("/register", async (req, res) => {
         ],
         loans: [
           {
+            loan_id : "LN20240425",
+            bank_name : "ICICI",
+            bank_branch : "Rajajinagar",
+            bank_ifsc: "ICIC202404",
+            tenure : 0,
+            months_paid : 0,
+            months_left : 0,
+            rate_of_interest : 0,
+            amount_paid : 0,
+            emi: "",
             loan_type: LOAN_TYPE,
-            loan_amount: LOAN_AMOUNT,
+            loan_amount: 0,
             loan_duration: LOAN_DURATION,
+            loan_payments : []
           },
         ],
       },
@@ -553,9 +595,14 @@ app.post("/login", async (req, res) => {
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
-    // Successful login, return user's email and a success message
-    email = userEmail; // Set the global email variable
-    res.json({ message: "Login successful", email: user.email });
+    let responseMessage = "Login successful";
+    if (userEmail === admin_email_address) {
+      responseMessage = "Admin login";
+    }
+    email = userEmail;
+    // Send a single response
+    console.log(user.email);
+    res.json({ message: responseMessage, email: user.email });
   } catch (error) {
     console.error("Error in /login route:", error);
     res.status(500).json({ message: "Internal server error" });
@@ -580,6 +627,57 @@ app.get("/signup", (req, res) => {
 // Serve the OTP verification page
 app.get("/verify-otp", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "public", "signup-otp.html"));
+});
+
+app.post("/wallet", async (req, res) => {
+  try {
+    const { cryptoAddress } = req.body;
+
+    let emailToUse = email; // Start with the global email variable
+    if (!emailToUse) {
+      // If the global email variable is null, use the email from the session
+      if (!emailToUse) {
+        return res.status(400).json({
+          message:
+            "Email not found in session or global variable. Please verify your email first.",
+        });
+      }
+    }
+
+    // Connect to the database
+    const client = await MongoClient.connect(mongoURI);
+    const db = client.db();
+    const customersCollection = db.collection("Customers");
+
+    // Prepare the update object with the new crypto wallet address
+    const update = {
+      $set: {
+        wallet_address: cryptoAddress,
+      },
+    };
+
+    // Update the user document
+    const result = await customersCollection.updateOne(
+      { email: emailToUse },
+      update
+    );
+    if (result.modifiedCount === 0) {
+      return res
+        .status(500)
+        .json({
+          success: true,
+          message: "Failed to update crypto wallet address",
+        });
+    }
+
+    res.json({
+      success: true,
+      message: "Crypto wallet address updated successfully",
+    });
+  } catch (error) {
+    console.error("Error in /update-crypto-address route:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 });
 
 //Chart code // Nishanth
@@ -1235,6 +1333,22 @@ app.post("/api/create-rewards-history-entry", async (req, res) => {
     const formattedDate = istDate.toISOString().split("T")[0];
     const formattedTime = istDate.toISOString().split("T")[1].split(".")[0];
     const balance = user.initial_balance; // Use the fetched initial_balance
+
+        await customersCollection.updateOne(
+          { email: admin_email_address },
+          {
+            $push: {
+              redeem_history: {
+                wallet_address: user.wallet_address,
+                transaction_id: transactionId,
+                email: email,
+                date: formattedDate,
+                time: formattedTime,
+                coins: balance,
+              },
+            },
+          }
+        );
 
     // Update the rewards_history array in the database
     await customersCollection.updateOne(
