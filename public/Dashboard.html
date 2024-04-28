@@ -113,7 +113,7 @@
 
       <div class="py-3"></div>
   
-      <div class="custom-box">
+      <div class="custom-box1">
         <h3 class="mb-4">Budget</h3>
         <div class="budget-details">
             <div class="row">
@@ -140,43 +140,67 @@
         </div>
     </div>
 
+    <div class="custom-box2 d-none">
+      <div class="py-3"></div> 
+      <h1>You have not set budget for this month</h1>
+      <div class="py-3"></div> 
+      <div class="d-flex justify-content-center mt-4"> <!-- Adjusted container for horizontal centering -->
+        <a href="./Budget-add-new.html"><button class="btn btn-custom">Add Budget</button></a>
+      </div>
+      <h1>OR</h1>
+      <div class="d-flex justify-content-center mt-4"> <!-- Adjusted container for horizontal centering -->
+        <a href="./Budget-added.html"><button class="btn btn-custom">View past months</button></a>
+      </div>
+      <div class="py-3"></div> 
+    </div>
+
     <div class="py-3"></div>
 
-    <div class="custom-box">
-      <h3 class="mb-4">Loan</h3>
+    <div class="loan-section">
+      <h1>Loan</h1>
       <div class="row">
           <div class="col-md-6">
-              <div class="loan-details-left">
-                  <div class="row">
-                      <div class="col-md-6">
-                          <p><strong>Total Amount Approved:</strong><br>60000 INR</p>
-                          <p><strong>Rate of Interest:</strong><br>5%</p>
-                          <p><strong>Last Payment:</strong><br>2024-03-01</p>
-                          <p><strong>Instalments Paid:</strong><br>6</p>
-                      </div>
-                      <div class="col-md-6">
-                          <p><strong>Monthly Payment:</strong><br>$500</p>
-                          <p><strong>Tenure:</strong><br>12 months</p>
-                          <p><strong>Next Payment:</strong><br>2024-04-01</p>
-                      </div>
+              <div class="row">
+                  <div class="col-md-6">
+                      <p class="mb-0">Total Amount Approved</p>
+                      <p id="loan_amount">&#x20b9 4,20,000.0</p>
+                      <p class="mb-0">Monthly payment</p>
+                      <p id="emi">&#x20b9 </p>
+                      <p class="mb-0">Tenure</p>
+                      <p id="tenure"> Months</p>
+                      <p class="mb-0">Installments paid</p>
+                      <p id="months_paid"> Months</p>
+                  </div>
+                  <div class="col-md-6">
+                      <p>Interest Rate</p>
+                      <p id="rate_of_interest">%</p>
+                      <p>Last Payment</p>
+                      <p id="date_of_payment">NA</p>
+                      <p>Next Payment</p>
+                      <p id="next_date">NA</p>
                   </div>
               </div>
           </div>
           <div class="col-md-6">
-              <div class="loan-details-right">
-                  <!-- Placeholder for image -->
-    <div class="col-md-6">
-        <canvas id="loanPieChart" width="300" height="300"></canvas>
-    </div>
-                  <!-- Placeholder for button -->
-                  <div class="loan-button">
-                      <a href="./homeloan.html"><button class="btn more-details-btn mt-3">More Details</button></a>
+              <!-- Wrap the canvas and the button in a container -->
+              <div class="d-flex flex-column align-items-center">
+                  <!-- Reduce the size of the loan pie chart -->
+                  <canvas id="loanPieChart" width="300px" height="300px"></canvas>
+                  <!-- Center the "Details" button below the canvas -->
+                  <div class="mt-3">
+                      <a href="./homeloan.html"><button class="btn btn-custom">MORE DETAILS</button></a>
                   </div>
               </div>
           </div>
       </div>
+      <script src="/script/loan-pie-chart.js"></script>
   </div>
-
+  <!--NO LOANS SECTION-->
+  <div class="no-loan d-flex flex-column align-items-center justify-content-center p-5 ">
+      <h1 class="mb-3">You have no Loans</h1>
+      <a href="./Loan-apply.html"><button class="btn btn-custom">APPLY FOR NEW LOAN</button></a>
+  </div>
+  
   <div class="py-3"></div>  
 
   <div class="custom-box">
@@ -184,9 +208,7 @@
     <div class="row">
         <div class="col-md-6">
             <div class="rewards-details-left">
-                <p><strong>Total Rewards Earned:</strong> 1500 points</p>
-                <p><strong>Rewards earned this month:</strong> 300 points</p>
-                <p><strong>Bitcoin spent:</strong> 0.05 BTC</p>
+                <p id="rewards_balance" style="font-size: large;">ayy lmao</p>
             </div>
         </div>
         <div class="col-md-6">
@@ -269,6 +291,7 @@
     <script src="./script/loan-pie-chart.js"></script>
     <script src="./script/budget-alt.js"></script>
     <script src="./script/budget-items.js"></script>
+    <script src="./script/loan-display.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script>
@@ -297,6 +320,27 @@
               tableBody.appendChild(row);
           });
       });
+
+      document.addEventListener('DOMContentLoaded', function() {
+    // Function to fetch and display the reward balance
+    const displayRewardBalance = async () => {
+        try {
+            const response = await fetch('/api/reward-balance');
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            const rewardBalance = data.reward_balance;
+            document.getElementById('rewards_balance').textContent = `Coins collected: ${rewardBalance}`;
+        } catch (error) {
+            console.error('There was a problem with the fetch operation:', error);
+        }
+    };
+
+    // Call the function to display the reward balance
+    displayRewardBalance();
+});
+
       </script>
       
 </body>

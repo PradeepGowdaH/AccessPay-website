@@ -20,9 +20,10 @@ const crypto = require("crypto");
 const port = 3000;
 
 const mongoURI = "mongodb://0.0.0.0:27017/AccessPay";
+// let email = "pradeephgowda.pg@gmail.com";
+// let email = "Peter.kevin@example.com";
 let email = null;
 const admin_email_address = "accesspay2024@gmail.com";
-// let email = "Peter.kevin@example.com";
 // Middleware to parse JSON bodies
 app.use(express.json());
 
@@ -30,6 +31,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static("public"));
+
+app.use(cors());
 
 // OAuth Log-in & Sign-up
 
@@ -350,7 +353,6 @@ app.get("/api/redeem-history", async (req, res) => {
 
 // Pavan's Login, Signup and register
 
-app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -680,7 +682,7 @@ app.post("/wallet", async (req, res) => {
   }
 });
 
-//Chart code // Nishanth
+//Chart code
 
 // Transactions
 
@@ -720,46 +722,49 @@ app.get("/api/transactions", async (req, res) => {
   }
 });
 
-app.get("/api/transactions-weekly", async (req, res) => {
+app.get("/api/transactions-monthly", async (req, res) => {
   try {
     const client = await MongoClient.connect(mongoURI);
     const db = client.db();
     const customersCollection = db.collection("Customers");
 
     const customer = await customersCollection.findOne({
-      email: email,
+      email: email, // Replace with actual email or parameter
     });
     if (!customer) {
       return res.status(404).send("Customer not found.");
     }
 
-    const currentDate = new Date();
-    const fiveWeeksAgo = new Date(
-      currentDate.setDate(currentDate.getDate() - 35)
-    );
-    const recentTransactions = customer.transactions.filter(
-      (transaction) => new Date(transaction.isoDate) >= fiveWeeksAgo
-    );
+    const transactions = await customersCollection
+      .aggregate([
+        { $match: { email: email } }, // Replace with actual email or parameter
+        { $unwind: "$transactions" },
+        {
+          $group: {
+            _id: {
+              month: { $month: { $toDate: "$transactions.isoDate" } }, // Convert string to date
+              year: { $year: { $toDate: "$transactions.isoDate" } }, // Convert string to date
+            },
+            totalAmount: { $sum: "$transactions.amount" },
+          },
+        },
+        { $sort: { "_id.year": 1, "_id.month": 1 } },
+      ])
+      .toArray();
 
-    const transactions = recentTransactions.reduce((acc, transaction) => {
-      const date = new Date(transaction.isoDate);
-      const weekNumber = date.getWeek();
+    // Convert month numbers to names without "month" prefix
+    const transactionsWithMonthNames = transactions.map((transaction) => ({
+      ...transaction,
+      _id: {
+        month: new Date(0, transaction._id.month - 1).toLocaleString(
+          "default",
+          { month: "long" }
+        ),
+        year: transaction._id.year,
+      },
+    }));
 
-      if (!acc[weekNumber]) {
-        acc[weekNumber] = { amount: 0 };
-      }
-      acc[weekNumber].amount += transaction.amount;
-      return acc;
-    }, {});
-
-    const transactionsData = Object.entries(transactions).map(
-      ([weekNumber, { amount }]) => ({
-        weekNumber,
-        amount,
-      })
-    );
-
-    res.json(transactionsData);
+    res.json(transactionsWithMonthNames);
     client.close();
   } catch (error) {
     console.error("Error fetching transactions for customer:", error);
@@ -767,7 +772,46 @@ app.get("/api/transactions-weekly", async (req, res) => {
   }
 });
 
-// Rewards history
+
+app.get("/api/transactions-weekly", async (req, res) => {
+  try {
+    const client = await MongoClient.connect(mongoURI);
+    const db = client.db();
+    const customersCollection = db.collection("Customers");
+
+    const customer = await customersCollection.findOne({
+      email: email, // Replace with actual email or parameter
+    });
+    if (!customer) {
+      return res.status(404).send("Customer not found.");
+    }
+
+    const transactions = await customersCollection
+      .aggregate([
+        { $match: { email: email } }, // Replace with actual email or parameter
+        { $unwind: "$transactions" },
+        {
+          $group: {
+            _id: {
+              week: { $week: { $toDate: "$transactions.isoDate" } }, // Convert string to date
+              year: { $year: { $toDate: "$transactions.isoDate" } }, // Convert string to date
+            },
+            totalAmount: { $sum: "$transactions.amount" },
+          },
+        },
+        { $sort: { "_id.year": 1, "_id.week": 1 } },
+      ])
+      .toArray();
+
+    res.json(transactions);
+    client.close();
+  } catch (error) {
+    console.error("Error fetching transactions for customer:", error);
+    res.status(500).send("Error fetching transactions for customer.");
+  }
+});
+
+// Rewards history  // Nishanth
 
 app.get("/api/rewards-history", async (req, res) => {
   try {
@@ -776,7 +820,7 @@ app.get("/api/rewards-history", async (req, res) => {
     const customersCollection = db.collection("Customers");
 
     // Assuming you have a way to identify the customer, e.g., through a query parameter or a session
-    // For demonstration, let's use a hardcoded email
+    // For demonstration, let's use a hardcoded customerId
     // Replace this with the actual customer ID retrieval logic
 
     const customer = await customersCollection.findOne({
@@ -809,7 +853,7 @@ app.post("/changepassword", async (req, res) => {
     const { currentpassword, newpassword, confirmpassword } = req.body;
 
     // Assuming you have a way to identify the customer, e.g., through a session or a token
-    // For demonstration, let's use a hardcoded email
+    // For demonstration, let's use a hardcoded customerId
     // Replace this with the actual customer ID retrieval logic
 
     const customer = await customersCollection.findOne({
@@ -862,8 +906,10 @@ app.post("/fetch-budget", async (req, res) => {
   const budget = customer.budget.find((b) => b.month_year === monthYear);
   if (!budget) {
     // Return a JSON response with a message indicating no budget found
-    return res.status(404).json({ message: "Budget not found for the specified month and year." });
- }
+    return res
+      .status(404)
+      .json({ message: "Budget not found for the specified month and year." });
+  }
 
   const labels = Object.keys(budget).filter((key) => key !== "month_year");
   const data = Object.values(budget).slice(1);
@@ -891,49 +937,52 @@ app.get("/fetch-months", async (req, res) => {
 app.post("/add-budget-category", async (req, res) => {
   const { categoryName, categoryAmount } = req.body;
   // Format the current month and year to match the expected format in the database
-  const currentMonthYear = new Date().toLocaleString("default", {
-     month: "long",
-     year: "numeric",
-  }).replace(/ /g, ', '); // Replace spaces with ', ' to match the expected format
- 
+  const currentMonthYear = new Date()
+    .toLocaleString("default", {
+      month: "long",
+      year: "numeric",
+    })
+    .replace(/ /g, ", "); // Replace spaces with ', ' to match the expected format
+
   try {
-     const client = await MongoClient.connect(mongoURI);
-     const db = client.db();
-     const customersCollection = db.collection("Customers");
- 
-     const customer = await customersCollection.findOne({
-       email: email,
-     });
-     if (!customer) {
-       return res.status(404).send("Customer not found.");
-     }
- 
-     // Find the budget entry for the current month and year, case-insensitive
-     let budgetEntry = customer.budget.find(
-       (b) => b.month_year.toLowerCase() === currentMonthYear.toLowerCase()
-     );
- 
-     if (!budgetEntry) {
-       // If there's no budget entry for the current month, create a new one
-       budgetEntry = { month_year: currentMonthYear };
-       customer.budget.push(budgetEntry);
-     }
- 
-     // Update the budget entry with the new category
-     budgetEntry[categoryName] = parseInt(categoryAmount, 10);
- 
-     await customersCollection.updateOne(
-       { email: email },
-       { $set: { budget: customer.budget } }
-     );
- 
-     res.json({ message: "Budget category added successfully." });
-     client.close();
+    const client = await MongoClient.connect(mongoURI);
+    const db = client.db();
+    const customersCollection = db.collection("Customers");
+
+    const customer = await customersCollection.findOne({
+      email: email,
+    });
+    if (!customer) {
+      return res.status(404).send("Customer not found.");
+    }
+
+    // Find the budget entry for the current month and year, case-insensitive
+    let budgetEntry = customer.budget.find(
+      (b) => b.month_year.toLowerCase() === currentMonthYear.toLowerCase()
+    );
+
+    if (!budgetEntry) {
+      // If there's no budget entry for the current month, create a new one
+      budgetEntry = { month_year: currentMonthYear };
+      customer.budget.push(budgetEntry);
+    }
+
+    // Update the budget entry with the new category
+    budgetEntry[categoryName] = parseInt(categoryAmount, 10);
+
+    await customersCollection.updateOne(
+      { email: email },
+      { $set: { budget: customer.budget } }
+    );
+
+    res.json({ message: "Budget category added successfully." });
+    client.close();
   } catch (error) {
-     console.error("Error adding budget category:", error);
-     res.status(500).send("Error adding budget category.");
+    console.error("Error adding budget category:", error);
+    res.status(500).send("Error adding budget category.");
   }
- });
+});
+
 // Loan
 
 app.get("/loan-data", async (req, res) => {
@@ -999,7 +1048,7 @@ app.post("/api/add-transaction", async (req, res) => {
     transactionData.transaction_id = uuidv4(); // Generate a unique transaction ID
 
     // Assuming you have a way to identify the customer, e.g., through a query parameter or a session
-    // For demonstration, let's use a hardcoded email
+    // For demonstration, let's use a hardcoded customerId
 
     // Find the customer and update the transactions array
     const result = await customersCollection.updateOne(
@@ -1020,8 +1069,6 @@ app.post("/api/add-transaction", async (req, res) => {
     res.status(500).send("Error adding transaction.");
   }
 });
-
-//LOAN SECTION
 
 app.get("/api/loan-details", async (req, res) => {
   try {
@@ -1137,88 +1184,96 @@ app.post("/update-loan-details", async (req, res) => {
   }
 });
 
-
-app.post('/pay-loan', async (req, res) => {
+app.post("/pay-loan", async (req, res) => {
   const { loan_id } = req.body;
-  const currentDate = new Date().toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-  }).replace(/\//g, '/'); // Format date as dd/mm/yyyy
+  const currentDate = new Date()
+    .toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    })
+    .replace(/\//g, "/"); // Format date as dd/mm/yyyy
 
   try {
-      const client = await MongoClient.connect(mongoURI);
-      const db = client.db();
-      const customersCollection = db.collection("Customers");
+    const client = await MongoClient.connect(mongoURI);
+    const db = client.db();
+    const customersCollection = db.collection("Customers");
 
-      const customer = await customersCollection.findOne({ email: email });
-      if (!customer) {
-          return res.status(404).send("Customer not found.");
-      }
+    const customer = await customersCollection.findOne({ email: email });
+    if (!customer) {
+      return res.status(404).send("Customer not found.");
+    }
 
-      const loanIndex = customer.loans.findIndex(loan => loan.loan_id === loan_id);
-      if (loanIndex !== -1) {
-          customer.loans[loanIndex].months_paid += 1;
-          customer.loans[loanIndex].months_left -= 1;
-          const newPayment = {
-              loan_payment_id: uuidv4(),
-              amount_paid: parseFloat(customer.loans[loanIndex].emi),
-              date_of_payment: currentDate,
-          };
-          customer.loans[loanIndex].loan_payments.push(newPayment);
+    const loanIndex = customer.loans.findIndex(
+      (loan) => loan.loan_id === loan_id
+    );
+    if (loanIndex !== -1) {
+      customer.loans[loanIndex].months_paid += 1;
+      customer.loans[loanIndex].months_left -= 1;
+      const newPayment = {
+        loan_payment_id: uuidv4(),
+        amount_paid: parseFloat(customer.loans[loanIndex].emi),
+        date_of_payment: currentDate,
+      };
+      customer.loans[loanIndex].loan_payments.push(newPayment);
 
-          await customersCollection.updateOne({ email: email }, { $set: { loans: customer.loans } });
-          res.status(200).json({ success: true });
-      } else {
-          res.status(404).send('Loan not found.');
-      }
+      await customersCollection.updateOne(
+        { email: email },
+        { $set: { loans: customer.loans } }
+      );
+      res.status(200).json({ success: true });
+    } else {
+      res.status(404).send("Loan not found.");
+    }
   } catch (error) {
-      console.error("Error paying loan:", error);
-      res.status(500).send("Error paying loan.");
+    console.error("Error paying loan:", error);
+    res.status(500).send("Error paying loan.");
   }
 });
 
 app.get("/api/loan-details-and-calculate", async (req, res) => {
   try {
-     const client = await MongoClient.connect(mongoURI);
-     const db = client.db();
-     const customersCollection = db.collection("Customers");
- 
-     const customer = await customersCollection.findOne({
-       email: email,
-     });
-     if (!customer) {
-       return res.status(404).send("Customer not found.");
-     }
- 
-     // Check if the customer has any loans
-     if (customer.loans.length > 0) {
-       // Assuming you want to display the first loan
-       const loanDetails = customer.loans[0];
-       const loanObject = {
-         loan_amount: loanDetails.loan_amount,
-         emi: parseFloat(loanDetails.emi),
-         months_paid: loanDetails.months_paid,
-         months_left: loanDetails.months_left,
-         toBePaid: (loanDetails.months_left * parseFloat(loanDetails.emi)).toFixed(2),
-       };
-       res.json(loanObject);
-     } else {
-       // If no loans, return an object with empty values
-       res.json({
-         loan_amount: "",
-         emi: "",
-         months_paid: "",
-         months_left: "",
-         toBePaid: "",
-       });
-     }
-     client.close();
+    const client = await MongoClient.connect(mongoURI);
+    const db = client.db();
+    const customersCollection = db.collection("Customers");
+
+    const customer = await customersCollection.findOne({
+      email: email,
+    });
+    if (!customer) {
+      return res.status(404).send("Customer not found.");
+    }
+
+    // Check if the customer has any loans
+    if (customer.loans.length > 0) {
+      // Assuming you want to display the first loan
+      const loanDetails = customer.loans[0];
+      const loanObject = {
+        loan_amount: loanDetails.loan_amount,
+        emi: parseFloat(loanDetails.emi),
+        months_paid: loanDetails.months_paid,
+        months_left: loanDetails.months_left,
+        toBePaid: (
+          loanDetails.months_left * parseFloat(loanDetails.emi)
+        ).toFixed(2),
+      };
+      res.json(loanObject);
+    } else {
+      // If no loans, return an object with empty values
+      res.json({
+        loan_amount: "",
+        emi: "",
+        months_paid: "",
+        months_left: "",
+        toBePaid: "",
+      });
+    }
+    client.close();
   } catch (error) {
-     console.error("Error fetching loan details for customer:", error);
-     res.status(500).send("Error fetching loan details for customer.");
+    console.error("Error fetching loan details for customer:", error);
+    res.status(500).send("Error fetching loan details for customer.");
   }
- });
+});
 
 // Crypto Rewards // Eshwar
 
