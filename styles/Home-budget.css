@@ -167,6 +167,7 @@ body {
   
   .box-content {
     overflow: hidden;
+    margin-bottom: 40px;
   }
   
   .box-text {
@@ -243,8 +244,12 @@ body {
   }
   
   @media (max-width: 768px) {
-    .box-text,
-    .box-image {
+    .box-text {
+      float: none;
+      width: 100%;
+    }
+
+    #budgetChart {
       float: none;
       width: 100%;
     }
@@ -255,4 +260,24 @@ body {
     }
   }
   
+  canvas {
+    max-width: 100%; 
+    height: auto; 
+   }
+
+   .custom-box2{
+    border-radius: 30px;
+    background-color: #F0F0F0;
+    padding: 30px;
+    overflow: hidden;
+    margin-top: 40px;
+   }
+
+   h1{
+    font-family: 'DM Sans', sans-serif;
+    font-size: 24px;
+    margin-bottom: 15px;
+    text-align: center;
+    margin-top: 20px !important;
+   }
   
