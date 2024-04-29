@@ -21,7 +21,7 @@ const port = 3000;
 
 const mongoURI = "mongodb://0.0.0.0:27017/AccessPay";
 // let email = "pradeephgowda.pg@gmail.com";
-// let email = "Peter.kevin@example.com";
+//let email = "Peter.kevin@example.com";
 let email = null;
 const admin_email_address = "accesspay2024@gmail.com";
 // Middleware to parse JSON bodies
@@ -543,7 +543,7 @@ app.post("/register", async (req, res) => {
         ],
         loans: [
           {
-            loan_id : "LN20240425",
+            loan_id : "LN123456789",
             bank_name : "ICICI",
             bank_branch : "Rajajinagar",
             bank_ifsc: "ICIC202404",
@@ -684,7 +684,7 @@ app.post("/wallet", async (req, res) => {
 
 //Chart code
 
-// Transactions
+// Transactions // Pradeep
 
 Date.prototype.getWeek = function () {
   var oneJan = new Date(this.getFullYear(), 0, 1);
@@ -1036,39 +1036,45 @@ app.get("/api/loan-details", async (req, res) => {
   }
 });
 
-// Add expense
+// Add expense lol
 
 app.post("/api/add-transaction", async (req, res) => {
   try {
-    const client = await MongoClient.connect(mongoURI);
-    const db = client.db();
-    const customersCollection = db.collection("Customers");
-
-    const transactionData = req.body;
-    transactionData.transaction_id = uuidv4(); // Generate a unique transaction ID
-
-    // Assuming you have a way to identify the customer, e.g., through a query parameter or a session
-    // For demonstration, let's use a hardcoded customerId
-
-    // Find the customer and update the transactions array
-    const result = await customersCollection.updateOne(
-      { email: email },
-      { $push: { transactions: transactionData } }
-    );
-
-    if (result.modifiedCount === 0) {
-      return res
-        .status(404)
-        .send("Customer not found or transaction not added.");
-    }
-
-    res.json({ message: "Transaction added successfully", transactionData });
-    client.close();
+     const client = await MongoClient.connect(mongoURI);
+     const db = client.db();
+     const customersCollection = db.collection("Customers");
+ 
+     const transactionData = req.body;
+     transactionData.transaction_id = uuidv4(); // Generate a unique transaction ID
+ 
+     // Calculate 1% of the expenseAmount
+     const rewardIncrement = transactionData.amount * 0.01;
+ 
+     // Update the reward_balance and initial_balance fields
+     const updateResult = await customersCollection.updateOne(
+       { email: email },
+       {
+         $push: { transactions: transactionData },
+         $inc: { reward_balance: rewardIncrement, initial_balance: rewardIncrement },
+       }
+     );
+ 
+     if (updateResult.modifiedCount === 0) {
+       return res
+         .status(404)
+         .send("Customer not found or transaction not added.");
+     }
+ 
+     res.json({ message: "Transaction added successfully", transactionData });
+     client.close();
   } catch (error) {
-    console.error("Error adding transaction:", error);
-    res.status(500).send("Error adding transaction.");
+     console.error("Error adding transaction:", error);
+     res.status(500).send("Error adding transaction.");
   }
-});
+ });
+ 
+
+//loan-details
 
 app.get("/api/loan-details", async (req, res) => {
   try {
@@ -1187,49 +1193,50 @@ app.post("/update-loan-details", async (req, res) => {
 app.post("/pay-loan", async (req, res) => {
   const { loan_id } = req.body;
   const currentDate = new Date()
-    .toLocaleDateString("en-GB", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    })
-    .replace(/\//g, "/"); // Format date as dd/mm/yyyy
-
+     .toLocaleDateString("en-GB", {
+       day: "2-digit",
+       month: "2-digit",
+       year: "numeric",
+     })
+     .replace(/\//g, "/"); // Format date as dd/mm/yyyy
+ 
   try {
-    const client = await MongoClient.connect(mongoURI);
-    const db = client.db();
-    const customersCollection = db.collection("Customers");
-
-    const customer = await customersCollection.findOne({ email: email });
-    if (!customer) {
-      return res.status(404).send("Customer not found.");
-    }
-
-    const loanIndex = customer.loans.findIndex(
-      (loan) => loan.loan_id === loan_id
-    );
-    if (loanIndex !== -1) {
-      customer.loans[loanIndex].months_paid += 1;
-      customer.loans[loanIndex].months_left -= 1;
-      const newPayment = {
-        loan_payment_id: uuidv4(),
-        amount_paid: parseFloat(customer.loans[loanIndex].emi),
-        date_of_payment: currentDate,
-      };
-      customer.loans[loanIndex].loan_payments.push(newPayment);
-
-      await customersCollection.updateOne(
-        { email: email },
-        { $set: { loans: customer.loans } }
-      );
-      res.status(200).json({ success: true });
-    } else {
-      res.status(404).send("Loan not found.");
-    }
+     const client = await MongoClient.connect(mongoURI);
+     const db = client.db();
+     const customersCollection = db.collection("Customers");
+ 
+     const customer = await customersCollection.findOne({ email: email });
+     if (!customer) {
+       return res.status(404).json({ success: false, message: "Customer not found." });
+     }
+ 
+     const loanIndex = customer.loans.findIndex(
+       (loan) => loan.loan_id === loan_id
+     );
+     if (loanIndex !== -1) {
+       customer.loans[loanIndex].months_paid += 1;
+       customer.loans[loanIndex].months_left -= 1;
+       const newPayment = {
+         loan_payment_id: uuidv4(),
+         amount_paid: parseFloat(customer.loans[loanIndex].emi),
+         date_of_payment: currentDate,
+       };
+       customer.loans[loanIndex].loan_payments.push(newPayment);
+ 
+       await customersCollection.updateOne(
+         { email: email },
+         { $set: { loans: customer.loans } }
+       );
+       res.status(200).json({ success: true });
+     } else {
+       res.status(404).json({ success: false, message: "Loan not found." });
+     }
   } catch (error) {
-    console.error("Error paying loan:", error);
-    res.status(500).send("Error paying loan.");
+     console.error("Error paying loan:", error);
+     res.status(500).json({ success: false, message: "Error paying loan." });
   }
-});
+ });
+ 
 
 app.get("/api/loan-details-and-calculate", async (req, res) => {
   try {
