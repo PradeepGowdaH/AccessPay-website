@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
          category: expenseCategory,
          amount: parseFloat(expenseAmount),
          mode: transactionType,
-         isoDate: transactionDateTime
+         isoDate: transactionDateTime,
        };
    
        fetch('/api/add-transaction', {
