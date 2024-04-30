@@ -1439,6 +1439,37 @@ app.post("/api/create-rewards-history-entry", async (req, res) => {
   }
 });
 
+//resetting intitial balance to 0
+
+app.post("/api/reset-initial-balance", async (req, res) => {
+  try {
+     const client = await MongoClient.connect(mongoURI);
+     const db = client.db();
+     const customersCollection = db.collection("Customers");
+ 
+     // Assuming the email is available in the session or request
+     const customer = await customersCollection.findOne({ email: email });
+     if (!customer) {
+       return res.status(404).send("Customer not found.");
+     }
+ 
+     // Update the initial_balance to 0
+     await customersCollection.updateOne(
+       { email: email },
+       { $set: { initial_balance: 0 } }
+     );
+ 
+     res.json({ message: "Initial balance reset successfully." });
+     client.close();
+  } catch (error) {
+     console.error("Error resetting initial balance:", error);
+     res.status(500).send("Error resetting initial balance.");
+  }
+ });
+ 
+ 
+
+
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

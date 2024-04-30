@@ -101,7 +101,7 @@
             <div class="rigth"><P>Coins left</P> <img src="assets/coin.png.jpg" class="coin"> <P class="dollar">00.00</P></div></div>
             
             <div class="last">
-              <a href="./crypto homepage.html"><button class="back-btn">BACK TO HOME</button></a>
+              <a href="./crypto homepage.html"><button id="backToHomeBtn" class="back-btn">BACK TO HOME</button></a>
             </div>
             
         </div>
@@ -189,4 +189,31 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 </body>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      // Add event listener to the "BACK TO HOME" button
+      document.querySelector('.back-btn').addEventListener('click', function(event) {
+          event.preventDefault(); // Prevent the default action of the button
+          resetInitialBalance();
+      });
+  });
+  
+  function resetInitialBalance() {
+      fetch('/api/reset-initial-balance', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+      })
+      .then(response => {
+          if (!response.ok) {
+              throw new Error('Network response was not ok');
+          }
+          // Redirect to the homepage after successfully resetting the initial balance
+          window.location.href = './crypto homepage.html';
+      })
+      .catch(error => console.error('Error resetting initial balance:', error));
+  }
+  </script>
+  
 </html>
