@@ -95,8 +95,8 @@ passport.use(
           wallet_address: "",
           credit_score: 500,
           bank: [], // Placeholder for Bank Information
-          reward_balance: 500,
-          initial_balance: 500, // Placeholder for Reward Balance
+          reward_balance: 0,
+          initial_balance: 0, // Placeholder for Reward Balance
           rewards_history: [], // Placeholder for Rewards History
           loans: [], // Placeholder for Loans
           transactions: [], // Placeholder for Transactions
@@ -1026,6 +1026,9 @@ app.get("/api/loan-details", async (req, res) => {
       months_paid: loanDetails.months_paid,
       rate_of_interest: loanDetails.rate_of_interest,
       loan_payments: loanDetails.loan_payments,
+      bank_name: loanDetails.bank_name, 
+      bank_branch: loanDetails.bank_branch, 
+      bank_ifsc: loanDetails.bank_ifsc,
     };
 
     res.json(loanObject);
@@ -1101,6 +1104,9 @@ app.get("/api/loan-details", async (req, res) => {
         months_paid: loanDetails.months_paid,
         rate_of_interest: loanDetails.rate_of_interest,
         loan_payments: loanDetails.loan_payments,
+        bank_name: loanDetails.bank_name, 
+        bank_branch: loanDetails.bank_branch, 
+        bank_ifsc: loanDetails.bank_ifsc,
       };
       res.json(loanObject);
     } else {

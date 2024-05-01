@@ -20,6 +20,9 @@ async function updateLoanDetails() {
  
      // Update the rate of interest
      document.getElementById('rate_of_interest').textContent = `${loanDetails.rate_of_interest}%`;
+     document.getElementById('bank_name').textContent = `${loanDetails.bank_name}`;
+     document.getElementById('bank_branch').textContent = `${loanDetails.bank_branch}`;
+     document.getElementById('bank_ifsc').textContent = `${loanDetails.bank_ifsc}`;
   } catch (error) {
      console.error('There was a problem with the fetch operation:', error);
   }
