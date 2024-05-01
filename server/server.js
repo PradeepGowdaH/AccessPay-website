@@ -435,8 +435,8 @@ app.post("/signup", async (req, res) => {
       phone_number: phone_number,
       credit_score: 500,
       bank: [],
-      reward_balance: 500,
-      initial_balance: 500,
+      reward_balance: 0,
+      initial_balance: 0,
       rewards_history: [],
       loans: [],
       transactions: [],
@@ -553,9 +553,9 @@ app.post("/register", async (req, res) => {
             rate_of_interest : 0,
             amount_paid : 0,
             emi: "",
-            loan_type: LOAN_TYPE,
+            loan_type: "",
             loan_amount: 0,
-            loan_duration: LOAN_DURATION,
+            loan_duration: "",
             loan_payments : []
           },
         ],
@@ -1048,7 +1048,7 @@ app.post("/api/add-transaction", async (req, res) => {
      transactionData.transaction_id = uuidv4(); // Generate a unique transaction ID
  
      // Calculate 1% of the expenseAmount
-     const rewardIncrement = transactionData.amount * 0.01;
+     const rewardIncrement = transactionData.amount * 0.0001;
  
      // Update the reward_balance and initial_balance fields
      const updateResult = await customersCollection.updateOne(

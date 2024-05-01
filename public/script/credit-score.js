@@ -20,7 +20,7 @@ async function fetchCreditScore() {
 function updateCreditScoreInHtml(creditScore) {
   const creditScoreElement = document.querySelector(".credit-score");
   if (creditScoreElement) {
-    creditScoreElement.textContent = creditScore;
+    creditScoreElement.textContent = `Credit Score: ${creditScore}`;
   }
 }
 
