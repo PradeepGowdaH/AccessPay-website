@@ -11,7 +11,6 @@ const path = require("path");
 const session = require("express-session");
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const bcrypt = require("bcrypt");
 const { v4: uuidv4 } = require("uuid"); // For generating unique transaction IDs
 const nodemailer = require("nodemailer");
 const cors = require("cors");
