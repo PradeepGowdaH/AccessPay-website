@@ -95,8 +95,8 @@ passport.use(
           wallet_address: "",
           credit_score: 500,
           bank: [], // Placeholder for Bank Information
-          reward_balance: 500,
-          initial_balance: 500, // Placeholder for Reward Balance
+          reward_balance: 0,
+          initial_balance: 0, // Placeholder for Reward Balance
           rewards_history: [], // Placeholder for Rewards History
           loans: [], // Placeholder for Loans
           transactions: [], // Placeholder for Transactions
