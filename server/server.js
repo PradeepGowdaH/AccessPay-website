@@ -19,9 +19,7 @@ const bodyParser = require("body-parser");
 const crypto = require("crypto");
 const port = 3000;
 
-const mongoURI = "mongodb://0.0.0.0:27017/AccessPay";
-// let email = "pradeephgowda.pg@gmail.com";
-//let email = "Peter.kevin@example.com";
+const mongoURI = "mongodb+srv://accesspay-admin:VjlLrFU1TEC0P69I@cluster0.wv7ytnm.mongodb.net/AccessPay?retryWrites=true&w=majority&appName=Cluster0";
 let email = null;
 const admin_email_address = "accesspay2024@gmail.com";
 // Middleware to parse JSON bodies
@@ -50,7 +48,7 @@ app.use(passport.session());
 
 // Connect to MongoDB
 const connectToDatabase = async () => {
-  const client = new MongoClient("mongodb://127.0.0.1:27017/AccessPay");
+  const client = new MongoClient(mongoURI);
   await client.connect();
   return client.db("AccessPay");
 };
@@ -1473,9 +1471,6 @@ app.post("/api/reset-initial-balance", async (req, res) => {
   }
  });
  
- 
-
-
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

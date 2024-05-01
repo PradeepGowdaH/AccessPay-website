@@ -43,7 +43,7 @@
                             Features
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="featuresDropdown">
-                            <li><a class="dropdown-item" href="./crypto hompage.html">Rewards</a></li>
+                            <li><a class="dropdown-item" href="./crypto homepage.html">Rewards</a></li>
                             <li><a class="dropdown-item" href="./homeloan.html">Loan Tracking</a></li>
                             <li><a class="dropdown-item" href="./Transaction-Tracking.html">Transaction Tracking</a></li>
                             <li><a class="dropdown-item" href="./Home-budget.html">Budget Planning</a></li>
@@ -229,32 +229,40 @@ function updateCurrentMonthAndYear() {
     
 
     async function fetchAndDisplayBudget() {
-        try {
-            // Fetch the budget data from your server
-            const response = await fetch("/fetch-budget", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ monthYear: "April, 2024" }) // Adjust the monthYear as needed
-            });
-            const data = await response.json();
+    try {
+        // Get the current month and year
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth() + 1; // Months are 0-indexed in JavaScript
+        const currentYear = currentDate.getFullYear();
 
-            // Calculate the total budget
-            let totalBudget = 0;
-            data.data.forEach(categoryBudget => {
-                totalBudget += categoryBudget;
-            });
+        // Format the month and year as a string (e.g., "April, 2024")
+        const formattedMonthYear = `${['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][currentMonth - 1]}, ${currentYear}`;
 
-            // Update the total budget element
-            document.getElementById("totalBudget").textContent = `₹${totalBudget}`;
-        } catch (error) {
-            console.error("Error fetching budget data:", error);
-        }
+        // Fetch the budget data from your server
+        const response = await fetch("/fetch-budget", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ monthYear: formattedMonthYear }) // Use the dynamically generated monthYear
+        });
+        const data = await response.json();
+
+        // Calculate the total budget
+        let totalBudget = 0;
+        data.data.forEach(categoryBudget => {
+            totalBudget += categoryBudget;
+        });
+
+        // Update the total budget element
+        document.getElementById("totalBudget").textContent = `₹${totalBudget}`;
+    } catch (error) {
+        console.error("Error fetching budget data:", error);
     }
+}
 
-    // Fetch and display the budget
-    fetchAndDisplayBudget();
+// Fetch and display the budget
+fetchAndDisplayBudget();
 
     
 
