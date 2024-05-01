@@ -22,6 +22,9 @@ document.addEventListener("DOMContentLoaded", function() {
              document.getElementById("months_paid").textContent = `${data.months_paid} Months`;
              document.getElementById("rate_of_interest").textContent = `${data.rate_of_interest}%`;
              document.getElementById("date_of_payment").textContent = data.loan_payments[data.loan_payments.length - 1].date_of_payment;
+             document.getElementById("bank_name").textContent = data.bank_name;
+             document.getElementById("bank_branch").textContent = data.bank_branch;
+             document.getElementById("bank_ifsc").textContent = data.bank_ifsc;
    
              // Calculate and display the next payment date in "dd/mm/yyyy" format
              const lastPaymentDateStr = data.loan_payments[data.loan_payments.length - 1].date_of_payment;

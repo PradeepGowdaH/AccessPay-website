@@ -1026,6 +1026,9 @@ app.get("/api/loan-details", async (req, res) => {
       months_paid: loanDetails.months_paid,
       rate_of_interest: loanDetails.rate_of_interest,
       loan_payments: loanDetails.loan_payments,
+      bank_name: loanDetails.bank_name, 
+      bank_branch: loanDetails.bank_branch, 
+      bank_ifsc: loanDetails.bank_ifsc,
     };
 
     res.json(loanObject);
@@ -1101,6 +1104,9 @@ app.get("/api/loan-details", async (req, res) => {
         months_paid: loanDetails.months_paid,
         rate_of_interest: loanDetails.rate_of_interest,
         loan_payments: loanDetails.loan_payments,
+        bank_name: loanDetails.bank_name, 
+        bank_branch: loanDetails.bank_branch, 
+        bank_ifsc: loanDetails.bank_ifsc,
       };
       res.json(loanObject);
     } else {
