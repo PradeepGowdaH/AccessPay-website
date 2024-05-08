@@ -96,9 +96,11 @@ body {
     margin-left: -2.7px;
 }
 
-.btn-login2:hover,
-.btn-signup:hover {
+.btn-login2:hover {
     background-color: rgba(76, 140, 102, 0.9)!important;
+}
+.btn-signup:hover{
+    background-color: rgba(38, 38, 224, 1);
 }
 
 .login-form {
@@ -128,7 +130,7 @@ body {
     font-family: 'Fjalla One', sans-serif;
 }
 
-/*small screens*/
+
 @media (min-width:200px) {
    .flex-grow-1 {
       padding-bottom: 30px; /* Reduce padding */
@@ -171,7 +173,9 @@ body {
     border-radius: 10px;
     border: 3px solid rgb(22, 20, 20); 
 }
-
+.signup-form{
+justify-content: center;
+}
 footer {
     background-color: rgba(76, 140, 102, 0.75)!important;
     min-height: 200px!important;
@@ -249,7 +253,6 @@ hr {
 }
 
 .btn-login1:hover,
-.btn-signup:hover,
 .btn-get-started1:hover {
     background-color: rgba(76, 140, 102, 0.9)!important;
 }
@@ -275,7 +278,7 @@ hr {
     text-transform: uppercase;
     font-weight: bold;
     font-family: 'Fjalla One', sans-serif!important;
-    margin: 5%;
+    margin-left: 7%;
 }
 
 .google-btn {
@@ -290,6 +293,7 @@ hr {
     align-items: center;
     justify-content: center;
     transition: background-color 0.3s ease;
+    margin-left: 25%;
 }
 
 .google-btn:hover {
@@ -309,5 +313,12 @@ hr {
    .google-btn {
         width: 100%;
         padding: 15px;
+        margin-left: 0%;
+    }
+}
+
+@media (max-width: 600px) {
+   .otp-btn {
+        margin-left: 16%;
     }
 }

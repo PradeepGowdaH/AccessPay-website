@@ -18,7 +18,8 @@ const bodyParser = require("body-parser");
 const crypto = require("crypto");
 const port = 3000;
 
-const mongoURI = "mongodb+srv://accesspay-admin:VjlLrFU1TEC0P69I@cluster0.wv7ytnm.mongodb.net/AccessPay?retryWrites=true&w=majority&appName=Cluster0";
+const mongoURI = "mongodb://0.0.0.0:27017/AccessPay";
+// const mongoURI = "mongodb+srv://accesspay-admin:VjlLrFU1TEC0P69I@cluster0.wv7ytnm.mongodb.net/AccessPay?retryWrites=true&w=majority&appName=Cluster0";
 let email = null;
 const admin_email_address = "accesspay2024@gmail.com";
 // Middleware to parse JSON bodies
@@ -358,7 +359,7 @@ app.use(
     secret: process.env.SESSION_SECRET, // Replace with your own secret key
     resave: false,
     saveUninitialized: true,
-    cookie: { maxAge: 3000000 }, // 50 minutes
+    cookie: { maxAge: 120000 }, // 50 minutes
   })
 );
 
