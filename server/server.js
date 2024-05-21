@@ -359,7 +359,7 @@ app.use(
     secret: process.env.SESSION_SECRET, // Replace with your own secret key
     resave: false,
     saveUninitialized: true,
-    cookie: { maxAge: 120000 }, // 50 minutes
+    cookie: { maxAge: 300 }, // 5 minutes
   })
 );
 
